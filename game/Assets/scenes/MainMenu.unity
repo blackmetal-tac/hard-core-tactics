@@ -158,9 +158,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e78c072d6dffbe47b6a68ea5d00ad8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quadPreflab: {fileID: 7521498380199668968, guid: 88b6d6b7cca31834ba60611b629ac601,
+  quadPreflab: {fileID: 8819240619699261052, guid: 6d3fc5d92231acd4e8ad62bb5dbf4fe8,
     type: 3}
   maxScale: 100
+  period: 0.1
 --- !u!4 &227955248
 Transform:
   m_ObjectHideFlags: 0
@@ -303,6 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   period: 1
+  amp: 200
 --- !u!1 &460251093
 GameObject:
   m_ObjectHideFlags: 0

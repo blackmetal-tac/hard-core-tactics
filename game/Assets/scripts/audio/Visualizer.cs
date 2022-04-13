@@ -7,8 +7,11 @@ public class Visualizer : MonoBehaviour
     public GameObject quadPreflab;
     GameObject[] quad = new GameObject[64];
     private AudioData audioData;
-
+    
     public float maxScale = 1;
+
+    private float nextActionTime = 0.0f;
+    public float period = 0.1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +22,7 @@ public class Visualizer : MonoBehaviour
             instanceQuad.transform.position = this.transform.position;
             instanceQuad.transform.parent = this.transform;
             instanceQuad.name = "Quad" + i;
-            instanceQuad.transform.position = new Vector3(0.2f*i, 0, 0);
+            instanceQuad.transform.position = new Vector3(0.1f + 0.2f*i, 0, 0);
             quad[i] = instanceQuad;
         }
     }
@@ -27,11 +30,15 @@ public class Visualizer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < 64; i++)
+        if (Time.time > nextActionTime)
         {
-            if (quad != null)
+
+            for (int i = 0; i < 64; i++)
             {
-                quad[i].transform.localScale = new Vector3(0.1f, audioData.samples[i] * maxScale + 2, 1);
+                if (quad != null)
+                {
+                    quad[i].transform.localScale = new Vector3(0.1f, audioData.samples[i] * maxScale + 2, 1);
+                }
             }
         }
     }
