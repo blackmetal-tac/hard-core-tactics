@@ -8,6 +8,9 @@ public class AudioData : MonoBehaviour
     AudioSource audioSource;
     public float[] samples = new float[64];
 
+    private float nextActionTime = 0.0f;
+    private float period = 0.1f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +25,9 @@ public class AudioData : MonoBehaviour
 
     void GetSpectrumAudio()
     {
-        audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
+        if (Time.time > nextActionTime)
+        {
+            audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
+        }
     }
 }
