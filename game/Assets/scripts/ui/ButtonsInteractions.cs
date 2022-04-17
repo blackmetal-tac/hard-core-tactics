@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ButtonsInteractions : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private float followVelocity = 1;
+    public AudioClip hoverSound;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        LeanTween.reset();
     }
 
     // Update is called once per frame
@@ -21,11 +21,12 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        LeanTween.scale(gameObject, new Vector3(1,1.1f,1), 0.1f);
+        LeanTween.scaleX(gameObject, 1.1f, 0.1f);
+        gameObject.GetComponent<AudioSource>().PlayOneShot(hoverSound);        
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //LeanTween.scaleX(gameObject, 1, 0.1f);
+        LeanTween.scaleX(gameObject, 1, 0.1f);
     }
 }
