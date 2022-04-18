@@ -24,10 +24,6 @@ public class Equalizer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.time > nextActionTime)
-        {
-            nextActionTime += period;
-
             //audio waves low to high
             VFX.SetFloat("A", (audioData.samples[0] + audioData.samples[1] + audioData.samples[2] +
                 audioData.samples[3] + audioData.samples[4] + audioData.samples[5] +
@@ -51,7 +47,6 @@ public class Equalizer : MonoBehaviour
 
             VFX.SetFloat("F", (audioData.samples[45] + audioData.samples[46] + audioData.samples[47] +
                 audioData.samples[48] + audioData.samples[49] + audioData.samples[50] +
-                audioData.samples[51] + audioData.samples[52] + audioData.samples[53]) * amp * 32);
-        }        
+                audioData.samples[51] + audioData.samples[52] + audioData.samples[53]) * amp * 32);    
     }
 }

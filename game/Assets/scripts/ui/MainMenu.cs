@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     public string TestLevel;
+    public AudioClip buttonClick;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +22,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene(TestLevel);
+        StartCoroutine(delayStartGame());                
     }
 
     public void OpenMainOptions()
@@ -37,5 +38,13 @@ public class MainMenu : MonoBehaviour
     public void CloseGame()
     {
         Application.Quit();
+    }
+
+    IEnumerator delayStartGame()
+    {
+        GameObject.Find("StartButton").GetComponent<AudioSource>().PlayOneShot(buttonClick);
+        LeanTween.scaleX(gameObject, 1.2f, 0.1f).setLoopOnce();
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(TestLevel);
     }
 }

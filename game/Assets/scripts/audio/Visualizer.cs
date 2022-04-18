@@ -10,8 +10,6 @@ public class Visualizer : MonoBehaviour
     
     public float maxScale = 1;
 
-    private float nextActionTime = 0.0f;
-    private float period = 0.1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,16 +28,12 @@ public class Visualizer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.time > nextActionTime)
-        {
-
             for (int i = 0; i < 64; i++)
             {
                 if (quad != null)
                 {
                     quad[i].transform.localScale = new Vector3(0.1f, audioData.samples[i] * maxScale + 0.5f, 1);
                 }
-            }
-        }
+            }        
     }
 }
