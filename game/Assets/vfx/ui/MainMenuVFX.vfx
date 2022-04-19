@@ -315,9 +315,9 @@ MonoBehaviour:
   categories: []
   uiBounds:
     serializedVersion: 2
-    x: -1722
+    x: -1721
     y: -1262
-    width: 7599
+    width: 7598
     height: 3434
 --- !u!114 &114350483966674976
 MonoBehaviour:
@@ -975,7 +975,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614583}
   - {fileID: 8926484042661614585}
   dataType: 0
-  capacity: 100000
+  capacity: 80000
   stripCapacity: 16
   particlePerStripCount: 16
   m_Space: 0
@@ -4981,7 +4981,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614797}
   - {fileID: 8926484042661614830}
   dataType: 0
-  capacity: 100000
+  capacity: 80000
   stripCapacity: 16
   particlePerStripCount: 16
   m_Space: 0
@@ -17394,7 +17394,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 10000
+      m_SerializableObject: 8000
     m_Space: 2147483647
   m_Property:
     name: b
@@ -17530,7 +17530,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 10000
+      m_SerializableObject: 8000
     m_Space: 2147483647
   m_Property:
     name: b
