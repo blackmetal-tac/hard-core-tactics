@@ -9,14 +9,27 @@ public class MainMenu : MonoBehaviour
     public AudioClip buttonClick;
 
     private GameObject optionsScreen;
+    private GameObject startButton;
+    private GameObject openOptions;
     private GameObject closeOptions;
+    private GameObject exitButton;
+    private GameObject applyButton;
+
+    private float buttonDelay;
 
     // Start is called before the first frame update
     void Start()
     {
         optionsScreen = GameObject.Find("MainOptions");
-        closeOptions = GameObject.Find("CloseOptions").transform.GetChild(1).gameObject;
-        optionsScreen.SetActive(false);
+        startButton = GameObject.Find("StartButton");
+        openOptions = GameObject.Find("OptionsButton");
+        closeOptions = GameObject.Find("CloseOptions");
+        exitButton = GameObject.Find("CloseButton");
+        applyButton = GameObject.Find("ApplyButton");
+        buttonDelay = 0.4f;
+
+        optionsScreen.transform.localScale = new Vector3(0, 0, 0);
+        LeanTween.reset();
     }
 
     // Update is called once per frame
@@ -27,46 +40,47 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        GameObject.Find("StartButton").GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(GameObject.Find("StartButton").transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(5);
+        startButton.GetComponent<AudioSource>().PlayOneShot(buttonClick);
+        LeanTween.scaleX(startButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
 
-        this.Wait(0.6f, ()=> { 
+        this.Wait(buttonDelay, ()=> {
+            startButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
             SceneManager.LoadScene(TestLevel);
-            LeanTween.scaleX(GameObject.Find("StartButton").transform.GetChild(1).gameObject, 1f, 0.1f);
         });        
     }
 
     public void OpenMainOptions()
     {
-        GameObject.Find("OptionsButton").GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(GameObject.Find("OptionsButton").transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(5);        
+        openOptions.GetComponent<AudioSource>().PlayOneShot(buttonClick);
+        LeanTween.scaleX(openOptions.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);        
 
-        this.Wait(0.6f, () => {
-            optionsScreen.SetActive(true);
-            LeanTween.scaleX(GameObject.Find("OptionsButton").transform.GetChild(1).gameObject, 1f, 0.1f);            
-        });        
+        this.Wait(buttonDelay, () => {
+            openOptions.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+        });
+        LeanTween.scale(optionsScreen, new Vector3(1, 1, 1), 0.2f);
     }
 
     public void CloseMainOptions()
-    {
-        closeOptions.GetComponent<AudioSource>().volume = 0.05f;
+    {        
         closeOptions.GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(closeOptions, 1.2f, 0.1f).setRepeat(5);
+        LeanTween.scaleX(closeOptions.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
 
-        this.Wait(0.6f, () => {
-            optionsScreen.SetActive(false);
-            LeanTween.scaleX(closeOptions, 1f, 0.1f);
-        });
+        this.Wait(buttonDelay, () => {
+            closeOptions.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+            applyButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+
+            LeanTween.scale(optionsScreen, new Vector3(0, 0, 0), 0.2f);          
+        });        
     }
 
     public void CloseGame()
     {
-        GameObject.Find("CloseButton").GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(GameObject.Find("CloseButton").transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(5);
+        exitButton.GetComponent<AudioSource>().PlayOneShot(buttonClick);
+        LeanTween.scaleX(exitButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
 
-        this.Wait(0.6f, () => { 
-            Application.Quit();
-            LeanTween.scaleX(GameObject.Find("CloseButton").transform.GetChild(1).gameObject, 1f, 0.1f);
+        this.Wait(buttonDelay, () => {
+            exitButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+            Application.Quit();            
         });        
     }
 }

@@ -14,7 +14,7 @@ public class SongName : MonoBehaviour
     private Vector3 startPosition;
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         song = GameObject.Find("BGM").GetComponent<AudioSource>().clip;
         textmeshPro = GetComponent<TextMeshProUGUI>();
