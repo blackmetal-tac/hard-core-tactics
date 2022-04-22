@@ -6,21 +6,23 @@ using TMPro;
 public class SongName : MonoBehaviour
 {
     private AudioClip song;
-    private TextMeshProUGUI textmeshPro;
+    private static TextMeshProUGUI textmeshPro;
     private TextMeshProUGUI clonetextmeshPro;
 
-    public static RectTransform rectTransform;
+    //public static RectTransform rectTransform;
+    public static RectTransform maskPos;
     public static Vector3 startPosition;
+    public static float resModifier;
+    private static float width;
     private float scrollPos;
 
     // Start is called before the first frame update
     void Start()
     {
         song = GameObject.Find("BGM").GetComponent<AudioSource>().clip;
-        textmeshPro = GetComponent<TextMeshProUGUI>();
-        rectTransform = textmeshPro.GetComponent<RectTransform>();        
-        scrollPos = 0;
-        //startPosition = rectTransform.position;
+        maskPos = GameObject.Find("Mask").GetComponent<RectTransform>();
+        textmeshPro = GetComponent<TextMeshProUGUI>();    
+        scrollPos = 0;        
 
         UpdateStartPos();
     }
@@ -31,7 +33,9 @@ public class SongName : MonoBehaviour
         textmeshPro.text = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString() +           
         "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString();
 
-        float width = textmeshPro.preferredWidth / 2;
+        width = textmeshPro.preferredWidth / resModifier;
+
+        //width = maskPos.sizeDelta.x ;
 
         textmeshPro.transform.position = new Vector3((-scrollPos % width) + startPosition.x, startPosition.y, startPosition.z);
         scrollPos += 1 * 20 * Time.deltaTime;
@@ -39,6 +43,7 @@ public class SongName : MonoBehaviour
 
     public static void UpdateStartPos()
     {
-        startPosition = rectTransform.position;
+        startPosition = maskPos.position;
+        resModifier = 2;
     }
 }
