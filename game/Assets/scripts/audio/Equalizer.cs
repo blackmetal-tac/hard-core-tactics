@@ -11,6 +11,7 @@ public class Equalizer : MonoBehaviour
     private float nextActionTime = 0.0f;
     private float period = 0.1f;
 
+    //Waves amplification
     public int amp;
 
     // Start is called before the first frame update
@@ -24,7 +25,7 @@ public class Equalizer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            //audio waves low to high
+            //audio waves low to high, need only 6 parameters
             VFX.SetFloat("A", (audioData.samples[0] + audioData.samples[1] + audioData.samples[2] +
                 audioData.samples[3] + audioData.samples[4] + audioData.samples[5] +
                 audioData.samples[6] + audioData.samples[7] + audioData.samples[8]) * amp);

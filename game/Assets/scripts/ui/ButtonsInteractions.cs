@@ -18,7 +18,8 @@ public class ButtonsInteractions : MonoBehaviour, IPointerEnterHandler, IPointer
     {
         
     }
-
+    
+    //Buttons sound and animation
     public void OnPointerEnter(PointerEventData eventData)
     {
         LeanTween.scaleX(gameObject, 1.1f, 0.1f);

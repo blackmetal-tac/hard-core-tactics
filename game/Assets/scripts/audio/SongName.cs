@@ -8,8 +8,7 @@ public class SongName : MonoBehaviour
     private AudioClip song;
     private static TextMeshProUGUI textmeshPro;
     private TextMeshProUGUI clonetextmeshPro;
-
-    //public static RectTransform rectTransform;
+    
     public static RectTransform maskPos;
     public static Vector3 startPosition;
     public static float resModifier;
@@ -30,20 +29,30 @@ public class SongName : MonoBehaviour
     // Update is called once per frame
     void Update()
     {       
+        //Double string and spaces
         textmeshPro.text = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString() +           
         "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString();
 
-        width = textmeshPro.preferredWidth / resModifier;
+        //Set reset modifier for animation
+        width = textmeshPro.preferredWidth / resModifier;        
 
-        //width = maskPos.sizeDelta.x ;
-
+        //Text animation
         textmeshPro.transform.position = new Vector3((-scrollPos % width) + startPosition.x, startPosition.y, startPosition.z);
         scrollPos += 1 * 20 * Time.deltaTime;
     }
 
+    //Changes runnig text position and width to current resolution
     public static void UpdateStartPos()
     {
         startPosition = maskPos.position;
-        resModifier = 2;
+
+        if (Screen.width == 1920)
+        {
+            resModifier = 2;
+        }
+        else
+        {
+            resModifier = 3;
+        }
     }
 }

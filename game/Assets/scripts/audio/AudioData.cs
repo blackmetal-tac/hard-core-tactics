@@ -20,6 +20,7 @@ public class AudioData : MonoBehaviour
         GetSpectrumAudio();
     }
 
+    //Get audio data from track for visualization
     void GetSpectrumAudio()
     {
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);

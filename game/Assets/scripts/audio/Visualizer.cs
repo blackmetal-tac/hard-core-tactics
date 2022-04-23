@@ -14,6 +14,8 @@ public class Visualizer : MonoBehaviour
     void Start()
     {
         audioData = GameObject.Find("BGM").GetComponent<AudioData>();
+
+        //Spawn waves visual
         for (int i = 0; i < 64; i++)
         {
             GameObject instanceQuad = (GameObject)Instantiate(quadPreflab);
@@ -28,12 +30,13 @@ public class Visualizer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            for (int i = 0; i < 64; i++)
+        //Animate audio waves
+        for (int i = 0; i < 64; i++)
+        {
+            if (quad != null)
             {
-                if (quad != null)
-                {
-                    quad[i].transform.localScale = new Vector3(0.1f, audioData.samples[i] * maxScale + 0.5f, 1);
-                }
-            }        
+                quad[i].transform.localScale = new Vector3(0.1f, audioData.samples[i] * maxScale + 0.5f, 1);
+            }
+        }        
     }
 }

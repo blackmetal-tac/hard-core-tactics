@@ -25,6 +25,7 @@ public class MainMenu : MonoBehaviour
         exitButton = GameObject.Find("CloseButton");
         applyButton = GameObject.Find("ApplyButton");
 
+        //Set options screen to 0 (invisible)
         optionsScreen.transform.localScale = new Vector3(0, 0, 0);
         LeanTween.reset();
     }
@@ -35,11 +36,13 @@ public class MainMenu : MonoBehaviour
         
     }
 
+    //Buttons
     public void StartGame()
     {
         startButton.GetComponent<AudioSource>().PlayOneShot(buttonClick);
         LeanTween.scaleX(startButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
 
+        //Delay for animation
         this.Wait(buttonDelay, ()=> {
             startButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
             SceneManager.LoadScene(TestLevel);
@@ -49,8 +52,9 @@ public class MainMenu : MonoBehaviour
     public void OpenMainOptions()
     {
         openOptions.GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(openOptions.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);        
+        LeanTween.scaleX(openOptions.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
 
+        //Delay for animation
         this.Wait(buttonDelay, () => {
             openOptions.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
         });
@@ -62,6 +66,7 @@ public class MainMenu : MonoBehaviour
         exitButton.GetComponent<AudioSource>().PlayOneShot(buttonClick);
         LeanTween.scaleX(exitButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
 
+        //Delay for animation
         this.Wait(buttonDelay, () => {
             exitButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
             Application.Quit();            
