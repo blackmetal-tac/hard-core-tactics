@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 using TMPro;
 
 public class MainOptions : MonoBehaviour
 {
     private Toggle fullscreenTog, vsyncTog;
-    private GameObject closeOptions;
-    private GameObject applyButton;
+    private GameObject closeOptions, applyButton;
 
     private AudioClip buttonClick;
 
     public List<ResItem> resolutions = new List<ResItem>();
     private int selectedRes;
     private TextMeshProUGUI resLabel;
+
+    public AudioMixer mainMixer;
+    private Slider masterVol, musicVol, effectsVol;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +28,9 @@ public class MainOptions : MonoBehaviour
         applyButton = GameObject.Find("ApplyButton");
         buttonClick = GameObject.Find("MainMenuCanvas").GetComponent<MainMenu>().buttonClick;
         resLabel = GameObject.Find("ResolutionText").GetComponent<TextMeshProUGUI>();
+        masterVol = GameObject.Find("MasterSlider").GetComponent<Slider>();
+        musicVol = GameObject.Find("MusicSlider").GetComponent<Slider>();
+        effectsVol = GameObject.Find("SFXSlider").GetComponent<Slider>();
 
         //Set graphical options
         fullscreenTog.isOn = Screen.fullScreen;
@@ -60,6 +66,16 @@ public class MainOptions : MonoBehaviour
             selectedRes = resolutions.Count - 1;
             UpdateResLabel();
         }
+
+        //Set volume sliders
+        mainMixer.GetFloat("MasterVolume", out float vol);
+        masterVol.value = vol;
+
+        mainMixer.GetFloat("MusicVolume", out vol);
+        masterVol.value = vol;
+
+        mainMixer.GetFloat("EffectsVolume", out vol);
+        masterVol.value = vol;
 
         LeanTween.reset();
     }
@@ -141,6 +157,25 @@ public class MainOptions : MonoBehaviour
 
         //Update running text position
         SongName.UpdateStartPos();
+    }
+
+    //Audio settings
+    public void SetMasterVolume()
+    {
+        mainMixer.SetFloat("MasterVolume", masterVol.value);
+        PlayerPrefs.SetFloat("MasterVolume", masterVol.value);
+    }
+
+    public void SetMusicVolume()
+    {
+        mainMixer.SetFloat("MusicVolume", musicVol.value);
+        PlayerPrefs.SetFloat("MusicVolume", musicVol.value);
+    }
+
+    public void SetSFXVolume()
+    {
+        mainMixer.SetFloat("EffectsVolume", effectsVol.value);
+        PlayerPrefs.SetFloat("EffectsVolume", effectsVol.value);
     }
 }
 

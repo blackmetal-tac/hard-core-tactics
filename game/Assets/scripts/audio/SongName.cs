@@ -18,7 +18,7 @@ public class SongName : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        song = GameObject.Find("BGM").GetComponent<AudioSource>().clip;
+        song = GameObject.Find("AudioManager").GetComponent<AudioSource>().clip;
         maskPos = GameObject.Find("Mask").GetComponent<RectTransform>();
         textmeshPro = GetComponent<TextMeshProUGUI>();    
         scrollPos = 0;        

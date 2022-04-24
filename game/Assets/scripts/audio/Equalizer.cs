@@ -18,7 +18,7 @@ public class Equalizer : MonoBehaviour
     void Start()
     {
         amp = 100;
-        audioData = GameObject.Find("BGM").GetComponent<AudioData>();
+        audioData = GameObject.Find("AudioManager").GetComponent<AudioData>();
         VFX = GetComponent<VisualEffect>();
     }
 

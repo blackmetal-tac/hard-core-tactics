@@ -9,10 +9,7 @@ public class MainMenu : MonoBehaviour
     public AudioClip buttonClick;
 
     public static GameObject optionsScreen;
-    private GameObject startButton;
-    private GameObject openOptions;    
-    private GameObject exitButton;
-    private GameObject applyButton;
+    private GameObject startButton, openOptions, exitButton;
 
     public static float buttonDelay = 0.4f;
 
@@ -23,7 +20,6 @@ public class MainMenu : MonoBehaviour
         startButton = GameObject.Find("StartButton");
         openOptions = GameObject.Find("OptionsButton");        
         exitButton = GameObject.Find("CloseButton");
-        applyButton = GameObject.Find("ApplyButton");
 
         //Set options screen to 0 (invisible)
         optionsScreen.transform.localScale = new Vector3(0, 0, 0);
