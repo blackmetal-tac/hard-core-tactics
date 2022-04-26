@@ -145,7 +145,7 @@ public class MainOptions : MonoBehaviour
         else
         {
             QualitySettings.vSyncCount = 0;
-        }
+        }       
 
         //Delay for animations and sounds
         this.Wait(MainMenu.buttonDelay, () => {
@@ -153,10 +153,10 @@ public class MainOptions : MonoBehaviour
             applyButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
 
             LeanTween.scale(MainMenu.optionsScreen, new Vector3(0, 0, 0), 0.2f);
-        });
 
-        //Update running text position
-        SongName.UpdateStartPos();
+            //Update running text position
+            SongName.UpdateStartPos();
+        });        
     }
 
     //Audio settings
