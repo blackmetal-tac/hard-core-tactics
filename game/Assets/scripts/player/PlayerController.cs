@@ -21,8 +21,8 @@ public class PlayerController : MonoBehaviour
         clickMarker.transform.localScale = new Vector3(0, 0, 0);
         walkPath = GetComponent<LineRenderer>();
 
-        walkPath.startWidth = 0.05f;
-        walkPath.endWidth = 0.05f;
+        walkPath.startWidth = 0.02f;
+        walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
 
         LeanTween.reset();

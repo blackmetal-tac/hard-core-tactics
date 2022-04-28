@@ -34,11 +34,14 @@ public class SongName : MonoBehaviour
         "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString();
 
         //Set reset modifier for animation
-        width = textmeshPro.preferredWidth / resModifier;        
+        //width = textmeshPro.preferredWidth / resModifier;
+        //width = this.gameObject.GetComponent<RectTransform>().sizeDelta.x;
+        width = textmeshPro.GetRenderedValues(true).x / 2;
 
         //Text animation
         textmeshPro.transform.position = new Vector3((-scrollPos % width) + startPosition.x, startPosition.y, startPosition.z);
-        scrollPos += 1 * 20 * Time.deltaTime;
+        //scrollPos += 1 * 20 * Time.deltaTime;
+        scrollPos += 1 * 1 * Time.deltaTime / 10;
     }
 
     //Changes runnig text position and width to current resolution
