@@ -7,11 +7,10 @@ public class SongName : MonoBehaviour
 {
     private AudioClip song;
     private static TextMeshProUGUI textmeshPro;
-    private TextMeshProUGUI clonetextmeshPro;
     
     public static RectTransform maskPos;
+    public static RectTransform textPos;
     public static Vector3 startPosition;
-    public static float resModifier;
     private static float width;
     private float scrollPos;
 
@@ -20,10 +19,11 @@ public class SongName : MonoBehaviour
     {
         song = GameObject.Find("AudioManager").GetComponent<AudioSource>().clip;
         maskPos = GameObject.Find("Mask").GetComponent<RectTransform>();
+        textPos = this.gameObject.GetComponent<RectTransform>();
         textmeshPro = GetComponent<TextMeshProUGUI>();    
-        scrollPos = 0;        
+        scrollPos = 0;
 
-        UpdateStartPos();
+        startPosition = maskPos.position;
     }
 
     // Update is called once per frame
@@ -34,28 +34,15 @@ public class SongName : MonoBehaviour
         "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString();
 
         //Set reset modifier for animation
-        //width = textmeshPro.preferredWidth / resModifier;
-        //width = this.gameObject.GetComponent<RectTransform>().sizeDelta.x;
-        width = textmeshPro.GetRenderedValues(true).x / 2;
+        width = textmeshPro.preferredWidth / 2;
 
         //Text animation
-        textmeshPro.transform.position = new Vector3((-scrollPos % width) + startPosition.x, startPosition.y, startPosition.z);
-        //scrollPos += 1 * 20 * Time.deltaTime;
-        scrollPos += 1 * 1 * Time.deltaTime / 10;
-    }
+        textmeshPro.transform.position = new Vector3(-scrollPos + startPosition.x, startPosition.y, startPosition.z);
+        scrollPos += 1 * 1 * Time.deltaTime / 50;
 
-    //Changes runnig text position and width to current resolution
-    public static void UpdateStartPos()
-    {
-        startPosition = maskPos.position;
-
-        if (Screen.width == 1920)
+        if (textPos.localPosition.x <= -width)
         {
-            resModifier = 2;
-        }
-        else
-        {
-            resModifier = 3;
+            scrollPos = 0;
         }
     }
 }

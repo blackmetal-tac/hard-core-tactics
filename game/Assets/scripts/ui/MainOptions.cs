@@ -152,10 +152,7 @@ public class MainOptions : MonoBehaviour
             closeOptions.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
             applyButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
 
-            LeanTween.scale(MainMenu.optionsScreen, new Vector3(0, 0, 0), 0.2f);
-
-            //Update running text position
-            SongName.UpdateStartPos();
+            LeanTween.scale(MainMenu.optionsScreen, new Vector3(0, 0, 0), 0.2f);            
         });        
     }
 
