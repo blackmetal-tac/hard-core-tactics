@@ -22,12 +22,17 @@ public class PlayerController : MonoBehaviour
 
     private float turnTime = 10f;
     private float timeValue;
-    private float timeRound;
     private static TextMeshProUGUI timer;
+
+    private float walkDistance = 5;
+
+    private NavMeshPath path;
 
     // Start is called before the first frame update
     void Start()
     {
+        path = new NavMeshPath();
+
         playerAgent = GetComponent<NavMeshAgent>();
         clickMarker = GameObject.Find("ClickMarker");
         clickMarker.transform.localScale = new Vector3(0, 0, 0);
@@ -61,9 +66,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        //Timer display
-        //timer.text = Mathf.FloorToInt(timeValue).ToString();
-
+        //Timer display      
         timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
 
         if (inMove && timeValue > 0)
@@ -121,12 +124,26 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        for (int i = 1; i < playerAgent.path.corners.Length; i++)
-        {
-            Vector3 pointPosition = new Vector3(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y, 
-                playerAgent.path.corners[i].z);
-            walkPath.SetPosition(i, pointPosition);
-        }
+        Debug.Log(playerAgent.remainingDistance);
+
+        
+            for (int i = 1; i < playerAgent.path.corners.Length; i++)
+            {
+
+                if (playerAgent.remainingDistance <= walkDistance)
+                {
+                    Vector3 pointPosition = new Vector3(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y,
+                        playerAgent.path.corners[i].z);
+                    walkPath.SetPosition(i, pointPosition);
+                }
+                else
+                {
+                    Vector3 finalPoint = playerAgent.path.corners[i] + ((playerAgent.path.corners[i + 1] -
+                        playerAgent.path.corners[i]).normalized * walkDistance);
+                    NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
+                    playerAgent.SetPath(path);                    
+                }
+            }        
     }
 
     //Start turn
