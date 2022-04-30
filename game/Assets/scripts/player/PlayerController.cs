@@ -20,11 +20,11 @@ public class PlayerController : MonoBehaviour
     public float mechSpeed = 3.5f;
     private bool inMove;
 
-    private float turnTime = 10f;
+    private float turnTime = 3;
     private float timeValue;
     private static TextMeshProUGUI timer;
 
-    private float walkDistance = 5;
+    private float walkDistance = 3;
 
     private NavMeshPath path;
 
@@ -60,9 +60,10 @@ public class PlayerController : MonoBehaviour
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            if (!inMove)
-            {                
+            //if (!inMove)
+            {
                 MoveToClick();
+                //MaxDistanceMove();
             }
         }
 
@@ -89,7 +90,7 @@ public class PlayerController : MonoBehaviour
             clickMarker.transform.localScale = new Vector3(0, 0, 0);
         }
 
-        clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));
+        clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));       
     }
 
     private void MoveToClick()
@@ -107,11 +108,25 @@ public class PlayerController : MonoBehaviour
     //Draw click marker
     private void SetDestination(Vector3 target)
     {
-        playerAgent.SetDestination(target);
-        playerAgent.speed = 0;
-        clickMarker.transform.position = new Vector3(target.x, 0.05f, target.z);
-        clickMarker.transform.localScale = new Vector3(0, 0, 0);
-        LeanTween.scale(clickMarker, new Vector3(0.2f, 0.2f, 0.2f), 0.2f);
+        if (playerAgent.remainingDistance <= walkDistance)
+        {
+            playerAgent.SetDestination(target);
+            playerAgent.speed = 0;
+            clickMarker.transform.position = new Vector3(target.x, 0.05f, target.z);
+            clickMarker.transform.localScale = new Vector3(0, 0, 0);
+            LeanTween.scale(clickMarker, new Vector3(0.2f, 0.2f, 0.2f), 0.2f);
+        }
+        else 
+        {
+            NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
+            for (int i = 0; i < path.corners.Length - 1; i++) // Leave room to add 1
+            {
+                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * walkDistance);
+                NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
+                playerAgent.SetPath(path);
+                clickMarker.transform.position = new Vector3(finalPoint.x, 0.05f, finalPoint.z);
+            }
+        }
     }
 
     private void DrawPath()
@@ -124,28 +139,17 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        Debug.Log(playerAgent.remainingDistance);
-
-        
-            for (int i = 1; i < playerAgent.path.corners.Length; i++)
+        for (int i = 1; i < playerAgent.path.corners.Length; i++)
+        {
+            if (playerAgent.remainingDistance <= walkDistance)
             {
-
-                if (playerAgent.remainingDistance <= walkDistance)
-                {
-                    Vector3 pointPosition = new Vector3(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y,
-                        playerAgent.path.corners[i].z);
-                    walkPath.SetPosition(i, pointPosition);
-                }
-                else
-                {
-                    Vector3 finalPoint = playerAgent.path.corners[i] + ((playerAgent.path.corners[i + 1] -
-                        playerAgent.path.corners[i]).normalized * walkDistance);
-                    NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
-                    playerAgent.SetPath(path);                    
-                }
-            }        
-    }
-
+                Vector3 pointPosition = new Vector3(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y,
+                    playerAgent.path.corners[i].z);
+                walkPath.SetPosition(i, pointPosition);
+            }             
+        }
+    }   
+    
     //Start turn
     public void ExecuteOrder()
     {
@@ -154,5 +158,5 @@ public class PlayerController : MonoBehaviour
 
         playerAgent.speed = mechSpeed;
         inMove = true;
-    }
+    }  
 }
