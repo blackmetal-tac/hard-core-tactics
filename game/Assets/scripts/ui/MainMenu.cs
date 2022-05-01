@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour
         exitButton = GameObject.Find("CloseButton");
 
         //Set options screen to 0 (invisible)
-        optionsScreen.transform.localScale = new Vector3(0, 0, 0);
+        optionsScreen.transform.localScale = Vector3.zero;
         LeanTween.reset();
     }
 
@@ -40,7 +40,7 @@ public class MainMenu : MonoBehaviour
 
         //Delay for animation
         this.Wait(buttonDelay, ()=> {
-            startButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+            startButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
             SceneManager.LoadScene(TestLevel);
         });        
     }
@@ -52,9 +52,9 @@ public class MainMenu : MonoBehaviour
 
         //Delay for animation
         this.Wait(buttonDelay, () => {
-            openOptions.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+            openOptions.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
         });
-        LeanTween.scale(optionsScreen, new Vector3(1, 1, 1), 0.2f);
+        LeanTween.scale(optionsScreen, Vector3.one, 0.2f);
     }
 
     public void CloseGame()
@@ -64,7 +64,7 @@ public class MainMenu : MonoBehaviour
 
         //Delay for animation
         this.Wait(buttonDelay, () => {
-            exitButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+            exitButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
             Application.Quit();            
         });        
     }

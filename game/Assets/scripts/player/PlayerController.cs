@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
 
     private GameObject clickMarker;
     private GameObject executeButton;
+    private GameObject crosshair;
+    private GameObject enemy;
     private LineRenderer walkPath;
 
     public float mechSpeed = 3.5f;
@@ -35,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
         playerAgent = GetComponent<NavMeshAgent>();
         clickMarker = GameObject.Find("ClickMarker");
-        clickMarker.transform.localScale = new Vector3(0, 0, 0);
+        clickMarker.transform.localScale = Vector3.zero;
         walkPath = GetComponent<LineRenderer>();
         executeButton = GameObject.Find("ExecuteButton");
         inMove = false;
@@ -43,6 +45,9 @@ public class PlayerController : MonoBehaviour
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
         timeValue = turnTime;
         timer.text = timeValue.ToString();
+
+        crosshair = GameObject.Find("Crosshair");
+        enemy = GameObject.Find("Enemy");
 
         //Set path parameters
         walkPath.startWidth = 0.02f;
@@ -55,21 +60,21 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        crosshair.transform.position = enemy.transform.position;
+
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject())
-                return;
+                return;            
 
-            //if (!inMove)
+            if (!inMove)
             {
-                MoveToClick();
-                //MaxDistanceMove();
+                MoveToClick();                
             }
-        }
+        }        
 
         //Timer display      
         timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
-
         if (inMove && timeValue > 0)
         {            
             timeValue -= Time.deltaTime;
@@ -87,8 +92,8 @@ public class PlayerController : MonoBehaviour
         }
         else 
         {
-            clickMarker.transform.localScale = new Vector3(0, 0, 0);
-        }
+            clickMarker.transform.localScale = Vector3.zero;
+        }        
 
         clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));       
     }
@@ -101,34 +106,34 @@ public class PlayerController : MonoBehaviour
 
         if(isHit)
         {
-            SetDestination(hit.point);            
+            SetDestination(hit.point);           
         }       
     }
 
     //Draw click marker
     private void SetDestination(Vector3 target)
     {
-        if (playerAgent.remainingDistance <= walkDistance)
+        playerAgent.speed = 0;
+
+        NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
+        for (int i = 0; i < path.corners.Length - 1; i++) 
         {
-            playerAgent.SetDestination(target);
-            playerAgent.speed = 0;
-            clickMarker.transform.position = new Vector3(target.x, 0.05f, target.z);
-            clickMarker.transform.localScale = new Vector3(0, 0, 0);
-            LeanTween.scale(clickMarker, new Vector3(0.2f, 0.2f, 0.2f), 0.2f);
-        }
-        else 
-        {
-            NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
-            for (int i = 0; i < path.corners.Length - 1; i++) // Leave room to add 1
+            float segmentDistance = (path.corners[i + 1] - path.corners[i]).magnitude;
+            if (segmentDistance <= walkDistance)
+            {
+                playerAgent.SetDestination(target);
+            }
+            else
             {
                 Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * walkDistance);
                 NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
-                playerAgent.SetPath(path);
-                clickMarker.transform.position = new Vector3(finalPoint.x, 0.05f, finalPoint.z);
+                playerAgent.SetPath(path);                
+                break;
             }
         }
     }
 
+    //Constantly draws players path
     private void DrawPath()
     {
         walkPath.positionCount = playerAgent.path.corners.Length;
@@ -141,12 +146,12 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 1; i < playerAgent.path.corners.Length; i++)
         {
-            if (playerAgent.remainingDistance <= walkDistance)
-            {
-                Vector3 pointPosition = new Vector3(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y,
+            Vector3 pointPosition = new Vector3(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y,
                     playerAgent.path.corners[i].z);
-                walkPath.SetPosition(i, pointPosition);
-            }             
+            walkPath.SetPosition(i, pointPosition);
+            clickMarker.transform.position = new Vector3(pointPosition.x, 0.05f, pointPosition.z);
+            clickMarker.transform.localScale = new Vector3(0, 0, 0);
+            LeanTween.scale(clickMarker, Vector3.one * 0.2f, 0.2f);
         }
     }   
     
@@ -158,5 +163,5 @@ public class PlayerController : MonoBehaviour
 
         playerAgent.speed = mechSpeed;
         inMove = true;
-    }  
+    }
 }

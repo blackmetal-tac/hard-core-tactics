@@ -121,10 +121,10 @@ public class MainOptions : MonoBehaviour
 
         //Delay for animations and sounds
         this.Wait(MainMenu.buttonDelay, () => {
-            closeOptions.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
-            applyButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+            closeOptions.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
+            applyButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
 
-            LeanTween.scale(MainMenu.optionsScreen, new Vector3(0, 0, 0), 0.2f);
+            LeanTween.scale(MainMenu.optionsScreen, Vector3.zero, 0.2f);
         });
     }
 
@@ -149,10 +149,10 @@ public class MainOptions : MonoBehaviour
 
         //Delay for animations and sounds
         this.Wait(MainMenu.buttonDelay, () => {
-            closeOptions.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
-            applyButton.transform.GetChild(1).gameObject.transform.localScale = new Vector3(1, 1, 1);
+            closeOptions.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
+            applyButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
 
-            LeanTween.scale(MainMenu.optionsScreen, new Vector3(0, 0, 0), 0.2f);            
+            LeanTween.scale(MainMenu.optionsScreen, Vector3.zero, 0.2f);            
         });        
     }
 
