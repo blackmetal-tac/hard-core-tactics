@@ -11,6 +11,17 @@ using System;
 [RequireComponent(typeof(LineRenderer))]
 public class PlayerController : MonoBehaviour
 {
+    private Dictionary<string, Queue<GameObject>> poolDictionary;
+
+    [System.Serializable]
+    private class Pool {
+        public string tag;
+        public GameObject prefab;
+        public int size = 5;
+    }
+
+    private List<Pool> pools;
+
     private NavMeshAgent playerAgent;
 
     private GameObject clickMarker;
@@ -19,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private GameObject enemy;
     private LineRenderer walkPath;
 
-    public float mechSpeed = 3.5f;
+    private float mechSpeed = 3.5f;
     private bool inMove;
 
     private float turnTime = 3;
@@ -29,12 +40,14 @@ public class PlayerController : MonoBehaviour
     private float walkDistance = 3;
 
     private NavMeshPath path;
+    private Camera camMain;
 
     // Start is called before the first frame update
     void Start()
     {
         path = new NavMeshPath();
 
+        camMain = Camera.main;
         playerAgent = GetComponent<NavMeshAgent>();
         clickMarker = GameObject.Find("ClickMarker");
         clickMarker.transform.localScale = Vector3.zero;
@@ -54,14 +67,53 @@ public class PlayerController : MonoBehaviour
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
 
+        poolDictionary = new Dictionary<string, Queue<GameObject>>();
+
+        foreach (Pool pool in pools) 
+        {
+            Queue<GameObject> objectPool = new Queue<GameObject>();
+            for (int i = 0; i < pool.size; i++)
+            {
+                GameObject obj = Instantiate(pool.prefab);
+                obj.transform.localScale = Vector3.zero;
+                objectPool.Enqueue(obj);
+            }
+
+            poolDictionary.Add(pool.tag, objectPool);
+        }
+
         LeanTween.reset();
+    }
+
+    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    {
+        if (!poolDictionary.ContainsKey(tag)) 
+        {
+            Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+            return null;
+        }
+
+        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+
+        objectToSpawn.transform.localScale = Vector3.one;
+        objectToSpawn.transform.position = position;
+        objectToSpawn.transform.rotation = rotation;
+
+        poolDictionary[tag].Enqueue(objectToSpawn);
+
+        return objectToSpawn;
     }
 
     // Update is called once per frame
     void Update()
     {
-        crosshair.transform.position = enemy.transform.position;
+        //Spawn bullets
 
+
+        //Crosshair position
+        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
+
+        //Mouse click
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject())
