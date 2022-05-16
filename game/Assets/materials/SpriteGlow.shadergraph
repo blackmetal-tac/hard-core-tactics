@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "7e878ab3ded541c483bc16578bfada48",
     "m_Properties": [
@@ -8,6 +8,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "553e9cea41f449b7ac91c10d1fe5d37f"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "2ad740aa41454d1e9a051e6dba053ffd"
@@ -158,10 +164,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"fileID\":10210,\"guid\":\"0000000000000000e000000000000000\",\"type\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Shader Graphs",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": ""
@@ -310,7 +317,7 @@
         "x": 1.0,
         "y": 1.0,
         "z": 1.0,
-        "w": 1.0
+        "w": 0.0
     },
     "m_DefaultValue": {
         "x": 0.0,
@@ -448,10 +455,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -960.6665649414063,
-            "y": -168.00001525878907,
-            "width": 130.0,
-            "height": 34.0
+            "x": -946.6665649414063,
+            "y": -79.99999237060547,
+            "width": 129.99993896484376,
+            "height": 36.00004577636719
         }
     },
     "m_Slots": [
@@ -472,17 +479,23 @@
 }
 
 {
-    "m_SGVersion": 0,
+    "m_SGVersion": 1,
     "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalTarget",
     "m_ObjectId": "4695a441159e4ad3a714944453997951",
     "m_ActiveSubTarget": {
         "m_Id": "d1892e2facc346118e8ff8450029c8c7"
     },
+    "m_AllowMaterialOverride": false,
     "m_SurfaceType": 0,
+    "m_ZTestMode": 4,
+    "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
-    "m_TwoSided": false,
+    "m_RenderFace": 2,
     "m_AlphaClip": false,
-    "m_CustomEditorGUI": ""
+    "m_CastShadows": true,
+    "m_ReceiveShadows": true,
+    "m_CustomEditorGUI": "",
+    "m_SupportVFX": false
 }
 
 {
@@ -497,10 +510,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -639.3333129882813,
-            "y": -192.66664123535157,
-            "width": 208.0,
-            "height": 435.3333435058594
+            "x": -717.9999389648438,
+            "y": -121.33334350585938,
+            "width": 209.33334350585938,
+            "height": 438.6666564941406
         }
     },
     "m_Slots": [
@@ -537,7 +550,20 @@
         "m_SerializableColors": []
     },
     "m_TextureType": 0,
-    "m_NormalMapSpace": 0
+    "m_NormalMapSpace": 0,
+    "m_EnableGlobalMipBias": true
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "553e9cea41f449b7ac91c10d1fe5d37f",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "a721c7e18db648748636d6430c9d6782"
+        }
+    ]
 }
 
 {
@@ -726,10 +752,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -364.0000305175781,
-            "y": 198.00001525878907,
-            "width": 207.99998474121095,
-            "height": 302.0000305175781
+            "x": -317.3333435058594,
+            "y": 190.66665649414063,
+            "width": 209.33331298828126,
+            "height": 303.9999694824219
         }
     },
     "m_Slots": [
@@ -838,9 +864,13 @@
         "m_GuidSerialized": "ffab01b3-3226-4f5a-b488-59bdac727581"
     },
     "m_Name": "MainTex",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Texture2D_a721c7e18db648748636d6430c9d6782",
     "m_OverrideReferenceName": "_MainTex",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -849,6 +879,8 @@
         "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
         "m_Guid": ""
     },
+    "isMainTexture": false,
+    "useTilingAndOffset": false,
     "m_Modifiable": true,
     "m_DefaultType": 0
 }

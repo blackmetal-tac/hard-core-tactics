@@ -8,7 +8,7 @@ public class Crosshair : MonoBehaviour
     void Start()
     {
         LeanTween.reset();
-        LeanTween.scale(gameObject, Vector3.one * 1.1f, 1f).setEaseInOutCubic().setLoopPingPong();           
+        LeanTween.scale(gameObject, new Vector3(0.22f,0.22f,0.22f), 1f).setEaseInOutCubic().setLoopPingPong();           
     }
 
     // Update is called once per frame

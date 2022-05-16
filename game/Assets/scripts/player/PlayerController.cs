@@ -11,16 +11,7 @@ using System;
 [RequireComponent(typeof(LineRenderer))]
 public class PlayerController : MonoBehaviour
 {
-    private Dictionary<string, Queue<GameObject>> poolDictionary;
-
-    [System.Serializable]
-    private class Pool {
-        public string tag;
-        public GameObject prefab;
-        public int size = 5;
-    }
-
-    private List<Pool> pools;
+    ObjectPooler objectPooler;
 
     private NavMeshAgent playerAgent;
 
@@ -44,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {     
         path = new NavMeshPath();
 
         camMain = Camera.main;
@@ -67,41 +58,9 @@ public class PlayerController : MonoBehaviour
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
 
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
-
-        foreach (Pool pool in pools) 
-        {
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-            for (int i = 0; i < pool.size; i++)
-            {
-                GameObject obj = Instantiate(pool.prefab);
-                obj.transform.localScale = Vector3.zero;
-                objectPool.Enqueue(obj);
-            }
-
-            poolDictionary.Add(pool.tag, objectPool);
-        }
-
         LeanTween.reset();
-    }
 
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
-    {
-        if (!poolDictionary.ContainsKey(tag)) 
-        {
-            Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
-            return null;
-        }
-
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
-
-        objectToSpawn.transform.localScale = Vector3.one;
-        objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = rotation;
-
-        poolDictionary[tag].Enqueue(objectToSpawn);
-
-        return objectToSpawn;
+        objectPooler = ObjectPooler.Instance;
     }
 
     // Update is called once per frame
@@ -117,11 +76,15 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject())
-                return;            
+                return;
 
             if (!inMove)
             {
-                MoveToClick();                
+                MoveToClick();
+            }
+            else
+            {
+                objectPooler.SpawnFromPool("Bullet", transform.position, Quaternion.identity);
             }
         }        
 
@@ -212,6 +175,10 @@ public class PlayerController : MonoBehaviour
     {
         executeButton.GetComponent<AudioSource>().Play();
         LeanTween.scaleX(executeButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
+
+        this.Wait(MainMenu.buttonDelay, () => {
+            executeButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;            
+        });
 
         playerAgent.speed = mechSpeed;
         inMove = true;
