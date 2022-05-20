@@ -8,9 +8,6 @@ public class Equalizer : MonoBehaviour
     private AudioData audioData;
     private VisualEffect VFX;
 
-    private float nextActionTime = 0.0f;
-    private float period = 0.1f;
-
     //Waves amplification
     public int amp;
 

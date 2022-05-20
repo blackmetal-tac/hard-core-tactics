@@ -30,8 +30,7 @@ public class GameManager : MonoBehaviour
     public int mapSize = 11;	
 
     //current player
-    public int currentPlayerIndex = 0;    
-    bool newPlayer = false;
+    public int currentPlayerIndex = 0;     
 
     //attack target
     public AIPlayer target;
@@ -83,7 +82,6 @@ public class GameManager : MonoBehaviour
         else
         {
             nextTurn();
-            newPlayer = true;
         }
 
         //get current weapon

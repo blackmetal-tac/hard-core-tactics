@@ -11,45 +11,55 @@ using System;
 [RequireComponent(typeof(LineRenderer))]
 public class PlayerController : MonoBehaviour
 {
+    private Camera camMain;
+
+    private static TextMeshProUGUI timer;
+
     ObjectPooler objectPooler;
 
     private NavMeshAgent playerAgent;
+    private NavMeshPath path;
 
-    private GameObject clickMarker;
-    private GameObject executeButton;
-    private GameObject crosshair;
-    private GameObject enemy;
+    private GameObject clickMarker, executeButton, buttonFrame, crosshair, enemy, firePoint;
+
+    private AudioSource buttonSound;
     private LineRenderer walkPath;
 
-    private float mechSpeed = 3.5f;
-    private bool inMove;
+    public static float mechSpeed = 3.5f;
+    private bool inAction;
 
-    private float turnTime = 3;
+    private float walkDistance = 3f;
+    private float turnTime = 3f;
     private float timeValue;
-    private static TextMeshProUGUI timer;
 
-    private float walkDistance = 3;
-
-    private NavMeshPath path;
-    private Camera camMain;
+    public float fireRate = 1f;
+    private float lastShot = 0f;   
 
     // Start is called before the first frame update
     void Start()
-    {     
-        path = new NavMeshPath();
-
+    {
         camMain = Camera.main;
+
+        //Navmesh setup
+        path = new NavMeshPath();
         playerAgent = GetComponent<NavMeshAgent>();
+
         clickMarker = GameObject.Find("ClickMarker");
         clickMarker.transform.localScale = Vector3.zero;
         walkPath = GetComponent<LineRenderer>();
-        executeButton = GameObject.Find("ExecuteButton");
-        inMove = false;
 
+        //UI
+        executeButton = GameObject.Find("ExecuteButton");
+        buttonSound = executeButton.GetComponent<AudioSource>();
+        buttonFrame = executeButton.transform.GetChild(1).gameObject;
+        inAction = false;
+
+        //Turn timer
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
         timeValue = turnTime;
         timer.text = timeValue.ToString();
 
+        //Set target
         crosshair = GameObject.Find("Crosshair");
         enemy = GameObject.Find("Enemy");
 
@@ -58,17 +68,16 @@ public class PlayerController : MonoBehaviour
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
 
-        LeanTween.reset();
-
+        //Firing
+        firePoint = GameObject.Find("FirePoint");
         objectPooler = ObjectPooler.Instance;
+
+        LeanTween.reset();       
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Spawn bullets
-
-
         //Crosshair position
         crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
 
@@ -78,26 +87,32 @@ public class PlayerController : MonoBehaviour
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            if (!inMove)
+            if (!inAction)
             {
                 MoveToClick();
             }
-            else
+        }
+
+        //Shoot while in action
+        if (inAction)
+        {
+            if (Time.time > lastShot + fireRate)
             {
-                objectPooler.SpawnFromPool("Bullet", transform.position, Quaternion.identity);
+                objectPooler.SpawnFromPool("Bullet", firePoint.transform.position, firePoint.transform.rotation);
+                lastShot = Time.time;
             }
-        }        
+        }
 
         //Timer display      
         timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
-        if (inMove && timeValue > 0)
+        if (inAction && timeValue > 0)
         {            
             timeValue -= Time.deltaTime;
         }
         else
         {
-            inMove = false;
-            timeValue = turnTime;            
+            inAction = false;
+            timeValue = turnTime;
         }
 
         //Draw player path
@@ -165,7 +180,7 @@ public class PlayerController : MonoBehaviour
                     playerAgent.path.corners[i].z);
             walkPath.SetPosition(i, pointPosition);
             clickMarker.transform.position = new Vector3(pointPosition.x, 0.05f, pointPosition.z);
-            clickMarker.transform.localScale = new Vector3(0, 0, 0);
+            clickMarker.transform.localScale = Vector3.zero;
             LeanTween.scale(clickMarker, Vector3.one * 0.2f, 0.2f);
         }
     }   
@@ -173,14 +188,14 @@ public class PlayerController : MonoBehaviour
     //Start turn
     public void ExecuteOrder()
     {
-        executeButton.GetComponent<AudioSource>().Play();
-        LeanTween.scaleX(executeButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
+        buttonSound.Play();
+        LeanTween.scaleX(buttonFrame, 1.2f, 0.1f).setRepeat(3);
 
         this.Wait(MainMenu.buttonDelay, () => {
-            executeButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;            
+            buttonFrame.transform.localScale = Vector3.one;            
         });
 
         playerAgent.speed = mechSpeed;
-        inMove = true;
+        inAction = true;
     }
 }

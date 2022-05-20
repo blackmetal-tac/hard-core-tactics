@@ -6,10 +6,11 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     public string TestLevel;
+    private AudioSource audioUI;
     public AudioClip buttonClick;
 
     public static GameObject optionsScreen;
-    private GameObject startButton, openOptions, exitButton;
+    private GameObject startButton, openOptions, exitButton, startBorder, optionsBorder, exitBorder;
 
     public static float buttonDelay = 0.4f;
 
@@ -21,8 +22,15 @@ public class MainMenu : MonoBehaviour
         openOptions = GameObject.Find("OptionsButton");        
         exitButton = GameObject.Find("CloseButton");
 
+        startBorder = startButton.transform.GetChild(1).gameObject;
+        optionsBorder = openOptions.transform.GetChild(1).gameObject;
+        exitBorder = exitButton.transform.GetChild(1).gameObject;
+
+        audioUI = startButton.GetComponentInParent<AudioSource>();      
+
         //Set options screen to 0 (invisible)
         optionsScreen.transform.localScale = Vector3.zero;
+
         LeanTween.reset();
     }
 
@@ -35,36 +43,36 @@ public class MainMenu : MonoBehaviour
     //Buttons
     public void StartGame()
     {
-        startButton.GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(startButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
+        audioUI.PlayOneShot(buttonClick);
+        LeanTween.scaleX(startBorder, 1.2f, 0.1f).setRepeat(3);
 
         //Delay for animation
         this.Wait(buttonDelay, ()=> {
-            startButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
+            startBorder.transform.localScale = Vector3.one;
             SceneManager.LoadScene(TestLevel);
         });        
     }
 
     public void OpenMainOptions()
     {
-        openOptions.GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(openOptions.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
+        audioUI.PlayOneShot(buttonClick);
+        LeanTween.scaleX(optionsBorder, 1.2f, 0.1f).setRepeat(3);
 
         //Delay for animation
         this.Wait(buttonDelay, () => {
-            openOptions.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
+            optionsBorder.transform.localScale = Vector3.one;
         });
         LeanTween.scale(optionsScreen, Vector3.one, 0.2f);
     }
 
     public void CloseGame()
     {
-        exitButton.GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(exitButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
+        audioUI.PlayOneShot(buttonClick);
+        LeanTween.scaleX(exitBorder, 1.2f, 0.1f).setRepeat(3);
 
         //Delay for animation
         this.Wait(buttonDelay, () => {
-            exitButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
+            exitBorder.transform.localScale = Vector3.one;
             Application.Quit();            
         });        
     }
