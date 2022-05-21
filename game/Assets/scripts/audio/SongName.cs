@@ -8,8 +8,7 @@ public class SongName : MonoBehaviour
     private AudioClip song;
     private static TextMeshProUGUI textmeshPro;
     
-    public static RectTransform maskPos;
-    public static RectTransform textPos;
+    public static RectTransform maskPos, textPos;
     public static Vector3 startPosition;
     private static float width;
     private float scrollPos;

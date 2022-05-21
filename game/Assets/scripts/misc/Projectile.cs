@@ -31,6 +31,7 @@ public class Projectile : MonoBehaviour
         }
         else 
         {
+            bulletCollider.enabled = true;
             bullet.velocity = Vector3.zero;
         }
     }

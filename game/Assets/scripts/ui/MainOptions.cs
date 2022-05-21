@@ -8,9 +8,10 @@ using TMPro;
 public class MainOptions : MonoBehaviour
 {
     private Toggle fullscreenTog, vsyncTog;
-    private GameObject closeOptions, applyButton;
+    private GameObject closeOptions, applyButton, closeBorder, applyBorder;
 
     private AudioClip buttonClick;
+    private AudioSource audioUI;
 
     public List<ResItem> resolutions = new List<ResItem>();
     private int selectedRes;
@@ -26,11 +27,16 @@ public class MainOptions : MonoBehaviour
         vsyncTog = GameObject.Find("VsyncToggle").GetComponent<Toggle>();
         closeOptions = GameObject.Find("CloseOptions");
         applyButton = GameObject.Find("ApplyButton");
-        buttonClick = GameObject.Find("MainMenuCanvas").GetComponent<MainMenu>().buttonClick;
+        closeBorder = closeOptions.transform.GetChild(1).gameObject;
+        applyBorder = applyButton.transform.GetChild(1).gameObject;
+
+        buttonClick = GameObject.Find("MainUI").GetComponent<MainMenu>().buttonClick;
         resLabel = GameObject.Find("ResolutionText").GetComponent<TextMeshProUGUI>();
         masterVol = GameObject.Find("MasterSlider").GetComponent<Slider>();
         musicVol = GameObject.Find("MusicSlider").GetComponent<Slider>();
         effectsVol = GameObject.Find("SFXSlider").GetComponent<Slider>();
+
+        audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
 
         //Set graphical options
         fullscreenTog.isOn = Screen.fullScreen;
@@ -116,14 +122,13 @@ public class MainOptions : MonoBehaviour
     //Close options button
     public void CloseMainOptions()
     {
-        closeOptions.GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(closeOptions.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
+        audioUI.PlayOneShot(buttonClick);
+        LeanTween.scaleX(closeBorder, 1.2f, 0.1f).setRepeat(3);
 
         //Delay for animations and sounds
         this.Wait(MainMenu.buttonDelay, () => {
-            closeOptions.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
-            applyButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
-
+            closeBorder.transform.localScale = Vector3.one;
+            applyBorder.transform.localScale = Vector3.one;
             LeanTween.scale(MainMenu.optionsScreen, Vector3.zero, 0.2f);
         });
     }
@@ -131,8 +136,8 @@ public class MainOptions : MonoBehaviour
     //Apply options button
     public void ApplyOptions()
     {
-        applyButton.GetComponent<AudioSource>().PlayOneShot(buttonClick);
-        LeanTween.scaleX(applyButton.transform.GetChild(1).gameObject, 1.2f, 0.1f).setRepeat(3);
+        audioUI.PlayOneShot(buttonClick);
+        LeanTween.scaleX(applyBorder, 1.2f, 0.1f).setRepeat(3);
 
         //Resoluton
         Screen.SetResolution(resolutions[selectedRes].horizontal, resolutions[selectedRes].vertical, fullscreenTog.isOn);
@@ -149,9 +154,8 @@ public class MainOptions : MonoBehaviour
 
         //Delay for animations and sounds
         this.Wait(MainMenu.buttonDelay, () => {
-            closeOptions.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
-            applyButton.transform.GetChild(1).gameObject.transform.localScale = Vector3.one;
-
+            closeBorder.transform.localScale = Vector3.one;
+            applyBorder.transform.localScale = Vector3.one;
             LeanTween.scale(MainMenu.optionsScreen, Vector3.zero, 0.2f);            
         });        
     }

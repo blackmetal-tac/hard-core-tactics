@@ -22,7 +22,8 @@ public class PlayerController : MonoBehaviour
 
     private GameObject clickMarker, executeButton, buttonFrame, crosshair, enemy, firePoint;
 
-    private AudioSource buttonSound;
+    private AudioSource audioUI;
+    public AudioClip buttonClick;
     private LineRenderer walkPath;
 
     public static float mechSpeed = 3.5f;
@@ -32,8 +33,10 @@ public class PlayerController : MonoBehaviour
     private float turnTime = 3f;
     private float timeValue;
 
+    public float fireDelay = 1f;
+    public int burstSize = 3;
     public float fireRate = 1f;
-    private float lastShot = 0f;   
+    private float lastBurst = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -50,9 +53,9 @@ public class PlayerController : MonoBehaviour
 
         //UI
         executeButton = GameObject.Find("ExecuteButton");
-        buttonSound = executeButton.GetComponent<AudioSource>();
+        audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonFrame = executeButton.transform.GetChild(1).gameObject;
-        inAction = false;
+        inAction = false;        
 
         //Turn timer
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
@@ -96,10 +99,11 @@ public class PlayerController : MonoBehaviour
         //Shoot while in action
         if (inAction)
         {
-            if (Time.time > lastShot + fireRate)
+            if (Time.time > lastBurst + fireDelay)
             {
-                objectPooler.SpawnFromPool("Bullet", firePoint.transform.position, firePoint.transform.rotation);
-                lastShot = Time.time;
+                //objectPooler.SpawnFromPool("Bullet", firePoint.transform.position, firePoint.transform.rotation);
+                StartCoroutine(FireBurst(burstSize, fireRate));
+                lastBurst = Time.time;   
             }
         }
 
@@ -126,6 +130,17 @@ public class PlayerController : MonoBehaviour
         }        
 
         clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));       
+    }
+
+    public IEnumerator FireBurst(int burstSize, float fireRate) 
+    {
+        float bulletDelay = 60 / fireRate;
+
+        for (int i = 0; i < burstSize; i++)
+        {
+            objectPooler.SpawnFromPool("Bullet", firePoint.transform.position, firePoint.transform.rotation);
+            yield return new WaitForSeconds(bulletDelay);
+        }       
     }
 
     private void MoveToClick()
@@ -188,7 +203,7 @@ public class PlayerController : MonoBehaviour
     //Start turn
     public void ExecuteOrder()
     {
-        buttonSound.Play();
+        audioUI.PlayOneShot(buttonClick);
         LeanTween.scaleX(buttonFrame, 1.2f, 0.1f).setRepeat(3);
 
         this.Wait(MainMenu.buttonDelay, () => {

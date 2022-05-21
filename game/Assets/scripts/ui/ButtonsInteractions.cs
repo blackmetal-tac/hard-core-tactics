@@ -11,7 +11,7 @@ public class ButtonsInteractions : MonoBehaviour, IPointerEnterHandler, IPointer
     // Start is called before the first frame update
     void Start()
     {
-        buttonAudio = gameObject.GetComponentInParent<AudioSource>();
+        buttonAudio = GameObject.Find("MainUI").GetComponent<AudioSource>();
         LeanTween.reset();
     }
 

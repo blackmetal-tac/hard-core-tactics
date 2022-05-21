@@ -26,7 +26,7 @@ public class MainMenu : MonoBehaviour
         optionsBorder = openOptions.transform.GetChild(1).gameObject;
         exitBorder = exitButton.transform.GetChild(1).gameObject;
 
-        audioUI = startButton.GetComponentInParent<AudioSource>();      
+        audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
 
         //Set options screen to 0 (invisible)
         optionsScreen.transform.localScale = Vector3.zero;
