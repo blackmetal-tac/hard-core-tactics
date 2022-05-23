@@ -37,8 +37,15 @@ public class Projectile : MonoBehaviour
     }
 
     //Bullet collision
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collider)
     {
+        if (collider.name == "Emeny") 
+        { 
+            AIController.HP -= 0.01f; 
+        }
+
+        Debug.Log(collider.name);
+
         transform.localScale = Vector3.zero;
     }
 }
