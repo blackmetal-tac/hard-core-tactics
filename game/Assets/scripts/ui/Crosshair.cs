@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class Crosshair : MonoBehaviour
 {
+    public float crosshairSize = 0.2f;
+    public float animOffset = 0.02f;
+
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.transform.localScale = Vector3.one * 0.2f;
+        transform.localScale = Vector3.one * crosshairSize;
         LeanTween.reset();
-        LeanTween.scale(gameObject, new Vector3(0.22f,0.22f,0.22f), 1f).setEaseInOutCubic().setLoopPingPong();           
+
+        var leanSeq = LeanTween.sequence();
+
+        leanSeq.insert( LeanTween.scale(gameObject, new Vector3(crosshairSize + animOffset, 
+            crosshairSize + animOffset, crosshairSize + animOffset), 1f)
+            .setEaseInOutCubic().setLoopPingPong());          
     }
 
     // Update is called once per frame

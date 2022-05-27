@@ -9,12 +9,15 @@ public class AIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        HP = 1f;
+        HP = 100f;
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+
+
+        //Death
         if (HP <= 0)
         {
             this.transform.localScale = Vector3.zero;

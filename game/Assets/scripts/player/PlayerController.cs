@@ -20,12 +20,13 @@ public class PlayerController : MonoBehaviour
     private NavMeshAgent playerAgent;
     private NavMeshPath path;
 
-    private GameObject clickMarker, executeButton, buttonFrame, crosshair, enemy, firePoint;
+    private GameObject clickMarker, executeButton, buttonFrame, crosshair, enemy, firePoint, playerUI;
 
     private AudioSource audioUI;
     public AudioClip buttonClick;
     private LineRenderer walkPath;
 
+    public static float HP = 100f;
     public static float mechSpeed = 3.5f;
     private bool inAction;
 
@@ -55,7 +56,9 @@ public class PlayerController : MonoBehaviour
         executeButton = GameObject.Find("ExecuteButton");
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonFrame = executeButton.transform.GetChild(1).gameObject;
-        inAction = false;        
+        inAction = false;
+        HP = 100f;
+        playerUI = GameObject.Find("PlayerUI");
 
         //Turn timer
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
@@ -83,6 +86,7 @@ public class PlayerController : MonoBehaviour
     {
         //Crosshair position
         crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
+        playerUI.transform.position = camMain.WorldToScreenPoint(transform.position);
 
         //Mouse click
         if (Input.GetMouseButtonDown(0))
@@ -100,8 +104,7 @@ public class PlayerController : MonoBehaviour
         if (inAction)
         {
             if (Time.time > lastBurst + fireDelay)
-            {
-                //objectPooler.SpawnFromPool("Bullet", firePoint.transform.position, firePoint.transform.rotation);
+            {                
                 StartCoroutine(FireBurst(burstSize, fireRate));
                 lastBurst = Time.time;   
             }
@@ -116,7 +119,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             inAction = false;
-            timeValue = turnTime;
+            timeValue = turnTime;            
         }
 
         //Draw player path

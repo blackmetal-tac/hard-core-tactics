@@ -5,7 +5,9 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public static Vector3 target;
+    public float damage = 0.02f;
     public float speed = 10f;
+
     private Rigidbody bullet;
     private Collider bulletCollider;
 
@@ -31,21 +33,29 @@ public class Projectile : MonoBehaviour
         }
         else 
         {
-            bulletCollider.enabled = true;
+            bulletCollider.enabled = false;
             bullet.velocity = Vector3.zero;
+        }
+
+        if (bullet.velocity != Vector3.zero) 
+        {
+            bulletCollider.enabled = true;
         }
     }
 
     //Bullet collision
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.name == "Emeny") 
+        if (collider.name == "Enemy") 
         { 
-            AIController.HP -= 0.01f; 
+            AIController.HP -= damage * 100;
+
+            //Reset HP bar damage animation
+            HealthBar.shrinkTimer = 0.5f;
+
+            bulletCollider.enabled = false;                  
         }
-
-        Debug.Log(collider.name);
-
+        
         transform.localScale = Vector3.zero;
     }
 }
