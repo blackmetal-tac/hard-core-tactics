@@ -238,8 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de0d868bd2cbf2b43b43f6bca532c80a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 0.2
-  animOffset: 0.02
 --- !u!1 &107344199
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +297,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b8aaa707027cc4f79af3439c5dbc9652, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ca4ef7245986fcd448ac2e7f169bf107, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -373,7 +371,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 72bc6ef93dd24b24a92daaf12577d9f1, type: 2}
+  - {fileID: 2100000, guid: 0bfdcbbd36faf564bbdf98409bdc65ad, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1122,7 +1120,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b8aaa707027cc4f79af3439c5dbc9652, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ca4ef7245986fcd448ac2e7f169bf107, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1213,7 +1211,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b8aaa707027cc4f79af3439c5dbc9652, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ca4ef7245986fcd448ac2e7f169bf107, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1682,6 +1680,17 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3347666904270210964, guid: ec173db065649e5408c1e57182cbe610,
+        type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3347666904270210964, guid: ec173db065649e5408c1e57182cbe610,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0a936ae5d70c6c14ab943882f62e0a7a,
+        type: 3}
     - target: {fileID: 3347666904270210964, guid: ec173db065649e5408c1e57182cbe610,
         type: 3}
       propertyPath: m_Material
@@ -2334,7 +2343,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b8aaa707027cc4f79af3439c5dbc9652, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ca4ef7245986fcd448ac2e7f169bf107, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2411,11 +2420,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1745860272}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2e3e11488d57e8438b7f3cfdf936021, type: 3}
+  m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairSize: 0.2
-  animOffset: 0.02
+  scale: 0.25
+  time: 1
 --- !u!1 &1836696807
 GameObject:
   m_ObjectHideFlags: 0
@@ -2798,7 +2807,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 72bc6ef93dd24b24a92daaf12577d9f1, type: 2}
+  - {fileID: 2100000, guid: 0bfdcbbd36faf564bbdf98409bdc65ad, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using TMPro;
 using System;
+using DG.Tweening;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(LineRenderer))]
@@ -76,9 +77,7 @@ public class PlayerController : MonoBehaviour
 
         //Firing
         firePoint = GameObject.Find("FirePoint");
-        objectPooler = ObjectPooler.Instance;
-
-        LeanTween.reset();       
+        objectPooler = ObjectPooler.Instance;        
     }
 
     // Update is called once per frame
@@ -199,7 +198,7 @@ public class PlayerController : MonoBehaviour
             walkPath.SetPosition(i, pointPosition);
             clickMarker.transform.position = new Vector3(pointPosition.x, 0.05f, pointPosition.z);
             clickMarker.transform.localScale = Vector3.zero;
-            LeanTween.scale(clickMarker, Vector3.one * 0.2f, 0.2f);
+            clickMarker.transform.DOScale(Vector3.one * 0.2f, 0.2f);
         }
     }   
     
@@ -207,7 +206,7 @@ public class PlayerController : MonoBehaviour
     public void ExecuteOrder()
     {
         audioUI.PlayOneShot(buttonClick);
-        LeanTween.scaleX(buttonFrame, 1.2f, 0.1f).setRepeat(3);
+        buttonFrame.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
 
         this.Wait(MainMenu.buttonDelay, () => {
             buttonFrame.transform.localScale = Vector3.one;            

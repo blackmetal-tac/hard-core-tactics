@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Crosshair : MonoBehaviour
 {
@@ -11,13 +12,7 @@ public class Crosshair : MonoBehaviour
     void Start()
     {
         transform.localScale = Vector3.one * crosshairSize;
-        LeanTween.reset();
-
-        var leanSeq = LeanTween.sequence();
-
-        leanSeq.insert( LeanTween.scale(gameObject, new Vector3(crosshairSize + animOffset, 
-            crosshairSize + animOffset, crosshairSize + animOffset), 1f)
-            .setEaseInOutCubic().setLoopPingPong());          
+        transform.DOScale(Vector3.one * (crosshairSize + animOffset), 1f).SetLoops(-1, LoopType.Yoyo);
     }
 
     // Update is called once per frame

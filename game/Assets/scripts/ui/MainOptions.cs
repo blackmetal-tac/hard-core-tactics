@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
+using DG.Tweening;
 
 public class MainOptions : MonoBehaviour
 {
@@ -82,8 +83,6 @@ public class MainOptions : MonoBehaviour
 
         mainMixer.GetFloat("EffectsVolume", out vol);
         masterVol.value = vol;
-
-        LeanTween.reset();
     }
 
     // Update is called once per frame
@@ -123,13 +122,13 @@ public class MainOptions : MonoBehaviour
     public void CloseMainOptions()
     {
         audioUI.PlayOneShot(buttonClick);
-        LeanTween.scaleX(closeBorder, 1.2f, 0.1f).setRepeat(3);
+        MainMenu.BorderAnim(closeBorder);
 
         //Delay for animations and sounds
         this.Wait(MainMenu.buttonDelay, () => {
             closeBorder.transform.localScale = Vector3.one;
             applyBorder.transform.localScale = Vector3.one;
-            LeanTween.scale(MainMenu.optionsScreen, Vector3.zero, 0.2f);
+            MainMenu.ScaleDown(gameObject);
         });
     }
 
@@ -137,7 +136,7 @@ public class MainOptions : MonoBehaviour
     public void ApplyOptions()
     {
         audioUI.PlayOneShot(buttonClick);
-        LeanTween.scaleX(applyBorder, 1.2f, 0.1f).setRepeat(3);
+        MainMenu.BorderAnim(applyBorder);
 
         //Resoluton
         Screen.SetResolution(resolutions[selectedRes].horizontal, resolutions[selectedRes].vertical, fullscreenTog.isOn);
@@ -156,7 +155,7 @@ public class MainOptions : MonoBehaviour
         this.Wait(MainMenu.buttonDelay, () => {
             closeBorder.transform.localScale = Vector3.one;
             applyBorder.transform.localScale = Vector3.one;
-            LeanTween.scale(MainMenu.optionsScreen, Vector3.zero, 0.2f);            
+            MainMenu.ScaleDown(gameObject);
         });        
     }
 

@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class MainMenu : MonoBehaviour
 {
-    public string TestLevel;
+    public string Level;
     private AudioSource audioUI;
     public AudioClip buttonClick;
 
@@ -30,8 +31,6 @@ public class MainMenu : MonoBehaviour
 
         //Set options screen to 0 (invisible)
         optionsScreen.transform.localScale = Vector3.zero;
-
-        LeanTween.reset();
     }
 
     // Update is called once per frame
@@ -44,36 +43,46 @@ public class MainMenu : MonoBehaviour
     public void StartGame()
     {
         audioUI.PlayOneShot(buttonClick);
-        LeanTween.scaleX(startBorder, 1.2f, 0.1f).setRepeat(3);
+        BorderAnim(startBorder);
 
         //Delay for animation
         this.Wait(buttonDelay, ()=> {
             startBorder.transform.localScale = Vector3.one;
-            SceneManager.LoadScene(TestLevel);
+            SceneManager.LoadScene(Level);
         });        
     }
 
     public void OpenMainOptions()
     {
         audioUI.PlayOneShot(buttonClick);
-        LeanTween.scaleX(optionsBorder, 1.2f, 0.1f).setRepeat(3);
+        BorderAnim(optionsBorder);
 
         //Delay for animation
         this.Wait(buttonDelay, () => {
             optionsBorder.transform.localScale = Vector3.one;
         });
-        LeanTween.scale(optionsScreen, Vector3.one, 0.2f);
+        optionsScreen.transform.DOScale(Vector3.one, 0.2f);
     }
 
     public void CloseGame()
     {
         audioUI.PlayOneShot(buttonClick);
-        LeanTween.scaleX(exitBorder, 1.2f, 0.1f).setRepeat(3);
+        BorderAnim(exitBorder);
 
         //Delay for animation
         this.Wait(buttonDelay, () => {
             exitBorder.transform.localScale = Vector3.one;
             Application.Quit();            
         });        
+    }
+
+    public static void BorderAnim(GameObject gameObject)
+    {
+        gameObject.transform.DOScaleX(1.2f, 0.1f).SetLoops(3);
+    }
+
+    public static void ScaleDown(GameObject gameObject) 
+    {
+        gameObject.transform.DOScale(Vector3.zero, 0.2f);
     }
 }
