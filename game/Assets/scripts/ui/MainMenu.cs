@@ -28,9 +28,6 @@ public class MainMenu : MonoBehaviour
         exitBorder = exitButton.transform.GetChild(1).gameObject;
 
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
-
-        //Set options screen to 0 (invisible)
-        optionsScreen.transform.localScale = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -43,11 +40,11 @@ public class MainMenu : MonoBehaviour
     public void StartGame()
     {
         audioUI.PlayOneShot(buttonClick);
-        BorderAnim(startBorder);
+        BorderAnim(startBorder, 1.2f, 3);
 
         //Delay for animation
         this.Wait(buttonDelay, ()=> {
-            startBorder.transform.localScale = Vector3.one;
+            BorderAnim(startBorder, 1f, 1);
             SceneManager.LoadScene(Level);
         });        
     }
@@ -55,30 +52,30 @@ public class MainMenu : MonoBehaviour
     public void OpenMainOptions()
     {
         audioUI.PlayOneShot(buttonClick);
-        BorderAnim(optionsBorder);
+        BorderAnim(optionsBorder, 1.2f, 3);
 
         //Delay for animation
         this.Wait(buttonDelay, () => {
-            optionsBorder.transform.localScale = Vector3.one;
+            BorderAnim(optionsBorder, 1f, 1);
         });
-        optionsScreen.transform.DOScale(Vector3.one, 0.2f);
+        optionsScreen.transform.DOScale(Vector3.one, buttonDelay).SetEase(Ease.OutBack);
     }
 
     public void CloseGame()
     {
         audioUI.PlayOneShot(buttonClick);
-        BorderAnim(exitBorder);
+        BorderAnim(exitBorder, 1.2f, 3);
 
         //Delay for animation
         this.Wait(buttonDelay, () => {
-            exitBorder.transform.localScale = Vector3.one;
+            BorderAnim(exitBorder, 1f, 1);
             Application.Quit();            
         });        
     }
 
-    public static void BorderAnim(GameObject gameObject)
+    public static void BorderAnim(GameObject gameObject, float scaleX, int loops)
     {
-        gameObject.transform.DOScaleX(1.2f, 0.1f).SetLoops(3);
+        gameObject.transform.DOScaleX(scaleX, 0.1f).SetLoops(loops);
     }
 
     public static void ScaleDown(GameObject gameObject) 

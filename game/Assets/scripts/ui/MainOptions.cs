@@ -122,12 +122,12 @@ public class MainOptions : MonoBehaviour
     public void CloseMainOptions()
     {
         audioUI.PlayOneShot(buttonClick);
-        MainMenu.BorderAnim(closeBorder);
+        MainMenu.BorderAnim(closeBorder, 1.2f, 3);
 
         //Delay for animations and sounds
         this.Wait(MainMenu.buttonDelay, () => {
-            closeBorder.transform.localScale = Vector3.one;
-            applyBorder.transform.localScale = Vector3.one;
+            MainMenu.BorderAnim(closeBorder, 1f, 1);
+            MainMenu.BorderAnim(applyBorder, 1f, 1);
             MainMenu.ScaleDown(gameObject);
         });
     }
@@ -136,7 +136,7 @@ public class MainOptions : MonoBehaviour
     public void ApplyOptions()
     {
         audioUI.PlayOneShot(buttonClick);
-        MainMenu.BorderAnim(applyBorder);
+        MainMenu.BorderAnim(applyBorder, 1.2f, 3);
 
         //Resoluton
         Screen.SetResolution(resolutions[selectedRes].horizontal, resolutions[selectedRes].vertical, fullscreenTog.isOn);
@@ -153,8 +153,8 @@ public class MainOptions : MonoBehaviour
 
         //Delay for animations and sounds
         this.Wait(MainMenu.buttonDelay, () => {
-            closeBorder.transform.localScale = Vector3.one;
-            applyBorder.transform.localScale = Vector3.one;
+            MainMenu.BorderAnim(closeBorder, 1f, 1);
+            MainMenu.BorderAnim(applyBorder, 1f, 1);
             MainMenu.ScaleDown(gameObject);
         });        
     }

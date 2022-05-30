@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using System;
 using DG.Tweening;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(LineRenderer))]
@@ -29,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     public static float HP = 100f;
     public static float mechSpeed = 3.5f;
-    private bool inAction;
+    public static bool inAction;
 
     private float walkDistance = 3f;
     private float turnTime = 3f;
@@ -99,15 +100,16 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        //Shoot while in action
+        //If in ACTION PHASE
         if (inAction)
         {
+            //Shoot while in action
             if (Time.time > lastBurst + fireDelay)
             {                
                 StartCoroutine(FireBurst(burstSize, fireRate));
                 lastBurst = Time.time;   
             }
-        }
+        } 
 
         //Timer display      
         timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
@@ -209,7 +211,7 @@ public class PlayerController : MonoBehaviour
         buttonFrame.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
 
         this.Wait(MainMenu.buttonDelay, () => {
-            buttonFrame.transform.localScale = Vector3.one;            
+            buttonFrame.transform.DOScaleX(1f, 0.1f);            
         });
 
         playerAgent.speed = mechSpeed;

@@ -51,7 +51,7 @@ public class Projectile : MonoBehaviour
             AIController.HP -= damage * 100;
 
             //Reset HP bar damage animation
-            HealthBar.shrinkTimer = 0.5f;
+            TargetHealth.shrinkTimer = 0.5f;
 
             bulletCollider.enabled = false;                  
         }
