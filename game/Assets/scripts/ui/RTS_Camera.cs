@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 namespace RTS_Cam
 {
     [RequireComponent(typeof(Camera))]
@@ -11,10 +12,6 @@ namespace RTS_Cam
         #region Foldouts
 
 #if UNITY_EDITOR
-
-        //my script
-        public CameraFocus CameraFocus;
-        GameObject target;
 
         public int lastTab = 0;
 

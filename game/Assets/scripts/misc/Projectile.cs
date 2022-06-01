@@ -5,7 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public static Vector3 target;
-    public float damage = 0.02f;
+    private float damage = 0.03f;
     public float speed = 10f;
 
     private Rigidbody bullet;
@@ -47,15 +47,14 @@ public class Projectile : MonoBehaviour
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.name == "Enemy") 
-        { 
-            AIController.HP -= damage * 100;
+        {
+            collider.GetComponent<CharacterStats>().TakeDamage(damage);
 
             //Reset HP bar damage animation
-            TargetHealth.shrinkTimer = 0.5f;
-
-            bulletCollider.enabled = false;                  
+            collider.GetComponent<CharacterStats>().shrinkTimer = 0.5f;                              
         }
-        
+
+        bulletCollider.enabled = false;
         transform.localScale = Vector3.zero;
     }
 }

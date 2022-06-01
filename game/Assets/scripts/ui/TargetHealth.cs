@@ -5,12 +5,13 @@ using UnityEngine.UI;
 
 public class TargetHealth : MonoBehaviour
 {
-    private Image healthImage, damageImage; 
-    public static float shrinkTimer;
+    private Image healthImage, damageImage;
+    private CharacterStats stats;
 
     // Start is called before the first frame update
     void Start()
     {
+        stats = GameObject.Find("Enemy").GetComponent<CharacterStats>();
         healthImage = transform.Find("TargetHealth").GetComponent<Image>();
         damageImage = transform.Find("TargetDamage").GetComponent<Image>();
         damageImage.fillAmount = 1f;
@@ -19,11 +20,11 @@ public class TargetHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        healthImage.fillAmount = AIController.HP / 100;
+        healthImage.fillAmount = stats.HP;
 
         //Damage animation
-        shrinkTimer -= Time.deltaTime;
-        if (shrinkTimer < 0) 
+        stats.shrinkTimer -= Time.deltaTime;
+        if (stats.shrinkTimer < 0) 
         {
             float shrinkSpeed = 1f;
             if (healthImage.fillAmount < damageImage.fillAmount) 
