@@ -7,59 +7,63 @@ using UnityEngine.EventSystems;
 using TMPro;
 using System;
 using DG.Tweening;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(LineRenderer))]
 public class PlayerController : MonoBehaviour
 {
     private Camera camMain;
-
     private static TextMeshProUGUI timer;
 
-    ObjectPooler objectPooler;
-
+    //NavMesh
     private NavMeshAgent playerAgent;
     private NavMeshPath path;
-
-    private GameObject clickMarker, executeButton, buttonFrame, crosshair, enemy, firePoint, playerUI;
-
-    private AudioSource audioUI;
-    public AudioClip buttonClick;
     private LineRenderer walkPath;
 
-    public static float HP = 100f;
+    //Objects
+    private GameObject clickMarker, executeButton, buttonFrame, crosshair, enemy, playerUI;
+    public GameObject projectile, firePoint;    
+
+    //Audio
+    private AudioSource audioUI;
+    public AudioClip buttonClick;
+
+    //Unit stats
     public static float mechSpeed = 3.5f;
     public static bool inAction;
-
     private float walkDistance = 3f;
     private float turnTime = 3f;
     private float timeValue;
 
+    //Attack parameters
+    ObjectPooler objectPooler;
     public float fireDelay = 1f;
     public int burstSize = 3;
     public float fireRate = 1f;
-    private float lastBurst = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
         camMain = Camera.main;
+        objectPooler = ObjectPooler.Instance;
 
         //Navmesh setup
         path = new NavMeshPath();
         playerAgent = GetComponent<NavMeshAgent>();
 
+        //Path
         clickMarker = GameObject.Find("ClickMarker");
         clickMarker.transform.localScale = Vector3.zero;
         walkPath = GetComponent<LineRenderer>();
+        walkPath.startWidth = 0.02f;
+        walkPath.endWidth = 0.02f;
+        walkPath.positionCount = 0;
 
         //UI
         executeButton = GameObject.Find("ExecuteButton");
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonFrame = executeButton.transform.GetChild(1).gameObject;
         inAction = false;
-        HP = 100f;
         playerUI = GameObject.Find("PlayerUI");
 
         //Turn timer
@@ -70,15 +74,6 @@ public class PlayerController : MonoBehaviour
         //Set target
         crosshair = GameObject.Find("Crosshair");
         enemy = GameObject.Find("Enemy");
-
-        //Set path parameters
-        walkPath.startWidth = 0.02f;
-        walkPath.endWidth = 0.02f;
-        walkPath.positionCount = 0;
-
-        //Firing
-        firePoint = GameObject.Find("FirePoint");
-        objectPooler = ObjectPooler.Instance;        
     }
 
     // Update is called once per frame
@@ -102,13 +97,8 @@ public class PlayerController : MonoBehaviour
 
         //If in ACTION PHASE
         if (inAction)
-        {
-            //Shoot while in action
-            if (Time.time > lastBurst + fireDelay)
-            {                
-                StartCoroutine(FireBurst(burstSize, fireRate));
-                lastBurst = Time.time;   
-            }
+        { 
+            this.FireBurst(objectPooler, "Bullet", firePoint, fireDelay, burstSize, fireRate);
         } 
 
         //Timer display      
@@ -134,17 +124,6 @@ public class PlayerController : MonoBehaviour
         }        
 
         clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));       
-    }
-
-    public IEnumerator FireBurst(int burstSize, float fireRate) 
-    {
-        float bulletDelay = 60 / fireRate;
-
-        for (int i = 0; i < burstSize; i++)
-        {
-            objectPooler.SpawnFromPool("Bullet", firePoint.transform.position, firePoint.transform.rotation);
-            yield return new WaitForSeconds(bulletDelay);
-        }       
     }
 
     private void MoveToClick()

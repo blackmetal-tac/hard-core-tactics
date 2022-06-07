@@ -5,19 +5,18 @@ using UnityEngine;
 public class CharacterStats : MonoBehaviour
 {
     public float HP {get; set;}
-    public float shrinkTimer { get; set; }
+
+    public float shrinkTimer {get; set;}
 
     // Start is called before the first frame update
     void Start()
     {
-        HP = 1f;
+        HP = 1f;       
     }
 
     // Update is called once per frame
     void Update()
     {
-
-
         //Death
         if (HP <= 0)
         {

@@ -46,7 +46,7 @@ public class Projectile : MonoBehaviour
     //Bullet collision
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.name == "Enemy") 
+        if (collider.name == "Enemy" || collider.name == "Player") 
         {
             collider.GetComponent<CharacterStats>().TakeDamage(damage);
 

@@ -8,9 +8,12 @@ public class PlayerHealth : MonoBehaviour
     private Image healthImage, damageImage; 
     public static float shrinkTimer;
 
+    private CharacterStats stats;
+
     // Start is called before the first frame update
     void Start()
     {
+        stats = GameObject.Find("Player").GetComponent<CharacterStats>();
         healthImage = transform.Find("PlayerHealth").GetComponent<Image>();
         damageImage = transform.Find("PlayerDamage").GetComponent<Image>();
         damageImage.fillAmount = 1f;
@@ -19,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        healthImage.fillAmount = PlayerController.HP / 100;
+        healthImage.fillAmount = stats.HP;
 
         //Damage animation
         shrinkTimer -= Time.deltaTime;
