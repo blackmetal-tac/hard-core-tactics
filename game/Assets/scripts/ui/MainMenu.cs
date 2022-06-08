@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
@@ -8,7 +6,7 @@ public class MainMenu : MonoBehaviour
 {
     public string Level;
     private AudioSource audioUI;
-    public AudioClip buttonClick;
+    private AudioClip buttonClick;
 
     public static GameObject optionsScreen;
     private GameObject startButton, openOptions, exitButton, startBorder, optionsBorder, exitBorder;
@@ -28,6 +26,7 @@ public class MainMenu : MonoBehaviour
         exitBorder = exitButton.transform.GetChild(1).gameObject;
 
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
+        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
     }
 
     // Update is called once per frame

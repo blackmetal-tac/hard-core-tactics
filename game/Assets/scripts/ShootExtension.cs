@@ -1,16 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public static class ShootExtension
+public static class ShootExtension 
 {
     public static float lastBurst = 0f;
     //Set ObjectPooler, projectile NAME, Fire Point, delay between bursts, number of shots, fire rate
-    public static void FireBurst(this MonoBehaviour mono, ObjectPooler objectPooler, string projectile, GameObject firePoint, 
+    public static void FireBurst(this MonoBehaviour mono, ObjectPooler objectPooler, string projectile, GameObject firePoint,
         float fireDelay, int burstSize, float fireRate)
-    {    
-
+    {
         if (Time.time > lastBurst + fireDelay)
         {
             mono.StartCoroutine(FireBurst(objectPooler, firePoint, projectile, burstSize, fireRate));

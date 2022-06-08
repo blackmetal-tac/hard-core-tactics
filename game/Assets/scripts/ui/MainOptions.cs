@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
-using DG.Tweening;
 
 public class MainOptions : MonoBehaviour
 {
@@ -26,12 +24,13 @@ public class MainOptions : MonoBehaviour
     {
         fullscreenTog = GameObject.Find("FullScreenToggle").GetComponent<Toggle>();
         vsyncTog = GameObject.Find("VsyncToggle").GetComponent<Toggle>();
+
         closeOptions = GameObject.Find("CloseOptions");
         applyButton = GameObject.Find("ApplyButton");
+        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
         closeBorder = closeOptions.transform.GetChild(1).gameObject;
-        applyBorder = applyButton.transform.GetChild(1).gameObject;
+        applyBorder = applyButton.transform.GetChild(1).gameObject;        
 
-        buttonClick = GameObject.Find("MainUI").GetComponent<MainMenu>().buttonClick;
         resLabel = GameObject.Find("ResolutionText").GetComponent<TextMeshProUGUI>();
         masterVol = GameObject.Find("MasterSlider").GetComponent<Slider>();
         musicVol = GameObject.Find("MusicSlider").GetComponent<Slider>();

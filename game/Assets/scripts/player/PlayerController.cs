@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using TMPro;
 using System;
@@ -26,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
     //Audio
     private AudioSource audioUI;
-    public AudioClip buttonClick;
+    private AudioClip buttonClick;
 
     //Unit stats
     public static float mechSpeed = 3.5f;
@@ -37,14 +34,16 @@ public class PlayerController : MonoBehaviour
 
     //Attack parameters
     ObjectPooler objectPooler;
-    public float fireDelay = 1f;
-    public int burstSize = 3;
-    public float fireRate = 1f;
+    public int burstSize;
+    public float fireDelay;    
+    public float fireRate;
 
     // Start is called before the first frame update
     void Start()
     {
         camMain = Camera.main;
+
+        //DONT'T FORGET TO INSTANSIATE when shooting
         objectPooler = ObjectPooler.Instance;
 
         //Navmesh setup
@@ -65,6 +64,7 @@ public class PlayerController : MonoBehaviour
         buttonFrame = executeButton.transform.GetChild(1).gameObject;
         inAction = false;
         playerUI = GameObject.Find("PlayerUI");
+        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
 
         //Turn timer
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
@@ -74,6 +74,8 @@ public class PlayerController : MonoBehaviour
         //Set target
         crosshair = GameObject.Find("Crosshair");
         enemy = GameObject.Find("Enemy");
+
+        ShootExtension.lastBurst = 0f;
     }
 
     // Update is called once per frame
@@ -97,9 +99,9 @@ public class PlayerController : MonoBehaviour
 
         //If in ACTION PHASE
         if (inAction)
-        { 
+        {
             this.FireBurst(objectPooler, "Bullet", firePoint, fireDelay, burstSize, fireRate);
-        } 
+        }
 
         //Timer display      
         timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");

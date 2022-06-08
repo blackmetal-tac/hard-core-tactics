@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
 public class ButtonsInteractions : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public AudioClip hoverSound;
+    private AudioClip hoverSound;
     private AudioSource buttonAudio;
 
     // Start is called before the first frame update
     void Start()
     {
         buttonAudio = GameObject.Find("MainUI").GetComponent<AudioSource>();
+        hoverSound = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().hoverButton;
     }
 
     // Update is called once per frame

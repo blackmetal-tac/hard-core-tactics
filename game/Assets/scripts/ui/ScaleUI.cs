@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
 public class ScaleUI : MonoBehaviour
 {
-    public AudioClip hoverSound;
+    private AudioClip initSound;
     private AudioSource buttonAudio;
 
     public float scale = 1f;
@@ -16,10 +14,11 @@ public class ScaleUI : MonoBehaviour
     void Start()
     {       
         buttonAudio = GameObject.Find("MainUI").GetComponent<AudioSource>();
+        initSound = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().initButton;
 
         this.Wait(delay * 0.2f, () => {
             transform.DOScale(Vector3.one * scale, time).SetEase(Ease.OutBack);
-            buttonAudio.PlayOneShot(hoverSound);
+            buttonAudio.PlayOneShot(initSound);
         });        
     }
 

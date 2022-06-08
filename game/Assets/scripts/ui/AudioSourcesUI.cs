@@ -1,7 +1,11 @@
 using UnityEngine;
 
-public class LookAtCamera : MonoBehaviour
+public class AudioSourcesUI : MonoBehaviour
 {
+    public AudioClip initButton;
+    public AudioClip hoverButton;
+    public AudioClip clickButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -10,7 +14,7 @@ public class LookAtCamera : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
-        transform.rotation = Camera.main.transform.rotation;
+    {
+        
     }
 }
