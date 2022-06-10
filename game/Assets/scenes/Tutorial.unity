@@ -494,7 +494,7 @@ Transform:
   m_Children:
   - {fileID: 1836696808}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &325939489
 NavMeshAgent:
@@ -1558,8 +1558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d8e274d6a1df64886a595dcc1b8824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spherePrefab: {fileID: 618136015}
-  canSpawn: 1
+  objectToSpawn: {fileID: 0}
 --- !u!1 &753842247
 GameObject:
   m_ObjectHideFlags: 0
@@ -2414,11 +2413,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1487827720}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d8e274d6a1df64886a595dcc1b8824, type: 3}
+  m_Script: {fileID: 11500000, guid: 1de76d45f0f73024fb86f643611123a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spherePrefab: {fileID: 618136015}
-  canSpawn: 1
+  target: {fileID: 325939484}
 --- !u!1 &1567707577
 GameObject:
   m_ObjectHideFlags: 0
@@ -2736,7 +2734,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1836696808}
   - component: {fileID: 1836696809}
-  - component: {fileID: 1836696810}
   m_Layer: 0
   m_Name: FirePoint
   m_TagString: Untagged
@@ -2771,20 +2768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1de76d45f0f73024fb86f643611123a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1836696810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836696807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d8e274d6a1df64886a595dcc1b8824, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spherePrefab: {fileID: 618136015}
-  canSpawn: 1
+  target: {fileID: 2013035603}
 --- !u!1 &1895752057
 GameObject:
   m_ObjectHideFlags: 0
@@ -3015,7 +2999,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!212 &1963596623
 SpriteRenderer:
@@ -3199,6 +3183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 1487827720}
+  projectile: {fileID: 618136015}
   burstSize: 5
   fireDelay: 1
   fireRate: 800

@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using OWS.ObjectPooling;
 
@@ -7,31 +6,17 @@ using OWS.ObjectPooling;
 /// </summary>
 public class Spawner : MonoBehaviour
 {
-    public GameObject spherePrefab;
-
-    private static ObjectPool<PoolObject> spherePool;
-    public bool canSpawn = true;
+    public GameObject objectToSpawn;
+    private static ObjectPool<PoolObject> objectsPool;
 
     private void OnEnable()
     {
-        spherePool = new ObjectPool<PoolObject>(spherePrefab);
-
-        StartCoroutine(SpawnOverTime());
-    }
-
-    IEnumerator SpawnOverTime()
-    {
-        while (canSpawn)
-        {
-            Spawn();
-            yield return null;
-        }
+        objectsPool = new ObjectPool<PoolObject>(objectToSpawn);        
     }
 
     public void Spawn()
     {
         GameObject prefab;
-
-        prefab = spherePool.PullGameObject(this.transform.position, this.transform.rotation);
+        prefab = objectsPool.PullGameObject(this.transform.position, this.transform.rotation);
     }
 }

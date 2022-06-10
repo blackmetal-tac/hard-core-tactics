@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
         //If in ACTION PHASE
         if (inAction)
         {
-            this.FireBurst(objectPooler, "Bullet", firePoint, fireDelay, burstSize, fireRate);
+            this.FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
         }
 
         //Timer display      

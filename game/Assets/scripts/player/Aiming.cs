@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class Aiming : MonoBehaviour
 {
-    private GameObject target;
+    public GameObject target;
     private Vector3 spread;
     public static float spreadPower = 1f;
 
     // Start is called before the first frame update
     void Start()
     {
-        target = GameObject.Find("Enemy");
+        
     }
 
     // Update is called once per frame

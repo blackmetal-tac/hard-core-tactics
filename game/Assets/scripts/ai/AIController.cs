@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
-    ObjectPooler objectPooler;
-    public GameObject firePoint;    
+    public GameObject firePoint, projectile;    
     public int burstSize;
     public float fireDelay;
     public float fireRate;
@@ -11,8 +10,7 @@ public class AIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //DONT'T FORGET TO INSTANSIATE when shooting        
-        objectPooler = ObjectPooler.Instance;
+
     }
 
     // Update is called once per frame
@@ -20,7 +18,7 @@ public class AIController : MonoBehaviour
     {
         if (PlayerController.inAction)
         {
-            this.FireBurst(objectPooler, "Bullet", firePoint, fireDelay, burstSize, fireRate);
+            this.FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
         }
     }
 }
