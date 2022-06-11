@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterStats : MonoBehaviour
+public class UnitStats : MonoBehaviour
 {
     public float HP {get; set;}
 
@@ -15,10 +15,10 @@ public class CharacterStats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Death
+        // Death
         if (HP <= 0)
         {
-            //this.transform.localScale = Vector3.zero;
+            this.transform.localScale = Vector3.zero;
         }
     }
 

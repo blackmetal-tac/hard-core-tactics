@@ -1,4 +1,5 @@
 using UnityEngine;
+using OWS.ObjectPooling;
 
 public class Projectile : MonoBehaviour
 {
@@ -8,10 +9,12 @@ public class Projectile : MonoBehaviour
 
     private Rigidbody bullet;
     private Collider bulletCollider;
+    private PoolObject poolObject;
 
     // Start is called before the first frame update
     void Start()
     {
+        poolObject = GetComponent<PoolObject>();
         bullet = GetComponent<Rigidbody>();
         bulletCollider = GetComponent<Collider>();
     }
@@ -27,6 +30,7 @@ public class Projectile : MonoBehaviour
             this.Wait(3 , () => {
                 transform.localScale = Vector3.zero;
                 bulletCollider.enabled = false;
+                poolObject.ReturnToPool();            
             });
         }
         else 
@@ -46,13 +50,14 @@ public class Projectile : MonoBehaviour
     {
         if (collider.name == "Enemy" || collider.name == "Player") 
         {
-            collider.GetComponent<CharacterStats>().TakeDamage(damage);
+            collider.GetComponent<UnitStats>().TakeDamage(damage);
 
             //Reset HP bar damage animation
-            collider.GetComponent<CharacterStats>().shrinkTimer = 0.5f;                              
+            collider.GetComponent<UnitStats>().shrinkTimer = 0.5f;                              
         }
 
         bulletCollider.enabled = false;
         transform.localScale = Vector3.zero;
+        poolObject.ReturnToPool();
     }
 }

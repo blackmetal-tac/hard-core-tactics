@@ -7,14 +7,6 @@ namespace OWS.ObjectPooling
     {
         private Action<PoolObject> returnToPool;
 
-        void Update()
-        {
-            if (transform.localScale == Vector3.zero)
-            {
-                ReturnToPool();
-            }           
-        }
-
         public void Initialize(Action<PoolObject> returnAction)
         {
             //cache reference to return action

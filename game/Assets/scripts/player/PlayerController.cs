@@ -3,7 +3,9 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using TMPro;
 using System;
+using System.Collections;
 using DG.Tweening;
+using OWS.ObjectPooling;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(LineRenderer))]
@@ -12,39 +14,36 @@ public class PlayerController : MonoBehaviour
     private Camera camMain;
     private static TextMeshProUGUI timer;
 
-    //NavMesh
+    // NavMesh
     private NavMeshAgent playerAgent;
     private NavMeshPath path;
     private LineRenderer walkPath;
 
-    //Objects
+    // Objects
     private GameObject clickMarker, executeButton, buttonFrame, crosshair, enemy, playerUI;
     public GameObject projectile, firePoint;    
 
-    //Audio
+    // Audio
     private AudioSource audioUI;
     private AudioClip buttonClick;
 
-    //Unit stats
+    // Unit stats
     public static float mechSpeed = 3.5f;
     public static bool inAction;
     private float walkDistance = 3f;
     private float turnTime = 3f;
     private float timeValue;
 
-    //Attack parameters
-    ObjectPooler objectPooler;
+    // Attack parameters
     public int burstSize;
     public float fireDelay;    
     public float fireRate;
+    private float lastBurst = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
         camMain = Camera.main;
-
-        //DONT'T FORGET TO INSTANSIATE when shooting
-        objectPooler = ObjectPooler.Instance;
 
         //Navmesh setup
         path = new NavMeshPath();
@@ -75,7 +74,7 @@ public class PlayerController : MonoBehaviour
         crosshair = GameObject.Find("Crosshair");
         enemy = GameObject.Find("Enemy");
 
-        ShootExtension.lastBurst = 0f;
+        lastBurst = 0f;
     }
 
     // Update is called once per frame
@@ -100,7 +99,7 @@ public class PlayerController : MonoBehaviour
         //If in ACTION PHASE
         if (inAction)
         {
-            this.FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
+            FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
         }
 
         //Timer display      
@@ -126,6 +125,32 @@ public class PlayerController : MonoBehaviour
         }        
 
         clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));       
+    }
+
+    //Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
+    private void FireBurst(GameObject objectToSpawn, GameObject firePoint,
+        float fireDelay, int burstSize, float fireRate)
+    {
+        if (Time.time > lastBurst + fireDelay)
+        {
+            StartCoroutine(FireBurst(objectToSpawn, firePoint, burstSize, fireRate));
+            lastBurst = Time.time;
+        }
+    }
+
+    //Coroutine for separate bursts
+    private IEnumerator FireBurst(GameObject objectToSpawn, GameObject firePoint, int burstSize,
+        float fireRate)
+    {
+        ObjectPool<PoolObject> objectsPool;
+        objectsPool = new ObjectPool<PoolObject>(objectToSpawn);
+
+        float bulletDelay = 60 / fireRate;
+        for (int i = 0; i < burstSize; i++)
+        {
+            objectsPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
+            yield return new WaitForSeconds(bulletDelay);
+        }
     }
 
     private void MoveToClick()

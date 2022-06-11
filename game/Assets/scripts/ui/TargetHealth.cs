@@ -3,15 +3,16 @@ using UnityEngine.UI;
 
 public class TargetHealth : MonoBehaviour
 {
+    public GameObject unit;
     private Image healthImage, damageImage;
-    private CharacterStats stats;
+    private UnitStats stats;
 
     // Start is called before the first frame update
     void Start()
     {
-        stats = GameObject.Find("Enemy").GetComponent<CharacterStats>();
-        healthImage = transform.Find("TargetHealth").GetComponent<Image>();
-        damageImage = transform.Find("TargetDamage").GetComponent<Image>();
+        stats = unit.GetComponent<UnitStats>();
+        healthImage = transform.Find("Health").GetComponent<Image>();
+        damageImage = transform.Find("Damage").GetComponent<Image>();
         damageImage.fillAmount = 1f;
     }
 
