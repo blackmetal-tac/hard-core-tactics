@@ -1,19 +1,24 @@
 using UnityEngine;
 using OWS.ObjectPooling;
 using System.Collections;
+using UnityEngine.AI;
 
 public class AIController : MonoBehaviour
 {
-    public GameObject projectile, firePoint;    
+    private NavMeshAgent navAgent;
+    public GameObject projectile, firePoint, playerPos;    
     public int burstSize;
     public float fireDelay;
     public float fireRate;
     private float lastBurst = 0f;
+    public float mechSpeed = 3.5f;
+    private int moveOffset = 3;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        navAgent = GetComponent<NavMeshAgent>();
+        navAgent.speed = 0;
     }
 
     // Update is called once per frame
@@ -22,6 +27,12 @@ public class AIController : MonoBehaviour
         if (PlayerController.inAction)
         {
             FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
+            navAgent.speed = mechSpeed;
+        }
+        else
+        {
+            navAgent.speed = 0;
+            SetPath();
         }
     }
 
@@ -48,5 +59,13 @@ public class AIController : MonoBehaviour
             objectsPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
             yield return new WaitForSeconds(bulletDelay);
         }
+    }
+
+    private void SetPath()
+    {
+        navAgent.SetDestination(new Vector3(
+         playerPos.transform.position.x + Random.Range(-moveOffset, moveOffset),
+         playerPos.transform.position.y + Random.Range(-moveOffset, moveOffset),
+         playerPos.transform.position.z));
     }
 }
