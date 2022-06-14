@@ -1,22 +1,17 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
-using TMPro;
-using System;
-using System.Collections;
 using DG.Tweening;
-using OWS.ObjectPooling;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(LineRenderer))]
 public class PlayerController : MonoBehaviour
 {
     private Camera camMain;
-    private static TextMeshProUGUI timer;
+    private GameManager gameManager;
 
     // NavMesh
-    private NavMeshAgent playerAgent;
-    private NavMeshPath path;
+    private NavMeshAgent playerAgent;    
     private LineRenderer walkPath;
 
     // Objects
@@ -29,27 +24,23 @@ public class PlayerController : MonoBehaviour
 
     // Unit stats
     public static float mechSpeed = 3.5f;
-    public static bool inAction;
-    private float walkDistance = 3f;
-    private float turnTime = 3f;
-    private float timeValue;
 
     // Attack parameters
     public int burstSize;
     public float fireDelay;    
     public float fireRate;
-    private float lastBurst = 0f;
+    private UnitManager unitManager;
 
     // Start is called before the first frame update
     void Start()
     {
         camMain = Camera.main;
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
-        //Navmesh setup
-        path = new NavMeshPath();
+        // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();
 
-        //Path
+        // Path
         clickMarker = GameObject.Find("ClickMarker");
         clickMarker.transform.localScale = Vector3.zero;
         walkPath = GetComponent<LineRenderer>();
@@ -57,64 +48,46 @@ public class PlayerController : MonoBehaviour
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
 
-        //UI
+        // UI
         executeButton = GameObject.Find("ExecuteButton");
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonFrame = executeButton.transform.GetChild(1).gameObject;
-        inAction = false;
         playerUI = GameObject.Find("PlayerUI");
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
 
-        //Turn timer
-        timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
-        timeValue = turnTime;
-        timer.text = timeValue.ToString();
-
-        //Set target
+        // Set target
         crosshair = GameObject.Find("Crosshair");
         enemy = GameObject.Find("Enemy");
-
-        lastBurst = 0f;
+        unitManager = GetComponent<UnitManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Crosshair position
+        // Crosshair position
         crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
         playerUI.transform.position = camMain.WorldToScreenPoint(transform.position);
 
-        //Mouse click
+        // Mouse click
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            if (!inAction)
+            if (!gameManager.inAction)
             {
-                MoveToClick();
+                MoveToClick();                
             }
         }
 
-        //If in ACTION PHASE
-        if (inAction)
+        // If in ACTION PHASE
+        if (gameManager.inAction)
         {
-            FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
+            unitManager.FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
+            playerAgent.speed = unitManager.moveSpeed + 0.5f;
         }
 
-        //Timer display      
-        timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
-        if (inAction && timeValue > 0)
-        {            
-            timeValue -= Time.deltaTime;
-        }
-        else
-        {
-            inAction = false;
-            timeValue = turnTime;            
-        }
-
-        //Draw player path
+        // Draw player path
         if (playerAgent.hasPath)
         {
             DrawPath();
@@ -127,32 +100,6 @@ public class PlayerController : MonoBehaviour
         clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));       
     }
 
-    //Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
-    private void FireBurst(GameObject objectToSpawn, GameObject firePoint,
-        float fireDelay, int burstSize, float fireRate)
-    {
-        if (Time.time > lastBurst + fireDelay)
-        {
-            StartCoroutine(FireBurst(objectToSpawn, firePoint, burstSize, fireRate));
-            lastBurst = Time.time;
-        }
-    }
-
-    //Coroutine for separate bursts
-    private IEnumerator FireBurst(GameObject objectToSpawn, GameObject firePoint, int burstSize,
-        float fireRate)
-    {
-        ObjectPool<PoolObject> objectsPool;
-        objectsPool = new ObjectPool<PoolObject>(objectToSpawn);
-
-        float bulletDelay = 60 / fireRate;
-        for (int i = 0; i < burstSize; i++)
-        {
-            objectsPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
-            yield return new WaitForSeconds(bulletDelay);
-        }
-    }
-
     private void MoveToClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -161,34 +108,11 @@ public class PlayerController : MonoBehaviour
 
         if(isHit)
         {
-            SetDestination(hit.point);           
+            unitManager.SetDestination(hit.point, playerAgent);           
         }       
     }
 
-    //Draw click marker
-    private void SetDestination(Vector3 target)
-    {
-        playerAgent.speed = 0;
-
-        NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
-        for (int i = 0; i < path.corners.Length - 1; i++) 
-        {
-            float segmentDistance = (path.corners[i + 1] - path.corners[i]).magnitude;
-            if (segmentDistance <= walkDistance)
-            {
-                playerAgent.SetDestination(target);
-            }
-            else
-            {
-                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * walkDistance);
-                NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
-                playerAgent.SetPath(path);                
-                break;
-            }
-        }
-    }
-
-    //Constantly draws players path
+    // Draw player path
     private void DrawPath()
     {
         walkPath.positionCount = playerAgent.path.corners.Length;
@@ -210,7 +134,7 @@ public class PlayerController : MonoBehaviour
         }
     }   
     
-    //Start turn
+    // Start turn
     public void ExecuteOrder()
     {
         audioUI.PlayOneShot(buttonClick);
@@ -221,6 +145,6 @@ public class PlayerController : MonoBehaviour
         });
 
         playerAgent.speed = mechSpeed;
-        inAction = true;
+        gameManager.inAction = true;
     }
 }

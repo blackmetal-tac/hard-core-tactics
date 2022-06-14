@@ -26,7 +26,7 @@ public class Projectile : MonoBehaviour
         {
             bullet.velocity = transform.TransformDirection(Vector3.forward) * speed;
             
-            //Set bullet lifetime
+            // Set bullet lifetime
             this.Wait(3 , () => {
                 transform.localScale = Vector3.zero;
                 bulletCollider.enabled = false;
@@ -45,15 +45,15 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    //Bullet collision
+    // Bullet collision
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.name == "Enemy" || collider.name == "Player") 
         {
-            collider.GetComponent<UnitStats>().TakeDamage(damage);
+            collider.GetComponent<UnitManager>().TakeDamage(damage);
 
-            //Reset HP bar damage animation
-            collider.GetComponent<UnitStats>().shrinkTimer = 0.5f;                              
+            // Reset HP bar damage animation
+            collider.GetComponent<UnitManager>().shrinkTimer = 0.5f;                        
         }
 
         bulletCollider.enabled = false;

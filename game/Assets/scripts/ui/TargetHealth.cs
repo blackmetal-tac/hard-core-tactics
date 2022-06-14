@@ -5,12 +5,12 @@ public class TargetHealth : MonoBehaviour
 {
     public GameObject unit;
     private Image healthImage, damageImage;
-    private UnitStats stats;
+    private UnitManager unitManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        stats = unit.GetComponent<UnitStats>();
+        unitManager = unit.GetComponent<UnitManager>();
         healthImage = transform.Find("Health").GetComponent<Image>();
         damageImage = transform.Find("Damage").GetComponent<Image>();
         damageImage.fillAmount = 1f;
@@ -19,11 +19,11 @@ public class TargetHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        healthImage.fillAmount = stats.HP;
+        healthImage.fillAmount = unitManager.HP;
 
-        //Damage animation
-        stats.shrinkTimer -= Time.deltaTime;
-        if (stats.shrinkTimer < 0) 
+        // Health bar damage animation
+        unitManager.shrinkTimer -= Time.deltaTime;
+        if (unitManager.shrinkTimer < 0) 
         {
             float shrinkSpeed = 1f;
             if (healthImage.fillAmount < damageImage.fillAmount) 
