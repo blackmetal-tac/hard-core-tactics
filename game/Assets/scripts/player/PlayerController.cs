@@ -3,8 +3,6 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-[RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(LineRenderer))]
 public class PlayerController : MonoBehaviour
 {
     private Camera camMain;
@@ -39,11 +37,11 @@ public class PlayerController : MonoBehaviour
 
         // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();
+        walkPath = GetComponent<LineRenderer>();
 
         // Path
         clickMarker = GameObject.Find("ClickMarker");
-        clickMarker.transform.localScale = Vector3.zero;
-        walkPath = GetComponent<LineRenderer>();
+        clickMarker.transform.localScale = Vector3.zero;        
         walkPath.startWidth = 0.02f;
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
@@ -58,7 +56,7 @@ public class PlayerController : MonoBehaviour
         // Set target
         crosshair = GameObject.Find("Crosshair");
         enemy = GameObject.Find("Enemy");
-        unitManager = GetComponent<UnitManager>();
+        unitManager = GetComponentInChildren<UnitManager>();
     }
 
     // Update is called once per frame
@@ -108,7 +106,7 @@ public class PlayerController : MonoBehaviour
 
         if(isHit)
         {
-            unitManager.SetDestination(hit.point, playerAgent);           
+            unitManager.SetDestination(hit.point, playerAgent);
         }       
     }
 
@@ -132,10 +130,10 @@ public class PlayerController : MonoBehaviour
             clickMarker.transform.localScale = Vector3.zero;
             clickMarker.transform.DOScale(Vector3.one * 0.2f, 0.2f);
         }
-    }   
-    
+    }
+
     // Start turn
-    public void ExecuteOrder()
+    private void ExecuteOrder()
     {
         audioUI.PlayOneShot(buttonClick);
         buttonFrame.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);

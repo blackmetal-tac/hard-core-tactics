@@ -9,8 +9,8 @@ public class UnitManager : MonoBehaviour
 
     // Stats
     public float HP {get; set;}
-    public int walkDistance; // Speed
-    public float moveSpeed;
+    public int walkDistance; // Speed (max distance)
+    public float moveSpeed; // Actual agents speed
 
     public float shrinkTimer {get; set;}
     private float lastBurst = 0f;
