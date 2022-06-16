@@ -5,23 +5,14 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
-    private Camera camMain;
     private GameManager gameManager;
 
-    // NavMesh
-    private NavMeshAgent playerAgent;    
-    private LineRenderer walkPath;
-
     // Objects
-    private GameObject clickMarker, executeButton, buttonFrame, crosshair, enemy, playerUI;
+    private GameObject clickMarker;
     public GameObject projectile, firePoint;    
 
-    // Audio
-    private AudioSource audioUI;
-    private AudioClip buttonClick;
-
     // Unit stats
-    public static float mechSpeed = 3.5f;
+    public float mechSpeed = 3.5f;
 
     // Attack parameters
     public int burstSize;
@@ -29,10 +20,14 @@ public class PlayerController : MonoBehaviour
     public float fireRate;
     private UnitManager unitManager;
 
+    // NavMesh
+    public NavMeshAgent playerAgent;
+    private LineRenderer walkPath;
+
     // Start is called before the first frame update
     void Start()
     {
-        camMain = Camera.main;
+
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         // Navmesh setup        
@@ -46,26 +41,12 @@ public class PlayerController : MonoBehaviour
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
 
-        // UI
-        executeButton = GameObject.Find("ExecuteButton");
-        audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
-        buttonFrame = executeButton.transform.GetChild(1).gameObject;
-        playerUI = GameObject.Find("PlayerUI");
-        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
-
-        // Set target
-        crosshair = GameObject.Find("Crosshair");
-        enemy = GameObject.Find("Enemy");
         unitManager = GetComponentInChildren<UnitManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Crosshair position
-        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
-        playerUI.transform.position = camMain.WorldToScreenPoint(transform.position);
-
         // Mouse click
         if (Input.GetMouseButtonDown(0))
         {
@@ -130,19 +111,5 @@ public class PlayerController : MonoBehaviour
             clickMarker.transform.localScale = Vector3.zero;
             clickMarker.transform.DOScale(Vector3.one * 0.2f, 0.2f);
         }
-    }
-
-    // Start turn
-    private void ExecuteOrder()
-    {
-        audioUI.PlayOneShot(buttonClick);
-        buttonFrame.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
-
-        this.Wait(MainMenu.buttonDelay, () => {
-            buttonFrame.transform.DOScaleX(1f, 0.1f);            
-        });
-
-        playerAgent.speed = mechSpeed;
-        gameManager.inAction = true;
     }
 }

@@ -464,7 +464,7 @@ PrefabInstance:
     - target: {fileID: 5226917327009510874, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5226917327009510874, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
@@ -535,7 +535,6 @@ GameObject:
   - component: {fileID: 325939487}
   - component: {fileID: 325939486}
   - component: {fileID: 325939493}
-  - component: {fileID: 325939490}
   - component: {fileID: 325939485}
   - component: {fileID: 325939492}
   m_Layer: 0
@@ -624,23 +623,6 @@ Transform:
   m_Father: {fileID: 642910588}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &325939490
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 325939484}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af96a245eaf239646a24c5ff29a5e7b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectile: {fileID: 618136015}
-  firePoint: {fileID: 1836696807}
-  burstSize: 5
-  fireDelay: 1
-  fireRate: 800
 --- !u!54 &325939492
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1122,7 +1104,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &618136021
 Rigidbody:
@@ -1304,7 +1286,7 @@ Transform:
   m_Children:
   - {fileID: 325939488}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &642910589
 MonoBehaviour:
@@ -1320,9 +1302,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 618136015}
   firePoint: {fileID: 1836696807}
+  mechSpeed: 3.5
   burstSize: 5
   fireDelay: 1
   fireRate: 800
+  playerAgent: {fileID: 0}
 --- !u!1 &664663303
 GameObject:
   m_ObjectHideFlags: 0
@@ -1728,7 +1712,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 325939490}
+      objectReference: {fileID: 1355779585}
     - target: {fileID: 3347666904397146529, guid: ec173db065649e5408c1e57182cbe610,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1737,7 +1721,7 @@ PrefabInstance:
     - target: {fileID: 3347666904397146529, guid: ec173db065649e5408c1e57182cbe610,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PlayerController, Assembly-CSharp
+      value: GameManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3347666904397146542, guid: ec173db065649e5408c1e57182cbe610,
         type: 3}
@@ -2022,6 +2006,18 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!114 &1355779585 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 645734298742888793, guid: 0e900c9216f3c194f9edc241dbf2edb5,
+    type: 3}
+  m_PrefabInstance: {fileID: 645734297285831921}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904005ae408d83e48a30a50da6f748fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1434758038
 GameObject:
   m_ObjectHideFlags: 0
@@ -2773,7 +2769,7 @@ PrefabInstance:
     - target: {fileID: 645734298742888792, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 645734298742888792, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}
