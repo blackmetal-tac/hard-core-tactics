@@ -11,6 +11,10 @@ public class UnitManager : MonoBehaviour
     public float HP {get; set;}
     public int walkDistance; // Speed (max distance)
     public float moveSpeed; // Actual agents speed
+    public int burstSize; // Shooting stats
+    public float fireDelay; //
+    public float fireRate; //
+    public GameObject target; // Aim at this
 
     public float shrinkTimer {get; set;}
     private float lastBurst = 0f;
@@ -36,19 +40,17 @@ public class UnitManager : MonoBehaviour
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
-    public void FireBurst(GameObject objectToSpawn, GameObject firePoint,
-        float fireDelay, int burstSize, float fireRate)
+    public void FireBurst(GameObject objectToSpawn, GameObject firePoint)
     {
         if (Time.time > lastBurst + fireDelay)
         {
-            StartCoroutine(FireBurst(objectToSpawn, firePoint, burstSize, fireRate));
+            StartCoroutine(FireBurstCoroutine(objectToSpawn, firePoint));
             lastBurst = Time.time;
         }
     }
 
     // Coroutine for separate bursts
-    private IEnumerator FireBurst(GameObject objectToSpawn, GameObject firePoint, int burstSize,
-        float fireRate)
+    private IEnumerator FireBurstCoroutine(GameObject objectToSpawn, GameObject firePoint)
     {
         ObjectPool<PoolObject> objectsPool;
         objectsPool = new ObjectPool<PoolObject>(objectToSpawn);

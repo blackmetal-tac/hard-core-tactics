@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     private Camera camMain;
     private GameObject executeButton, buttonFrame, playerUI, crosshair, enemy, player;
     private PlayerController playerController;
+    private UnitManager unitManager;
 
     // Audio
     private AudioSource audioUI;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
         inAction = false;
 
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        unitManager = playerController.GetComponentInChildren<UnitManager>();
 
         // UI
         executeButton = GameObject.Find("ExecuteButton");
@@ -76,7 +78,7 @@ public class GameManager : MonoBehaviour
             buttonFrame.transform.DOScaleX(1f, 0.1f);
         });
 
-        playerController.playerAgent.speed = playerController.mechSpeed;
+        playerController.playerAgent.speed = unitManager.moveSpeed;
         inAction = true;
     }
 }

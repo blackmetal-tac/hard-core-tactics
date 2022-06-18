@@ -652,7 +652,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkDistance: 3
-  moveSpeed: 0
+  moveSpeed: 3
+  burstSize: 5
+  fireDelay: 1
+  fireRate: 800
+  target: {fileID: 0}
 --- !u!1 &460906004
 GameObject:
   m_ObjectHideFlags: 0
@@ -1027,6 +1031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3beb35392a0f3634985286d9d70d244c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 0.03
   speed: 10
 --- !u!135 &618136017
 SphereCollider:
@@ -1302,10 +1307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 618136015}
   firePoint: {fileID: 1836696807}
-  mechSpeed: 3.5
-  burstSize: 5
-  fireDelay: 1
-  fireRate: 800
+  target: {fileID: 2013035603}
   playerAgent: {fileID: 0}
 --- !u!1 &664663303
 GameObject:
@@ -2111,7 +2113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1de76d45f0f73024fb86f643611123a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 325939484}
 --- !u!1 &1567707577
 GameObject:
   m_ObjectHideFlags: 0
@@ -2296,7 +2297,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1de76d45f0f73024fb86f643611123a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 2013035603}
 --- !u!1 &1895752057
 GameObject:
   m_ObjectHideFlags: 0
@@ -2594,8 +2594,8 @@ GameObject:
   - component: {fileID: 2013035605}
   - component: {fileID: 2013035604}
   - component: {fileID: 2013035608}
-  - component: {fileID: 2013035610}
   - component: {fileID: 2013035609}
+  - component: {fileID: 2013035610}
   - component: {fileID: 2013035611}
   m_Layer: 0
   m_Name: Enemy
@@ -2713,11 +2713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 618136015}
   firePoint: {fileID: 1487827720}
-  playerPos: {fileID: 325939484}
-  burstSize: 5
-  fireDelay: 1
-  fireRate: 800
-  mechSpeed: 3.5
+  target: {fileID: 642910583}
 --- !u!114 &2013035610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2731,7 +2727,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkDistance: 3
-  moveSpeed: 0
+  moveSpeed: 3
+  burstSize: 5
+  fireDelay: 1
+  fireRate: 800
+  target: {fileID: 0}
 --- !u!195 &2013035611
 NavMeshAgent:
   m_ObjectHideFlags: 0

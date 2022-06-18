@@ -9,15 +9,7 @@ public class PlayerController : MonoBehaviour
 
     // Objects
     private GameObject clickMarker;
-    public GameObject projectile, firePoint;    
-
-    // Unit stats
-    public float mechSpeed = 3.5f;
-
-    // Attack parameters
-    public int burstSize;
-    public float fireDelay;    
-    public float fireRate;
+    public GameObject projectile, firePoint, target;
     private UnitManager unitManager;
 
     // NavMesh
@@ -40,8 +32,9 @@ public class PlayerController : MonoBehaviour
         walkPath.startWidth = 0.02f;
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
-
+    
         unitManager = GetComponentInChildren<UnitManager>();
+        unitManager.target = target;
     }
 
     // Update is called once per frame
@@ -62,7 +55,7 @@ public class PlayerController : MonoBehaviour
         // If in ACTION PHASE
         if (gameManager.inAction)
         {
-            unitManager.FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
+            unitManager.FireBurst(projectile, firePoint);
             playerAgent.speed = unitManager.moveSpeed + 0.5f;
         }
 

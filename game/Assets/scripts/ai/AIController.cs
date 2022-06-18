@@ -8,13 +8,7 @@ public class AIController : MonoBehaviour
     private GameManager gameManager;
 
     // Set objects
-    public GameObject projectile, firePoint, playerPos;
-
-    // Set stats
-    public int burstSize;
-    public float fireDelay;
-    public float fireRate;
-    public float mechSpeed = 3.5f;
+    public GameObject projectile, firePoint, target;
 
     // Move parameters
     private int moveOffset = 7;    
@@ -26,6 +20,7 @@ public class AIController : MonoBehaviour
 
         navAgent = GetComponent<NavMeshAgent>();
         unitManager = GetComponent<UnitManager>();
+        unitManager.target = target;
         navAgent.speed = 0;        
     }
 
@@ -34,7 +29,7 @@ public class AIController : MonoBehaviour
     {
         if (gameManager.inAction)
         {
-            unitManager.FireBurst(projectile, firePoint, fireDelay, burstSize, fireRate);
+            unitManager.FireBurst(projectile, firePoint);
             navAgent.speed = unitManager.moveSpeed + 0.5f;
         }
         else
@@ -47,9 +42,9 @@ public class AIController : MonoBehaviour
     private void SetPath()
     {
         navAgent.SetDestination(new Vector3(
-         playerPos.transform.position.x + Random.Range(-moveOffset, moveOffset),
-         playerPos.transform.position.y + Random.Range(-moveOffset, moveOffset),
-         playerPos.transform.position.z));
+         target.transform.position.x + Random.Range(-moveOffset, moveOffset),
+         target.transform.position.y + Random.Range(-moveOffset, moveOffset),
+         target.transform.position.z));
 
         unitManager.SetDestination(navAgent.destination, navAgent);
     }
