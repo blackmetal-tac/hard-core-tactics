@@ -1,21 +1,36 @@
 using UnityEngine;
+using UnityEngine.AI;
 using DG.Tweening;
 
 public class Crosshair : MonoBehaviour
 {
+    public UnitManager playerManager;
     public float crosshairSize = 0.2f;
-    public float animOffset = 0.02f;
 
     // Start is called before the first frame update
     void Start()
     {
-        transform.localScale = Vector3.one * crosshairSize;
-        transform.DOScale(Vector3.one * (crosshairSize + animOffset), 1f).SetLoops(-1, LoopType.Yoyo);
+        playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
+        StartYoyo();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public void Yoyo()
+    {
+        transform.localScale = Vector3.one * (crosshairSize + playerManager.moveSpeed);
+        transform.DOScale(Vector3.one * (crosshairSize + playerManager.moveSpeed / 5), 2f)
+            .SetLoops(-1, LoopType.Yoyo);
+    }
+
+    public void StartYoyo()
+    {
+        transform.localScale = Vector3.one * crosshairSize;
+        transform.DOScale(Vector3.one * (crosshairSize + 0.01f), 2f)
+            .SetLoops(-1, LoopType.Yoyo);
     }
 }

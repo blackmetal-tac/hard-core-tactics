@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     // Objects
     private GameObject clickMarker;
     public GameObject projectile, firePoint, target;
-    private UnitManager unitManager;
+    public UnitManager unitManager;
+    private Crosshair crosshair;
 
     // NavMesh
     public NavMeshAgent playerAgent;
@@ -19,8 +20,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
 
         // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();
@@ -48,7 +49,8 @@ public class PlayerController : MonoBehaviour
 
             if (!gameManager.inAction)
             {
-                MoveToClick();                
+                MoveToClick();
+                crosshair.Yoyo();
             }
         }
 

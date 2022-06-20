@@ -14,7 +14,7 @@ public class UnitManager : MonoBehaviour
     public int burstSize; // Shooting stats
     public float fireDelay; //
     public float fireRate; //
-    private int rotSpeed = 1;
+    private float rotSpeed = 0.5f;
     public GameObject target; // Aim at this
     private Vector3 direction;
 
@@ -28,18 +28,17 @@ public class UnitManager : MonoBehaviour
 
         HP = 1f;
 
-        lastBurst = 0f;
-        direction = target.transform.position - transform.position;
+        lastBurst = 0f;        
     }
 
     private void FixedUpdate()
     {
-        // Rotate body
+        // Rotate body to target
         if (gameManager.inAction)
-        {
-           
-            Quaternion toRotation = Quaternion.FromToRotation(transform.forward, direction);
-            transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, rotSpeed * Time.time);
+        {            
+            direction = target.transform.position - transform.position;
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
         }        
     }
 

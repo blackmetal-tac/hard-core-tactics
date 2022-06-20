@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private GameObject executeButton, buttonFrame, playerUI, crosshair, enemy, player;
     private PlayerController playerController;
     private UnitManager unitManager;
+    private Crosshair crosshairScr;
 
     // Audio
     private AudioSource audioUI;
@@ -44,8 +45,9 @@ public class GameManager : MonoBehaviour
 
         // Set target
         crosshair = GameObject.Find("Crosshair");
+        crosshairScr = crosshair.GetComponent<Crosshair>();
         enemy = GameObject.Find("Enemy");
-        player = GameObject.Find("Player");
+        player = GameObject.Find("Player");          
     }
 
     // Update is called once per frame
@@ -64,7 +66,7 @@ public class GameManager : MonoBehaviour
         else
         {
             inAction = false;
-            timeValue = turnTime;
+            timeValue = turnTime;            
         }
     }
 
@@ -74,8 +76,20 @@ public class GameManager : MonoBehaviour
         audioUI.PlayOneShot(buttonClick);
         buttonFrame.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
 
-        this.Wait(MainMenu.buttonDelay, () => {
+        this.Wait(MainMenu.buttonDelay, () => 
+        {
             buttonFrame.transform.DOScaleX(1f, 0.1f);
+        });
+
+        this.Wait(turnTime, () =>
+        {
+            playerController.unitManager.moveSpeed = 0.1f;
+            crosshair.transform.localScale = Vector3.one * crosshairScr.crosshairSize;
+
+            this.Wait(MainMenu.buttonDelay, () =>
+            {
+                crosshairScr.StartYoyo();
+            });                 
         });
 
         playerController.playerAgent.speed = unitManager.moveSpeed;

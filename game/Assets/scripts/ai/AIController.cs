@@ -19,7 +19,7 @@ public class AIController : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         navAgent = GetComponent<NavMeshAgent>();
-        unitManager = GetComponent<UnitManager>();
+        unitManager = GetComponentInChildren<UnitManager>();
         unitManager.target = target;
         navAgent.speed = 0;        
     }
