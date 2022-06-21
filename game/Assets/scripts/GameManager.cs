@@ -84,12 +84,7 @@ public class GameManager : MonoBehaviour
         this.Wait(turnTime, () =>
         {
             playerController.unitManager.moveSpeed = 0.1f;
-            crosshair.transform.localScale = Vector3.one * crosshairScr.crosshairSize;
-
-            this.Wait(MainMenu.buttonDelay, () =>
-            {
-                crosshairScr.StartYoyo();
-            });                 
+            crosshairScr.Yoyo();             
         });
 
         playerController.playerAgent.speed = unitManager.moveSpeed;
