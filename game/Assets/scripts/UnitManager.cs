@@ -9,6 +9,8 @@ public class UnitManager : MonoBehaviour
 
     // Stats
     public float HP {get; set;}
+    public float heat; // Total unit heat
+    public float cooling; // Cooling modifier
     public int walkDistance; // Speed (max distance)
     public float moveSpeed; // Actual agents speed
     public int burstSize; // Shooting stats
@@ -44,7 +46,14 @@ public class UnitManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {    
+    {
+        // Heat dissipation
+        if ((heat > 0) && gameManager.inAction)
+        {
+            heat -= Time.deltaTime * cooling;
+            heat = Mathf.Round(heat * 100) / 100;
+        }
+
         // Death
         if (HP <= 0)
         {
@@ -72,6 +81,7 @@ public class UnitManager : MonoBehaviour
         for (int i = 0; i < burstSize; i++)
         {
             objectsPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
+            firePoint.GetComponentInParent<UnitManager>().heat += objectToSpawn.GetComponent<Projectile>().heat;
             yield return new WaitForSeconds(bulletDelay);
         }
     }

@@ -3,8 +3,9 @@ using OWS.ObjectPooling;
 
 public class Projectile : MonoBehaviour
 {
-    public float damage = 0.03f;
-    public float speed = 10f;
+    public float damage;
+    public float heat;
+    public float speed;
 
     private Rigidbody bullet;
     private Collider bulletCollider;
