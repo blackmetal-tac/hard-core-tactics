@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.AI;
+using UnityEditor;
 using DG.Tweening;
 
 public class Crosshair : MonoBehaviour
@@ -11,13 +11,16 @@ public class Crosshair : MonoBehaviour
     void Start()
     {
         playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
-        Yoyo();
+        this.Wait(.6f, () => 
+        {
+            Yoyo();
+        });               
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     public void Yoyo()

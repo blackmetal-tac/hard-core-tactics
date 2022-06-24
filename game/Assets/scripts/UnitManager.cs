@@ -7,8 +7,10 @@ public class UnitManager : MonoBehaviour
 {
     private GameManager gameManager;
 
-    // Stats
+    // Stats    
     public float HP {get; set;}
+    public float shield { get; set; }
+    public float shieldRegen;
     public float heat; // Total unit heat
     public float cooling; // Cooling modifier
     public int walkDistance; // Speed (max distance)
@@ -28,8 +30,20 @@ public class UnitManager : MonoBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
-        HP = 1f;
+        // Load HP and Shield bars
+        this.Progress(2f, () => {
+            if (shield < 1)
+            { 
+                shield += Time.deltaTime * 0.6f; 
+            }
 
+            if (HP < 1)
+            {
+                HP += Time.deltaTime * 0.6f;
+            }            
+        });
+
+        // Reset burst fire
         lastBurst = 0f;        
     }
 
@@ -47,6 +61,13 @@ public class UnitManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Shield regeneration
+        if ((shield < 1) && gameManager.inAction)
+        {
+            shield += Time.deltaTime * shieldRegen;
+            shield = Mathf.Round(shield * 100) / 100;
+        }
+
         // Heat dissipation
         if ((heat > 0) && gameManager.inAction)
         {
@@ -115,6 +136,13 @@ public class UnitManager : MonoBehaviour
     // Take damage
     public void TakeDamage(float damage)
     {
-        HP -= damage;
+        if (shield > 0)
+        {
+            shield -= damage;
+        }
+        else
+        {
+            HP -= damage;
+        }             
     }
 }

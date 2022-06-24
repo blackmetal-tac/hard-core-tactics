@@ -19,16 +19,20 @@ public class TargetHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        healthImage.fillAmount = unitManager.HP;
+        healthImage.fillAmount = unitManager.shield;
 
         // Health bar damage animation
         unitManager.shrinkTimer -= Time.deltaTime;
         if (unitManager.shrinkTimer < 0) 
         {
             float shrinkSpeed = 1f;
-            if (healthImage.fillAmount < damageImage.fillAmount) 
+            if (healthImage.fillAmount < damageImage.fillAmount)
             {
                 damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
+            }
+            else
+            {
+                damageImage.fillAmount = healthImage.fillAmount;
             }
         }
     }
