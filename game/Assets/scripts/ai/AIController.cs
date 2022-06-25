@@ -11,7 +11,7 @@ public class AIController : MonoBehaviour
     public GameObject projectile, firePoint, target;
 
     // Move parameters
-    private int moveOffset = 7;    
+    private int moveOffset = 10;    
 
     // Start is called before the first frame update
     void Start()
@@ -35,11 +35,10 @@ public class AIController : MonoBehaviour
         else
         {
             navAgent.speed = 0;
-            SetPath();
         }
     }
 
-    private void SetPath()
+    public void SetPath()
     {
         navAgent.SetDestination(new Vector3(
          target.transform.position.x + Random.Range(-moveOffset, moveOffset),

@@ -30,8 +30,8 @@ public class UnitManager : MonoBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
-        // Load HP and Shield bars
-        this.Progress(2f, () => {
+        // Load HP, Shield, Heat bars
+        this.Progress(gameManager.loadTime, () => {
             if (shield < 1)
             { 
                 shield += Time.deltaTime * 0.6f; 
@@ -40,7 +40,25 @@ public class UnitManager : MonoBehaviour
             if (HP < 1)
             {
                 HP += Time.deltaTime * 0.6f;
-            }            
+            }
+
+            if (heat > 0)
+            { 
+                heat -= Time.deltaTime * 0.6f;
+            }
+        });
+
+        // Load Heat
+        this.Progress(gameManager.loadTime, () => {
+            if (shield < 1)
+            {
+                shield += Time.deltaTime * 0.6f;
+            }
+
+            if (HP < 1)
+            {
+                HP += Time.deltaTime * 0.6f;
+            }
         });
 
         // Reset burst fire

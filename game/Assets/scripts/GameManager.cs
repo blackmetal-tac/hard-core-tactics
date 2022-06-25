@@ -8,8 +8,13 @@ public class GameManager : MonoBehaviour
     private Camera camMain;
     private GameObject executeButton, buttonFrame, playerUI, crosshair, enemy, player;
     private PlayerController playerController;
+    private AIController AIController;
     private UnitManager unitManager;
     private Crosshair crosshairScr;
+
+    // UI settings
+    public float crosshairBars;
+    public float loadTime;
 
     // Audio
     private AudioSource audioUI;
@@ -29,6 +34,7 @@ public class GameManager : MonoBehaviour
         inAction = false;
 
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        AIController = GameObject.Find("Enemy").GetComponent<AIController>();
         unitManager = playerController.GetComponentInChildren<UnitManager>();
 
         // UI
@@ -89,5 +95,6 @@ public class GameManager : MonoBehaviour
 
         playerController.playerAgent.speed = unitManager.moveSpeed;
         inAction = true;
+        AIController.SetPath();
     }
 }
