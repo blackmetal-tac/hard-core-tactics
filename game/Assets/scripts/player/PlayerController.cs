@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public GameObject projectile, firePoint, target;
     public UnitManager unitManager;
     private Crosshair crosshair;
+    private Image heatStatus;
 
     // NavMesh
     public NavMeshAgent playerAgent;
@@ -21,15 +23,17 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        // UI
         crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
+        heatStatus = GameObject.Find("PlayerHeatStatus").GetComponent<Image>();
 
         // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();
         walkPath = GetComponent<LineRenderer>();
 
         // Path
-        clickMarker = GameObject.Find("ClickMarker");
-        clickMarker.transform.localScale = Vector3.zero;        
+        clickMarker = GameObject.Find("ClickMarker");   
         walkPath.startWidth = 0.02f;
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
@@ -65,13 +69,7 @@ public class PlayerController : MonoBehaviour
         if (playerAgent.hasPath)
         {
             DrawPath();
-        }
-        else 
-        {
-            clickMarker.transform.localScale = Vector3.zero;
-        }        
-
-        clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));       
+        }              
     }
 
     private void MoveToClick()

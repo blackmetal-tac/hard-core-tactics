@@ -13,12 +13,6 @@ public class ButtonsInteractions : MonoBehaviour, IPointerEnterHandler, IPointer
         buttonAudio = GameObject.Find("MainUI").GetComponent<AudioSource>();
         hoverSound = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().hoverButton;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     
     //Buttons sound and animation
     public void OnPointerEnter(PointerEventData eventData)

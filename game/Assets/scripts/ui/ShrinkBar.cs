@@ -1,24 +1,27 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TargetHealth : MonoBehaviour
+public class ShrinkBar : MonoBehaviour
 {
-    public GameObject unit;
+    private Camera camMain;
     private Image healthImage, damageImage;
     private UnitManager unitManager;
+    private GameObject unitUI;
 
     // Start is called before the first frame update
     void Start()
     {
-        unitManager = unit.GetComponent<UnitManager>();
-        healthImage = transform.Find("Health").GetComponent<Image>();
-        damageImage = transform.Find("Damage").GetComponent<Image>();
-        damageImage.fillAmount = 1f;
+        camMain = Camera.main;
+        unitManager = transform.GetComponentInParent<UnitManager>();
+        unitUI = transform.GetChild(0).gameObject;
+        healthImage = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<Image>();
+        damageImage = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        unitUI.transform.position = camMain.WorldToScreenPoint(transform.parent.transform.position);
         healthImage.fillAmount = unitManager.shield;
 
         // Health bar damage animation

@@ -6,7 +6,8 @@ using DG.Tweening;
 public class GameManager : MonoBehaviour
 {
     private Camera camMain;
-    private GameObject executeButton, buttonFrame, playerUI, crosshair, enemy, player;
+    private GameObject executeButton, buttonFrame, crosshair, enemy, player, actionMask, 
+        clickMarker;
     private PlayerController playerController;
     private AIController AIController;
     private UnitManager unitManager;
@@ -38,10 +39,12 @@ public class GameManager : MonoBehaviour
         unitManager = playerController.GetComponentInChildren<UnitManager>();
 
         // UI
+        clickMarker = GameObject.Find("ClickMarker");
         executeButton = GameObject.Find("ExecuteButton");
+        actionMask = GameObject.Find("ActionMask");
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonFrame = executeButton.transform.GetChild(1).gameObject;
-        playerUI = GameObject.Find("PlayerUI");
+        //playerUI = GameObject.Find("PlayerUI");
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
 
         // Turn timer
@@ -60,8 +63,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Crosshair position
-        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
-        playerUI.transform.position = camMain.WorldToScreenPoint(player.transform.position);
+        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);       
 
         // Timer display      
         timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
@@ -74,6 +76,8 @@ public class GameManager : MonoBehaviour
             inAction = false;
             timeValue = turnTime;            
         }
+
+        clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));
     }
 
     // Start turn
@@ -90,11 +94,24 @@ public class GameManager : MonoBehaviour
         this.Wait(turnTime, () =>
         {
             playerController.unitManager.moveSpeed = 0.1f;
-            crosshairScr.Yoyo();             
+            crosshairScr.Yoyo();
+            clickMarker.transform.localScale = Vector3.zero;
+
+            // Enable buttons
+            actionMask.transform.localScale = Vector3.zero;
         });
 
         playerController.playerAgent.speed = unitManager.moveSpeed;
         inAction = true;
         AIController.SetPath();
+        
+        // Action phase
+        this.Progress(turnTime, () => {
+
+            // Disable buttons
+            actionMask.transform.localScale = Vector3.one;
+
+            
+        });
     }
 }

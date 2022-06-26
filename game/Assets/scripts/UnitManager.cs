@@ -19,15 +19,16 @@ public class UnitManager : MonoBehaviour
     public float fireDelay; //
     public float fireRate; //
     private float rotSpeed = 0.5f;
+
     public GameObject target; // Aim at this
-    private Vector3 direction;
+    private Vector3 direction; // Rotate body to the enemy
 
     public float shrinkTimer {get; set;}
     private float lastBurst = 0f;
 
     // Start is called before the first frame update
     void Start()
-    {
+    {        
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         // Load HP, Shield, Heat bars
@@ -78,7 +79,7 @@ public class UnitManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {     
         // Shield regeneration
         if ((shield < 1) && gameManager.inAction)
         {
@@ -120,7 +121,7 @@ public class UnitManager : MonoBehaviour
         for (int i = 0; i < burstSize; i++)
         {
             objectsPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
-            firePoint.GetComponentInParent<UnitManager>().heat += objectToSpawn.GetComponent<Projectile>().heat;
+            firePoint.GetComponentInParent<UnitManager>().heat += objectToSpawn.GetComponent<Projectile>().heat;            
             yield return new WaitForSeconds(bulletDelay);
         }
     }

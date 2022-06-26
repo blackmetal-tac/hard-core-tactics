@@ -28,7 +28,5 @@ public class AudioControl : MonoBehaviour
         {
             mainMixer.SetFloat("MasterVolume", 10);
         }
-
-
     }
 }

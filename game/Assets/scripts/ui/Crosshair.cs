@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEditor;
 using DG.Tweening;
 
 public class Crosshair : MonoBehaviour
@@ -15,12 +14,6 @@ public class Crosshair : MonoBehaviour
         {
             Yoyo();
         });               
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void Yoyo()
