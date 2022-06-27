@@ -22,11 +22,15 @@ public class ShrinkBar : MonoBehaviour
     void Update()
     {
         unitUI.transform.position = camMain.WorldToScreenPoint(transform.parent.transform.position);
+    }
+
+    public void UpdateShield()
+    {
         healthImage.fillAmount = unitManager.shield;
 
         // Health bar damage animation
         unitManager.shrinkTimer -= Time.deltaTime;
-        if (unitManager.shrinkTimer < 0) 
+        if (unitManager.shrinkTimer < 0)
         {
             float shrinkSpeed = 1f;
             if (healthImage.fillAmount < damageImage.fillAmount)

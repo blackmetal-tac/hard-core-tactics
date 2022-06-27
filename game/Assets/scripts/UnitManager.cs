@@ -6,6 +6,7 @@ using OWS.ObjectPooling;
 public class UnitManager : MonoBehaviour
 {
     private GameManager gameManager;
+    private ShrinkBar shrinkBar;
 
     // Stats    
     public float HP {get; set;}
@@ -26,10 +27,14 @@ public class UnitManager : MonoBehaviour
     public float shrinkTimer {get; set;}
     private float lastBurst = 0f;
 
+    private ShieldIndicator shieldIndicator;
+
     // Start is called before the first frame update
     void Start()
     {        
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        shieldIndicator = GameObject.Find("ShieldIndicator").GetComponent<ShieldIndicator>();
+        shrinkBar = GetComponentInChildren<ShrinkBar>();
 
         // Load HP, Shield, Heat bars
         this.Progress(gameManager.loadTime, () => {
@@ -47,6 +52,9 @@ public class UnitManager : MonoBehaviour
             { 
                 heat -= Time.deltaTime * 0.6f;
             }
+
+            shrinkBar.UpdateShield();
+            shieldIndicator.UpdateShield();
         });
 
         // Load Heat
@@ -85,6 +93,8 @@ public class UnitManager : MonoBehaviour
         {
             shield += Time.deltaTime * shieldRegen;
             shield = Mathf.Round(shield * 100) / 100;
+            shrinkBar.UpdateShield();
+            shieldIndicator.UpdateShield();
         }
 
         // Heat dissipation
