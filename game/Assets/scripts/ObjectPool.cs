@@ -40,6 +40,7 @@ namespace OWS.ObjectPooling
             else
                 t = GameObject.Instantiate(prefab).GetComponent<T>();
 
+            t.gameObject.SetActive(true);
             t.gameObject.transform.localScale = Vector3.one * 0.05f; //ensure the object is on
             t.Initialize(Push);
 
@@ -92,6 +93,7 @@ namespace OWS.ObjectPooling
             pushObject?.Invoke(t);
 
             t.gameObject.transform.localScale = Vector3.zero;
+            t.gameObject.SetActive(false);
         }
 
         private void Spawn(int number)
@@ -103,6 +105,7 @@ namespace OWS.ObjectPooling
                 t = GameObject.Instantiate(prefab).GetComponent<T>();
                 pooledObjects.Push(t);
                 t.gameObject.transform.localScale = Vector3.zero;
+                t.gameObject.SetActive(false);
             }
         }
     }

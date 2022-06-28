@@ -27,13 +27,12 @@ public class UnitManager : MonoBehaviour
     public float shrinkTimer {get; set;}
     private float lastBurst = 0f;
 
-    private ShieldIndicator shieldIndicator;
+    private static ObjectPool<PoolObject> bulletsPool;
 
     // Start is called before the first frame update
     void Start()
     {        
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        shieldIndicator = GameObject.Find("ShieldIndicator").GetComponent<ShieldIndicator>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();        
         shrinkBar = GetComponentInChildren<ShrinkBar>();
 
         // Load HP, Shield, Heat bars
@@ -53,8 +52,7 @@ public class UnitManager : MonoBehaviour
                 heat -= Time.deltaTime * 0.6f;
             }
 
-            shrinkBar.UpdateShield();
-            shieldIndicator.UpdateShield();
+            shrinkBar.UpdateShield();            
         });
 
         // Load Heat
@@ -93,8 +91,7 @@ public class UnitManager : MonoBehaviour
         {
             shield += Time.deltaTime * shieldRegen;
             shield = Mathf.Round(shield * 100) / 100;
-            shrinkBar.UpdateShield();
-            shieldIndicator.UpdateShield();
+            shrinkBar.UpdateShield();            
         }
 
         // Heat dissipation
@@ -124,13 +121,13 @@ public class UnitManager : MonoBehaviour
     // Coroutine for separate bursts
     private IEnumerator FireBurstCoroutine(GameObject objectToSpawn, GameObject firePoint)
     {
-        ObjectPool<PoolObject> objectsPool;
-        objectsPool = new ObjectPool<PoolObject>(objectToSpawn);
+        //ObjectPool<PoolObject> bulletPool;
+        bulletsPool = new ObjectPool<PoolObject>(objectToSpawn);
 
         float bulletDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
-            objectsPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
+            bulletsPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
             firePoint.GetComponentInParent<UnitManager>().heat += objectToSpawn.GetComponent<Projectile>().heat;            
             yield return new WaitForSeconds(bulletDelay);
         }

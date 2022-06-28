@@ -30,7 +30,8 @@ public class Projectile : MonoBehaviour
             this.Wait(3 , () => {
                 transform.localScale = Vector3.zero;
                 bulletCollider.enabled = false;
-                poolObject.ReturnToPool();            
+                //poolObject.ReturnToPool();
+                gameObject.SetActive(false);
             });
         }
         else 
@@ -58,6 +59,7 @@ public class Projectile : MonoBehaviour
 
         bulletCollider.enabled = false;
         transform.localScale = Vector3.zero;
-        poolObject.ReturnToPool();
+        //poolObject.ReturnToPool();
+        gameObject.SetActive(false);
     }
 }

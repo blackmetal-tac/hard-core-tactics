@@ -678,7 +678,6 @@ GameObject:
   m_Component:
   - component: {fileID: 451354474}
   - component: {fileID: 451354477}
-  - component: {fileID: 451354478}
   m_Layer: 5
   m_Name: ShieldIndicator
   m_TagString: Untagged
@@ -722,18 +721,6 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &451354478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451354473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c477955092e49d7429822d329c2c3c7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &460906004
 GameObject:
   m_ObjectHideFlags: 0
@@ -2182,7 +2169,6 @@ GameObject:
   - component: {fileID: 926519589}
   - component: {fileID: 926519591}
   - component: {fileID: 926519590}
-  - component: {fileID: 926519592}
   m_Layer: 5
   m_Name: Health
   m_TagString: Untagged
@@ -2248,18 +2234,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 926519588}
   m_CullTransparentMesh: 1
---- !u!114 &926519592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 926519588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c477955092e49d7429822d329c2c3c7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &979627863
 GameObject:
   m_ObjectHideFlags: 0
@@ -4728,7 +4702,7 @@ PrefabInstance:
     - target: {fileID: 6174276809834148264, guid: f247062508543d34c8979f5cb5664670,
         type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f247062508543d34c8979f5cb5664670, type: 3}

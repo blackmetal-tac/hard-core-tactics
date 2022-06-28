@@ -12,9 +12,9 @@ public class ShieldIndicator : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        canvasGroup = GetComponentInParent<CanvasGroup>();
+        canvasGroup = GetComponent<CanvasGroup>();
 
-        unitManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
+        unitManager = GameObject.Find("Player").transform.GetComponentInChildren<UnitManager>();
         healthImage = transform.Find("Health").GetComponent<Image>();
         damageImage = transform.Find("Damage").GetComponent<Image>();
     }
