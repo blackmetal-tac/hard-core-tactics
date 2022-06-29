@@ -29,12 +29,6 @@ public class MainMenu : MonoBehaviour
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     //Buttons
     public void StartGame()
     {

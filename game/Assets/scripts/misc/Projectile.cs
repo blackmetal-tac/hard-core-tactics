@@ -24,14 +24,13 @@ public class Projectile : MonoBehaviour
     {
         if (transform.localScale != Vector3.zero)
         {
-            bullet.velocity = transform.TransformDirection(Vector3.forward) * speed;
+            bullet.velocity = speed * transform.TransformDirection(Vector3.forward);
             
             // Set bullet lifetime
-            this.Wait(3 , () => {
-                transform.localScale = Vector3.zero;
-                bulletCollider.enabled = false;
-                //poolObject.ReturnToPool();
-                gameObject.SetActive(false);
+            this.Wait(3f, () => {
+                //transform.localScale = Vector3.zero;
+                //bulletCollider.enabled = false;
+                //poolObject.ReturnToPool();                
             });
         }
         else 
@@ -59,7 +58,6 @@ public class Projectile : MonoBehaviour
 
         bulletCollider.enabled = false;
         transform.localScale = Vector3.zero;
-        //poolObject.ReturnToPool();
-        gameObject.SetActive(false);
+        poolObject.ReturnToPool();       
     }
 }

@@ -7,11 +7,6 @@ namespace OWS.ObjectPooling
     {
         private Action<PoolObject> returnToPool;
 
-        private void OnDisable()
-        {
-            ReturnToPool();
-        }
-
         public void Initialize(Action<PoolObject> returnAction)
         {
             //cache reference to return action

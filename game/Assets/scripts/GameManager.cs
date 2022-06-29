@@ -2,11 +2,12 @@ using TMPro;
 using System;
 using UnityEngine;
 using DG.Tweening;
+using OWS.ObjectPooling;
 
 public class GameManager : MonoBehaviour
 {
     private Camera camMain;
-    private GameObject executeButton, buttonFrame, crosshair, enemy, player, actionMask, 
+    private GameObject executeButton, buttonFrame, crosshair, enemy, actionMask, 
         clickMarker;
     private PlayerController playerController;
     private AIController AIController;
@@ -24,9 +25,11 @@ public class GameManager : MonoBehaviour
     // Turn timer
     private static TextMeshProUGUI timer;    
     private float timeValue;
-    public float turnTime = 3f;
+    public float turnTime;
 
     public bool inAction { get; set; }
+
+    public ObjectPool<PoolObject> bulletsPool;
 
     // Start is called before the first frame update
     void Start()
@@ -44,40 +47,31 @@ public class GameManager : MonoBehaviour
         actionMask = GameObject.Find("ActionMask");
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonFrame = executeButton.transform.GetChild(1).gameObject;
-        //playerUI = GameObject.Find("PlayerUI");
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
 
         // Turn timer
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
         timeValue = turnTime;
-        timer.text = timeValue.ToString();
+        timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
 
         // Set target
         crosshair = GameObject.Find("Crosshair");
         crosshairScr = crosshair.GetComponent<Crosshair>();
         enemy = GameObject.Find("Enemy");
-        player = GameObject.Find("Player");          
+
+        bulletsPool = new ObjectPool<PoolObject>(playerController.projectile);
     }
 
     // Update is called once per frame
     void Update()
     {
         // Crosshair position
-        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);       
+        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
 
-        // Timer display      
-        timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
-        if (inAction && timeValue > 0)
+        if (playerController.playerAgent.hasPath)
         {
-            timeValue -= Time.deltaTime;
-        }
-        else
-        {
-            inAction = false;
-            timeValue = turnTime;            
-        }
-
-        clickMarker.transform.Rotate(new Vector3(0, 0, -Time.deltaTime * 50));
+            clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
+        }        
     }
 
     // Start turn
@@ -91,6 +85,7 @@ public class GameManager : MonoBehaviour
             buttonFrame.transform.DOScaleX(1f, 0.1f);
         });
 
+        // At the end of turn
         this.Wait(turnTime, () =>
         {
             playerController.unitManager.moveSpeed = 0.1f;
@@ -99,6 +94,9 @@ public class GameManager : MonoBehaviour
 
             // Enable buttons
             actionMask.transform.localScale = Vector3.zero;
+            timeValue = turnTime;
+            timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
+            inAction = false;
         });
 
         playerController.playerAgent.speed = unitManager.moveSpeed;
@@ -111,7 +109,8 @@ public class GameManager : MonoBehaviour
             // Disable buttons
             actionMask.transform.localScale = Vector3.one;
 
-            
+            timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
+            timeValue -= Time.deltaTime;
         });
     }
 }

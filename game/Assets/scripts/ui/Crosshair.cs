@@ -18,8 +18,8 @@ public class Crosshair : MonoBehaviour
 
     public void Yoyo()
     {
-        transform.localScale = Vector3.one * (crosshairSize + playerManager.moveSpeed);
-        transform.DOScale(Vector3.one * (crosshairSize + playerManager.moveSpeed / 5), 2f)
+        transform.localScale = (crosshairSize + playerManager.moveSpeed) * Vector3.one;
+        transform.DOScale((crosshairSize + playerManager.moveSpeed / 5) * Vector3.one, 2f)
             .SetLoops(-1, LoopType.Yoyo);
     }
 }

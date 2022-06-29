@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
@@ -13,7 +12,6 @@ public class PlayerController : MonoBehaviour
     public GameObject projectile, firePoint, target;
     public UnitManager unitManager;
     private Crosshair crosshair;
-    private Image heatStatus;
 
     // NavMesh
     public NavMeshAgent playerAgent;
@@ -26,7 +24,6 @@ public class PlayerController : MonoBehaviour
 
         // UI
         crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
-        heatStatus = GameObject.Find("PlayerHeatStatus").GetComponent<Image>();
 
         // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();
@@ -61,7 +58,7 @@ public class PlayerController : MonoBehaviour
         // If in ACTION PHASE
         if (gameManager.inAction)
         {
-            unitManager.FireBurst(projectile, firePoint);
+            unitManager.FireBurst(projectile, firePoint, gameManager.bulletsPool);
             playerAgent.speed = unitManager.moveSpeed + 0.5f;
         }
 
@@ -85,7 +82,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Draw player path
-    private void DrawPath()
+    public void DrawPath()
     {
         walkPath.positionCount = playerAgent.path.corners.Length;
         walkPath.SetPosition(0, transform.position);
@@ -102,7 +99,7 @@ public class PlayerController : MonoBehaviour
             walkPath.SetPosition(i, pointPosition);
             clickMarker.transform.position = new Vector3(pointPosition.x, 0.05f, pointPosition.z);
             clickMarker.transform.localScale = Vector3.zero;
-            clickMarker.transform.DOScale(Vector3.one * 0.2f, 0.2f);
+            clickMarker.transform.DOScale(0.2f * Vector3.one , 0.2f);
         }
     }
 }

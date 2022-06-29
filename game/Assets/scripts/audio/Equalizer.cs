@@ -3,17 +3,17 @@ using UnityEngine.VFX;
 
 public class Equalizer : MonoBehaviour
 {
-    private AudioData audioData;
+    private AudioData _ad;
     private VisualEffect VFX;
 
     //Waves amplification
-    public int amp;
+    private int amp;
 
     // Start is called before the first frame update
     void Start()
     {
         amp = 100;
-        audioData = GameObject.Find("AudioManager").GetComponent<AudioData>();
+        _ad = GameObject.Find("AudioManager").GetComponent<AudioData>();
         VFX = GetComponent<VisualEffect>();
     }
 
@@ -21,28 +21,28 @@ public class Equalizer : MonoBehaviour
     void Update()
     {
             //audio waves low to high, need only 6 parameters
-            VFX.SetFloat("A", (audioData.samples[0] + audioData.samples[1] + audioData.samples[2] +
-                audioData.samples[3] + audioData.samples[4] + audioData.samples[5] +
-                audioData.samples[6] + audioData.samples[7] + audioData.samples[8]) * amp);
+            VFX.SetFloat("A", amp * (_ad.samples[0] + _ad.samples[1] + _ad.samples[2] +
+                _ad.samples[3] + _ad.samples[4] + _ad.samples[5] +
+                _ad.samples[6] + _ad.samples[7] + _ad.samples[8]));
 
-            VFX.SetFloat("B", (audioData.samples[9] + audioData.samples[10] + audioData.samples[11] +
-                audioData.samples[12] + audioData.samples[13] + audioData.samples[14] +
-                audioData.samples[15] + audioData.samples[16] + audioData.samples[17]) * amp * 2);
+            VFX.SetFloat("B", amp * 2 * (_ad.samples[9] + _ad.samples[10] + _ad.samples[11] +
+                _ad.samples[12] + _ad.samples[13] + _ad.samples[14] +
+                _ad.samples[15] + _ad.samples[16] + _ad.samples[17]));
 
-            VFX.SetFloat("C", (audioData.samples[18] + audioData.samples[19] + audioData.samples[20] +
-                audioData.samples[21] + audioData.samples[22] + audioData.samples[23] +
-                audioData.samples[24] + audioData.samples[25] + audioData.samples[26]) * amp * 4);
+            VFX.SetFloat("C", amp * 4 * (_ad.samples[18] + _ad.samples[19] + _ad.samples[20] +
+                _ad.samples[21] + _ad.samples[22] + _ad.samples[23] +
+                _ad.samples[24] + _ad.samples[25] + _ad.samples[26]));
 
-            VFX.SetFloat("D", (audioData.samples[27] + audioData.samples[28] + audioData.samples[29] +
-                audioData.samples[30] + audioData.samples[31] + audioData.samples[32] +
-                audioData.samples[33] + audioData.samples[34] + audioData.samples[35]) * amp * 8);
+            VFX.SetFloat("D", amp * 8 * (_ad.samples[27] + _ad.samples[28] + _ad.samples[29] +
+                _ad.samples[30] + _ad.samples[31] + _ad.samples[32] +
+                _ad.samples[33] + _ad.samples[34] + _ad.samples[35]));
 
-            VFX.SetFloat("E", (audioData.samples[36] + audioData.samples[37] + audioData.samples[38] +
-                audioData.samples[39] + audioData.samples[40] + audioData.samples[41] +
-                audioData.samples[42] + audioData.samples[43] + audioData.samples[44]) * amp * 16);
+            VFX.SetFloat("E", amp * 16 * (_ad.samples[36] + _ad.samples[37] + _ad.samples[38] +
+                _ad.samples[39] + _ad.samples[40] + _ad.samples[41] +
+                _ad.samples[42] + _ad.samples[43] + _ad.samples[44]));
 
-            VFX.SetFloat("F", (audioData.samples[45] + audioData.samples[46] + audioData.samples[47] +
-                audioData.samples[48] + audioData.samples[49] + audioData.samples[50] +
-                audioData.samples[51] + audioData.samples[52] + audioData.samples[53]) * amp * 32);    
+            VFX.SetFloat("F", amp * 32 * (_ad.samples[45] + _ad.samples[46] + _ad.samples[47] +
+                _ad.samples[48] + _ad.samples[49] + _ad.samples[50] +
+                _ad.samples[51] + _ad.samples[52] + _ad.samples[53]));    
     }
 }

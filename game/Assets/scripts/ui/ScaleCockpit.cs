@@ -17,14 +17,8 @@ public class ScaleCockpit : MonoBehaviour
         //initSound = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().initButton;
 
         this.Wait(delay * 0.2f, () => {
-            transform.DOScale(Vector3.one * scale, time).SetEase(Ease.OutBack, .5f);
+            transform.DOScale(scale * Vector3.one, time).SetEase(Ease.OutBack, .5f);
             //buttonAudio.PlayOneShot(initSound);
         });
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

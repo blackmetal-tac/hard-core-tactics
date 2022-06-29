@@ -8,7 +8,7 @@ public class LoadUI : MonoBehaviour
     private CanvasGroup canvasGroup;
     private GameObject initText;
     private GameManager gameManager;
-    public float alpha = 0.1f;
+    public float alpha;
 
     // Start is called before the first frame update
     void Start()

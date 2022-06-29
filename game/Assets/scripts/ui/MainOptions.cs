@@ -84,12 +84,6 @@ public class MainOptions : MonoBehaviour
         masterVol.value = vol;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     //Resolution buttons
     public void ResLeft()
     {

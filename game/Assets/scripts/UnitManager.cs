@@ -7,6 +7,7 @@ public class UnitManager : MonoBehaviour
 {
     private GameManager gameManager;
     private ShrinkBar shrinkBar;
+    private PlayerController playerController;
 
     // Stats    
     public float HP {get; set;}
@@ -19,19 +20,19 @@ public class UnitManager : MonoBehaviour
     public int burstSize; // Shooting stats
     public float fireDelay; //
     public float fireRate; //
-    private float rotSpeed = 0.5f;
+    private float rotSpeed;
 
     public GameObject target; // Aim at this
     private Vector3 direction; // Rotate body to the enemy
 
     public float shrinkTimer {get; set;}
-    private float lastBurst = 0f;
-
-    private static ObjectPool<PoolObject> bulletsPool;
+    private float lastBurst;  
 
     // Start is called before the first frame update
     void Start()
-    {        
+    { 
+
+        rotSpeed = 0.5f;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();        
         shrinkBar = GetComponentInChildren<ShrinkBar>();
 
@@ -69,7 +70,7 @@ public class UnitManager : MonoBehaviour
         });
 
         // Reset burst fire
-        lastBurst = 0f;        
+        lastBurst = 0f;      
     }
 
     private void FixedUpdate()
@@ -90,7 +91,7 @@ public class UnitManager : MonoBehaviour
         if ((shield < 1) && gameManager.inAction)
         {
             shield += Time.deltaTime * shieldRegen;
-            shield = Mathf.Round(shield * 100) / 100;
+            shield = Mathf.Round(100 * shield) / 100;
             shrinkBar.UpdateShield();            
         }
 
@@ -98,36 +99,33 @@ public class UnitManager : MonoBehaviour
         if ((heat > 0) && gameManager.inAction)
         {
             heat -= Time.deltaTime * cooling;
-            heat = Mathf.Round(heat * 100) / 100;
+            heat = Mathf.Round(100 * heat) / 100;
         }
 
         // Death
         if (HP <= 0)
         {
-            this.transform.localScale = Vector3.zero;
-        }
+            transform.localScale = Vector3.zero;
+        }   
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
-    public void FireBurst(GameObject objectToSpawn, GameObject firePoint)
+    public void FireBurst(GameObject objectToSpawn, GameObject firePoint, ObjectPool<PoolObject> objectPool)
     {
         if (Time.time > lastBurst + fireDelay)
         {
-            StartCoroutine(FireBurstCoroutine(objectToSpawn, firePoint));
+            StartCoroutine(FireBurstCoroutine(objectToSpawn, firePoint, objectPool));
             lastBurst = Time.time;
         }
     }
 
     // Coroutine for separate bursts
-    private IEnumerator FireBurstCoroutine(GameObject objectToSpawn, GameObject firePoint)
+    private IEnumerator FireBurstCoroutine(GameObject objectToSpawn, GameObject firePoint, ObjectPool<PoolObject> objectPool)
     {
-        //ObjectPool<PoolObject> bulletPool;
-        bulletsPool = new ObjectPool<PoolObject>(objectToSpawn);
-
         float bulletDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
-            bulletsPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
             firePoint.GetComponentInParent<UnitManager>().heat += objectToSpawn.GetComponent<Projectile>().heat;            
             yield return new WaitForSeconds(bulletDelay);
         }

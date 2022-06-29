@@ -29,7 +29,7 @@ public class AIController : MonoBehaviour
     {
         if (gameManager.inAction)
         {
-            unitManager.FireBurst(projectile, firePoint);
+            unitManager.FireBurst(projectile, firePoint, gameManager.bulletsPool);
             navAgent.speed = unitManager.moveSpeed + 0.5f;
         }
         else
