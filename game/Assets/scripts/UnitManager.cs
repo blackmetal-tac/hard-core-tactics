@@ -7,7 +7,6 @@ public class UnitManager : MonoBehaviour
 {
     private GameManager gameManager;
     private ShrinkBar shrinkBar;
-    private PlayerController playerController;
 
     // Stats    
     public float HP {get; set;}
@@ -26,12 +25,14 @@ public class UnitManager : MonoBehaviour
     private Vector3 direction; // Rotate body to the enemy
 
     public float shrinkTimer {get; set;}
-    private float lastBurst;  
+    private float lastBurst;
+
+    private bool isDead;
 
     // Start is called before the first frame update
     void Start()
-    { 
-
+    {
+        isDead = false;
         rotSpeed = 0.5f;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();        
         shrinkBar = GetComponentInChildren<ShrinkBar>();
@@ -76,7 +77,7 @@ public class UnitManager : MonoBehaviour
     private void FixedUpdate()
     {
         // Rotate body to target
-        if (gameManager.inAction)
+        if (gameManager.inAction && !isDead)
         {            
             direction = target.transform.position - transform.position;
             transform.rotation = Quaternion.RotateTowards(
@@ -88,7 +89,7 @@ public class UnitManager : MonoBehaviour
     void Update()
     {     
         // Shield regeneration
-        if ((shield < 1) && gameManager.inAction)
+        if ((shield < 1) && gameManager.inAction && !isDead)
         {
             shield += Time.deltaTime * shieldRegen;
             shield = Mathf.Round(100 * shield) / 100;
@@ -96,7 +97,7 @@ public class UnitManager : MonoBehaviour
         }
 
         // Heat dissipation
-        if ((heat > 0) && gameManager.inAction)
+        if ((heat > 0) && gameManager.inAction && !isDead)
         {
             heat -= Time.deltaTime * cooling;
             heat = Mathf.Round(100 * heat) / 100;
@@ -106,27 +107,29 @@ public class UnitManager : MonoBehaviour
         if (HP <= 0)
         {
             transform.localScale = Vector3.zero;
+            transform.GetComponent<BoxCollider>().enabled = false;
+            isDead = true;
         }   
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
-    public void FireBurst(GameObject objectToSpawn, GameObject firePoint, ObjectPool<PoolObject> objectPool)
+    public void FireBurst(GameObject firePoint, ObjectPool<PoolObject> objectPool)
     {
         if (Time.time > lastBurst + fireDelay)
         {
-            StartCoroutine(FireBurstCoroutine(objectToSpawn, firePoint, objectPool));
+            StartCoroutine(FireBurstCoroutine(firePoint, objectPool));
             lastBurst = Time.time;
         }
     }
 
     // Coroutine for separate bursts
-    private IEnumerator FireBurstCoroutine(GameObject objectToSpawn, GameObject firePoint, ObjectPool<PoolObject> objectPool)
+    private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool)
     {
         float bulletDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
-            firePoint.GetComponentInParent<UnitManager>().heat += objectToSpawn.GetComponent<Projectile>().heat;            
+            firePoint.GetComponentInParent<UnitManager>().heat += 0.01f;
             yield return new WaitForSeconds(bulletDelay);
         }
     }

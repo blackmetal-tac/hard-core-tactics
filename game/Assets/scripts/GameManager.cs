@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         crosshairScr = crosshair.GetComponent<Crosshair>();
         enemy = GameObject.Find("Enemy");
 
-        bulletsPool = new ObjectPool<PoolObject>(playerController.projectile);
+        bulletsPool = new ObjectPool<PoolObject>(playerController.projectile, 20);
     }
 
     // Update is called once per frame

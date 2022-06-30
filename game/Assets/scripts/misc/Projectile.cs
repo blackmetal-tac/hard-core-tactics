@@ -24,24 +24,7 @@ public class Projectile : MonoBehaviour
     {
         if (transform.localScale != Vector3.zero)
         {
-            bullet.velocity = speed * transform.TransformDirection(Vector3.forward);
-            
-            // Set bullet lifetime
-            this.Wait(3f, () => {
-                //transform.localScale = Vector3.zero;
-                //bulletCollider.enabled = false;
-                //poolObject.ReturnToPool();                
-            });
-        }
-        else 
-        {
-            bulletCollider.enabled = false;
-            bullet.velocity = Vector3.zero;
-        }
-
-        if (bullet.velocity != Vector3.zero) 
-        {
-            bulletCollider.enabled = true;
+            bullet.velocity = speed * transform.TransformDirection(Vector3.forward); 
         }
     }
 
@@ -57,7 +40,8 @@ public class Projectile : MonoBehaviour
         }
 
         bulletCollider.enabled = false;
-        transform.localScale = Vector3.zero;
-        poolObject.ReturnToPool();       
+        bullet.velocity = Vector3.zero;
+        transform.localScale = Vector3.zero;        
+        poolObject.ReturnToPool();
     }
 }

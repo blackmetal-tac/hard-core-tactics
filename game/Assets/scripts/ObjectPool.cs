@@ -40,7 +40,8 @@ namespace OWS.ObjectPooling
             else
                 t = GameObject.Instantiate(prefab).GetComponent<T>();
 
-            t.gameObject.transform.localScale = 0.05f * Vector3.one ; //ensure the object is on
+            t.gameObject.transform.localScale = 0.05f * Vector3.one; //ensure the object is on
+            t.gameObject.GetComponent<Collider>().enabled = true;
             t.Initialize(Push);
 
             //allow default behavior and turning object back on

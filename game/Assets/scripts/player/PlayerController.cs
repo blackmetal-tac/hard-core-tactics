@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         // If in ACTION PHASE
         if (gameManager.inAction)
         {
-            unitManager.FireBurst(projectile, firePoint, gameManager.bulletsPool);
+            unitManager.FireBurst(firePoint, gameManager.bulletsPool);
             playerAgent.speed = unitManager.moveSpeed + 0.5f;
         }
 
