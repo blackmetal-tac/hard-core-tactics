@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
 
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         AIController = GameObject.Find("Enemy").GetComponent<AIController>();
-        unitManager = playerController.GetComponentInChildren<UnitManager>();
+        unitManager = playerController.GetComponentInChildren<UnitManager>();        
 
         // UI
         clickMarker = GameObject.Find("ClickMarker");
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         crosshairScr = crosshair.GetComponent<Crosshair>();
         enemy = GameObject.Find("Enemy");
 
-        bulletsPool = new ObjectPool<PoolObject>(playerController.projectile, 20);
+        bulletsPool = new ObjectPool<PoolObject>(playerController.projectile, 15);
     }
 
     // Update is called once per frame
@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour
         // At the end of turn
         this.Wait(turnTime, () =>
         {
-            playerController.unitManager.moveSpeed = 0.1f;
+            //playerController.unitManager.moveSpeed = 0.1f;
             crosshairScr.Yoyo();
             clickMarker.transform.localScale = Vector3.zero;
 
@@ -111,6 +111,8 @@ public class GameManager : MonoBehaviour
 
             timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
             timeValue -= Time.deltaTime;
+
+            unitManager.aiming.StartAim(unitManager);
         });
     }
 }

@@ -8,7 +8,7 @@ public class AIController : MonoBehaviour
     private GameManager gameManager;
 
     // Set objects
-    public GameObject projectile, firePoint, target;
+    public GameObject projectile, target;
 
     // Move parameters
     private int moveOffset = 10;    
@@ -17,6 +17,7 @@ public class AIController : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        target = GameObject.Find("Player");
 
         navAgent = GetComponent<NavMeshAgent>();
         unitManager = GetComponentInChildren<UnitManager>();
@@ -29,7 +30,7 @@ public class AIController : MonoBehaviour
     {
         if (gameManager.inAction)
         {
-            unitManager.FireBurst(firePoint, gameManager.bulletsPool);
+            unitManager.FireBurst(unitManager.firePoint, gameManager.bulletsPool);
             navAgent.speed = unitManager.moveSpeed + 0.5f;
         }
         else

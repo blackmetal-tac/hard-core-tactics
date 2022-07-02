@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour
 
     // Objects
     private GameObject clickMarker;
-    public GameObject projectile, firePoint, target;
-    public UnitManager unitManager;
+    public GameObject projectile, target;
+    private UnitManager unitManager;
     private Crosshair crosshair;
 
     // NavMesh
@@ -24,9 +24,10 @@ public class PlayerController : MonoBehaviour
 
         // UI
         crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
+        target = GameObject.Find("Enemy");
 
         // Navmesh setup        
-        playerAgent = GetComponent<NavMeshAgent>();
+        playerAgent = GetComponent<NavMeshAgent>();        
         walkPath = GetComponent<LineRenderer>();
 
         // Path
@@ -42,6 +43,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //NavMesh.avoidancePredictionTime = 5;    
+
         // Mouse click
         if (Input.GetMouseButtonDown(0))
         {
@@ -58,7 +61,7 @@ public class PlayerController : MonoBehaviour
         // If in ACTION PHASE
         if (gameManager.inAction)
         {
-            unitManager.FireBurst(firePoint, gameManager.bulletsPool);
+            unitManager.FireBurst(unitManager.firePoint, gameManager.bulletsPool);
             playerAgent.speed = unitManager.moveSpeed + 0.5f;
         }
 

@@ -21,21 +21,24 @@ public class UnitManager : MonoBehaviour
     public float fireRate; //
     private float rotSpeed;
 
-    public GameObject target; // Aim at this
+    public GameObject firePoint, target; // Aiming objects
+    public Aiming aiming;
     private Vector3 direction; // Rotate body to the enemy
 
     public float shrinkTimer {get; set;}
     private float lastBurst;
 
-    private bool isDead;
+    private bool isDead; // ???
 
     // Start is called before the first frame update
     void Start()
     {
         isDead = false;
         rotSpeed = 0.5f;
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();        
-        shrinkBar = GetComponentInChildren<ShrinkBar>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        firePoint = transform.Find("FirePoint").gameObject;
+        aiming = firePoint.GetComponent<Aiming>();
+        shrinkBar = GetComponentInChildren<ShrinkBar>();        
 
         // Load HP, Shield, Heat bars
         this.Progress(gameManager.loadTime, () => {
@@ -102,14 +105,6 @@ public class UnitManager : MonoBehaviour
             heat -= Time.deltaTime * cooling;
             heat = Mathf.Round(100 * heat) / 100;
         }
-
-        // Death
-        if (HP <= 0)
-        {
-            transform.localScale = Vector3.zero;
-            transform.GetComponent<BoxCollider>().enabled = false;
-            isDead = true;
-        }   
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
@@ -170,6 +165,17 @@ public class UnitManager : MonoBehaviour
         else
         {
             HP -= damage;
-        }             
+        }
+
+        // Death
+        if (HP <= 0)
+        {
+            //transform.localScale = Vector3.zero;
+            //transform.GetComponent<Collider>().enabled = false;
+            //transform.GetComponentInParent<NavMeshAgent>().enabled = false;
+            //transform.parent.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
+            isDead = true;
+        }
     }
 }

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Aiming : MonoBehaviour
 {
-    private GameManager gameManager;
     private UnitManager unitManager;
     private Vector3 spread;
 
@@ -12,21 +11,15 @@ public class Aiming : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        unitManager = GetComponentInParent<UnitManager>();
         transform.LookAt(unitManager.target.transform.position);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartAim(UnitManager unitManager)
     {
-        if (gameManager.inAction) 
-        {
-            spread = new Vector3(
-                Random.Range((-unitManager.moveSpeed * spreadMult) - baseSpread, (unitManager.moveSpeed * spreadMult) + baseSpread),
-                Random.Range((-unitManager.moveSpeed * spreadMult) - baseSpread / 2, (unitManager.moveSpeed * spreadMult) + baseSpread / 2),
-                Random.Range((-unitManager.moveSpeed * spreadMult) - baseSpread, (unitManager.moveSpeed * spreadMult) + baseSpread));
-            transform.LookAt(unitManager.target.transform.position + spread);
-        }        
+        spread = new Vector3(
+            Random.Range((-unitManager.moveSpeed * spreadMult) - baseSpread, (unitManager.moveSpeed * spreadMult) + baseSpread),
+            Random.Range((-unitManager.moveSpeed * spreadMult) - baseSpread / 2, (unitManager.moveSpeed * spreadMult) + baseSpread / 2),
+            Random.Range((-unitManager.moveSpeed * spreadMult) - baseSpread, (unitManager.moveSpeed * spreadMult) + baseSpread));
+        transform.LookAt(unitManager.target.transform.position + spread);
     }
 }
