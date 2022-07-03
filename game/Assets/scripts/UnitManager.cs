@@ -24,6 +24,7 @@ public class UnitManager : MonoBehaviour
     public GameObject firePoint, target; // Aiming objects
     public Aiming aiming;
     private Vector3 direction; // Rotate body to the enemy
+    public Projectile projectile;
 
     public float shrinkTimer {get; set;}
     private float lastBurst;
@@ -37,6 +38,7 @@ public class UnitManager : MonoBehaviour
         rotSpeed = 0.5f;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         firePoint = transform.Find("FirePoint").gameObject;
+        projectile = GameObject.Find("Bullet").GetComponent<Projectile>();
         aiming = firePoint.GetComponent<Aiming>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();        
 
@@ -108,22 +110,22 @@ public class UnitManager : MonoBehaviour
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
-    public void FireBurst(GameObject firePoint, ObjectPool<PoolObject> objectPool)
+    public void FireBurst(GameObject firePoint, ObjectPool<PoolObject> objectPool, Projectile projectile)
     {
         if (Time.time > lastBurst + fireDelay)
         {
-            StartCoroutine(FireBurstCoroutine(firePoint, objectPool));
+            StartCoroutine(FireBurstCoroutine(firePoint, objectPool, projectile));
             lastBurst = Time.time;
         }
     }
 
     // Coroutine for separate bursts
-    private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool)
+    private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, Projectile projectile)
     {
         float bulletDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation);
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectile);
             firePoint.GetComponentInParent<UnitManager>().heat += 0.01f;
             yield return new WaitForSeconds(bulletDelay);
         }
@@ -170,7 +172,7 @@ public class UnitManager : MonoBehaviour
         // Death
         if (HP <= 0)
         {
-            //transform.localScale = Vector3.zero;
+            transform.localScale = Vector3.zero;
             //transform.GetComponent<Collider>().enabled = false;
             //transform.GetComponentInParent<NavMeshAgent>().enabled = false;
             //transform.parent.gameObject.SetActive(false);

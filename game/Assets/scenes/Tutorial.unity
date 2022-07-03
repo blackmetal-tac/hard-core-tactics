@@ -234,7 +234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 70883866}
   - component: {fileID: 70883867}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +506,7 @@ GameObject:
   m_Component:
   - component: {fileID: 274143385}
   - component: {fileID: 274143386}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Quad (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -625,7 +625,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 319027221}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CollidersBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -666,7 +666,6 @@ GameObject:
   - component: {fileID: 325939486}
   - component: {fileID: 325939493}
   - component: {fileID: 325939485}
-  - component: {fileID: 325939492}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -754,22 +753,6 @@ Transform:
   m_Father: {fileID: 642910588}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &325939492
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 325939484}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!114 &325939493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,6 +776,7 @@ MonoBehaviour:
   firePoint: {fileID: 0}
   target: {fileID: 0}
   aiming: {fileID: 0}
+  projectile: {fileID: 0}
 --- !u!224 &424978581 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6174276809834148261, guid: f247062508543d34c8979f5cb5664670,
@@ -865,7 +849,7 @@ GameObject:
   - component: {fileID: 460906006}
   - component: {fileID: 460906005}
   - component: {fileID: 460906009}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1221,7 +1205,7 @@ GameObject:
   - component: {fileID: 618136021}
   - component: {fileID: 618136016}
   - component: {fileID: 618136022}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1243,6 +1227,7 @@ MonoBehaviour:
   damage: 0.03
   heat: 0.02
   speed: 10
+  size: 0.05
 --- !u!135 &618136017
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1664,7 +1649,7 @@ GameObject:
   m_Component:
   - component: {fileID: 652705617}
   - component: {fileID: 652705618}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Quad (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1881,10 +1866,10 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1911
+    m_Bits: 2147483647
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2811,7 +2796,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1164519846}
   - component: {fileID: 1164519847}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Quad (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3033,7 +3018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1436642854}
   - component: {fileID: 1436642855}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Quad (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3494,7 +3479,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1711596204}
   - component: {fileID: 1711596205}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Quad (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4009,7 +3994,6 @@ GameObject:
   - component: {fileID: 2013035606}
   - component: {fileID: 2013035605}
   - component: {fileID: 2013035604}
-  - component: {fileID: 2013035608}
   - component: {fileID: 2013035610}
   m_Layer: 0
   m_Name: Body
@@ -4098,22 +4082,6 @@ Transform:
   m_Father: {fileID: 1443547885}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!54 &2013035608
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2013035603}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!114 &2013035610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4137,6 +4105,7 @@ MonoBehaviour:
   firePoint: {fileID: 0}
   target: {fileID: 0}
   aiming: {fileID: 0}
+  projectile: {fileID: 0}
 --- !u!1 &2015514941
 GameObject:
   m_ObjectHideFlags: 0

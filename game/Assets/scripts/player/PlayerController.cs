@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
         // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();        
         walkPath = GetComponent<LineRenderer>();
+        NavMesh.avoidancePredictionTime = 5;
 
         // Path
         clickMarker = GameObject.Find("ClickMarker");   
@@ -42,9 +43,7 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        //NavMesh.avoidancePredictionTime = 5;    
-
+    {          
         // Mouse click
         if (Input.GetMouseButtonDown(0))
         {
@@ -61,7 +60,7 @@ public class PlayerController : MonoBehaviour
         // If in ACTION PHASE
         if (gameManager.inAction)
         {
-            unitManager.FireBurst(unitManager.firePoint, gameManager.bulletsPool);
+            unitManager.FireBurst(unitManager.firePoint, gameManager.bulletsPool, unitManager.projectile);
             playerAgent.speed = unitManager.moveSpeed + 0.5f;
         }
 

@@ -6,9 +6,9 @@ public class Projectile : MonoBehaviour
     public float damage;
     public float heat;
     public float speed;
+    public float size;
 
     private Rigidbody bullet;
-    private Collider bulletCollider;
     private PoolObject poolObject;
 
     // Start is called before the first frame update
@@ -16,17 +16,7 @@ public class Projectile : MonoBehaviour
     {
         poolObject = GetComponent<PoolObject>();
         bullet = GetComponent<Rigidbody>();
-        bulletCollider = GetComponent<Collider>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (transform.localScale != Vector3.zero)
-        {
-            bullet.velocity = speed * transform.TransformDirection(Vector3.forward); 
-        }
-    }
+    } 
 
     // Bullet collision
     private void OnTriggerEnter(Collider collider)
@@ -39,9 +29,9 @@ public class Projectile : MonoBehaviour
             collider.GetComponent<UnitManager>().shrinkTimer = 0.5f;                        
         }
 
-        bulletCollider.enabled = false;
-        bullet.velocity = Vector3.zero;
-        transform.localScale = Vector3.zero;        
+        bullet.velocity = Vector3.zero;       
         poolObject.ReturnToPool();
+
+        //Debug.Log(collider.name);
     }
 }

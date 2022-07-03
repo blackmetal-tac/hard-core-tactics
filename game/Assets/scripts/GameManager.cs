@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
         clickMarker;
     private PlayerController playerController;
     private AIController AIController;
-    private UnitManager unitManager;
+    private UnitManager playerManager, enemyManager;
     private Crosshair crosshairScr;
 
     // UI settings
@@ -39,7 +39,8 @@ public class GameManager : MonoBehaviour
 
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         AIController = GameObject.Find("Enemy").GetComponent<AIController>();
-        unitManager = playerController.GetComponentInChildren<UnitManager>();        
+        playerManager = playerController.GetComponentInChildren<UnitManager>();
+        enemyManager = AIController.GetComponentInChildren<UnitManager>();
 
         // UI
         clickMarker = GameObject.Find("ClickMarker");
@@ -99,7 +100,7 @@ public class GameManager : MonoBehaviour
             inAction = false;
         });
 
-        playerController.playerAgent.speed = unitManager.moveSpeed;
+        playerController.playerAgent.speed = playerManager.moveSpeed;
         inAction = true;
         AIController.SetPath();
         
@@ -112,7 +113,8 @@ public class GameManager : MonoBehaviour
             timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
             timeValue -= Time.deltaTime;
 
-            unitManager.aiming.StartAim(unitManager);
+            playerManager.aiming.StartAim(playerManager);
+            enemyManager.aiming.StartAim(enemyManager);
         });
     }
 }

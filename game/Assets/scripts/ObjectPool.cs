@@ -40,8 +40,7 @@ namespace OWS.ObjectPooling
             else
                 t = GameObject.Instantiate(prefab).GetComponent<T>();
 
-            t.gameObject.transform.localScale = 0.05f * Vector3.one; //ensure the object is on
-            t.gameObject.GetComponent<Collider>().enabled = true;
+            //t.gameObject.transform.localScale = 0.05f * Vector3.one; //ensure the object is on
             t.Initialize(Push);
 
             //allow default behavior and turning object back on
@@ -77,11 +76,13 @@ namespace OWS.ObjectPooling
             return go;
         }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation)
+        public GameObject PullGameObject(Vector3 position, Quaternion rotation, Projectile projectile)
         {
             GameObject go = Pull().gameObject;
             go.transform.position = position;
             go.transform.rotation = rotation;
+            go.gameObject.transform.localScale = projectile.size * Vector3.one; //ensure the object is on
+            go.gameObject.GetComponent<Rigidbody>().velocity = projectile.speed * go.transform.TransformDirection(Vector3.forward);
             return go;
         }
 
