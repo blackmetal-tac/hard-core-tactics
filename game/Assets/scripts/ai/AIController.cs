@@ -3,9 +3,8 @@ using UnityEngine.AI;
 
 public class AIController : MonoBehaviour
 {
-    private NavMeshAgent navAgent;
+    public NavMeshAgent unitAgent;
     private UnitManager unitManager;
-    private GameManager gameManager;
 
     // Set objects
     public GameObject projectile, target;
@@ -16,36 +15,36 @@ public class AIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         target = GameObject.Find("Player");
 
-        navAgent = GetComponent<NavMeshAgent>();
+        unitAgent = GetComponent<NavMeshAgent>();
         unitManager = GetComponentInChildren<UnitManager>();
         unitManager.target = target;
-        navAgent.speed = 0;        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (gameManager.inAction)
-        {
-            unitManager.FireBurst(unitManager.firePoint, gameManager.bulletsPool, unitManager.projectile);
-            navAgent.speed = unitManager.moveSpeed + 0.5f;
-        }
-        else
-        {
-            navAgent.speed = 0;
-        }
+        unitAgent.speed = 0;        
     }
 
     public void SetPath()
     {
-        navAgent.SetDestination(new Vector3(
+        unitAgent.SetDestination(new Vector3(
          target.transform.position.x + Random.Range(-moveOffset, moveOffset),
          target.transform.position.y + Random.Range(-moveOffset, moveOffset),
          target.transform.position.z));
 
-        unitManager.SetDestination(navAgent.destination, navAgent);
+        unitManager.SetDestination(unitAgent.destination, unitAgent);
+    }
+
+    public void Aim()
+    {
+        unitManager.aiming.StartAim(unitManager);
+    }
+
+    public void Move()
+    {
+        unitAgent.speed = unitManager.moveSpeed + 0.5f;
+    }
+
+    public void EndMove()
+    {
+        unitManager.moveSpeed = 0.1f;
     }
 }

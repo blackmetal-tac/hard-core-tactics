@@ -86,24 +86,13 @@ public class GameManager : MonoBehaviour
             buttonFrame.transform.DOScaleX(1f, 0.1f);
         });
 
-        // At the end of turn
-        this.Wait(turnTime, () =>
-        {
-            //playerController.unitManager.moveSpeed = 0.1f;
-            crosshairScr.Yoyo();
-            clickMarker.transform.localScale = Vector3.zero;
-
-            // Enable buttons
-            actionMask.transform.localScale = Vector3.zero;
-            timeValue = turnTime;
-            timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
-            inAction = false;
-        });
-
         playerController.playerAgent.speed = playerManager.moveSpeed;
         inAction = true;
         AIController.SetPath();
-        
+        AIController.Move();
+
+        playerController.Move();
+
         // Action phase
         this.Progress(turnTime, () => {
 
@@ -113,8 +102,31 @@ public class GameManager : MonoBehaviour
             timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
             timeValue -= Time.deltaTime;
 
-            playerManager.aiming.StartAim(playerManager);
-            enemyManager.aiming.StartAim(enemyManager);
+            playerController.Aim();
+
+            AIController.Aim();            
+
+            playerManager.FireBurst(playerManager.firePoint, bulletsPool, playerManager.projectile);
+            enemyManager.FireBurst(enemyManager.firePoint, bulletsPool, enemyManager.projectile);
+        });
+
+        // At the end of turn
+        this.Wait(turnTime, () =>
+        { 
+            clickMarker.transform.localScale = Vector3.zero;
+
+            // Enable buttons
+            actionMask.transform.localScale = Vector3.zero;
+            timeValue = turnTime;
+            timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
+            inAction = false;
+
+            playerController.EndMove();
+
+            AIController.EndMove();
+
+            // Update crosshair size after end moving
+            crosshairScr.Yoyo();
         });
     }
 }

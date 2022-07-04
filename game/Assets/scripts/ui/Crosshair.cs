@@ -12,13 +12,13 @@ public class Crosshair : MonoBehaviour
         playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
         this.Wait(.6f, () => 
         {
+            transform.localScale = (crosshairSize + playerManager.moveSpeed) * Vector3.one;
             Yoyo();
         });               
     }
 
     public void Yoyo()
     {
-        transform.localScale = (crosshairSize + playerManager.moveSpeed) * Vector3.one;
         transform.DOScale((crosshairSize + playerManager.moveSpeed / 5) * Vector3.one, 2f)
             .SetLoops(-1, LoopType.Yoyo);
     }

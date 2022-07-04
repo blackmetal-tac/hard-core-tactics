@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     // Objects
     private GameObject clickMarker;
     public GameObject projectile, target;
-    private UnitManager unitManager;
+    private UnitManager playerManager;
     private Crosshair crosshair;
 
     // NavMesh
@@ -36,9 +36,9 @@ public class PlayerController : MonoBehaviour
         walkPath.startWidth = 0.02f;
         walkPath.endWidth = 0.02f;
         walkPath.positionCount = 0;
-    
-        unitManager = GetComponentInChildren<UnitManager>();
-        unitManager.target = target;
+
+        playerManager = GetComponentInChildren<UnitManager>();
+        playerManager.target = target;
     }
 
     // Update is called once per frame
@@ -57,13 +57,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // If in ACTION PHASE
-        if (gameManager.inAction)
-        {
-            unitManager.FireBurst(unitManager.firePoint, gameManager.bulletsPool, unitManager.projectile);
-            playerAgent.speed = unitManager.moveSpeed + 0.5f;
-        }
-
         // Draw player path
         if (playerAgent.hasPath)
         {
@@ -79,7 +72,7 @@ public class PlayerController : MonoBehaviour
 
         if(isHit)
         {
-            unitManager.SetDestination(hit.point, playerAgent);
+            playerManager.SetDestination(hit.point, playerAgent);
         }       
     }
 
@@ -103,5 +96,20 @@ public class PlayerController : MonoBehaviour
             clickMarker.transform.localScale = Vector3.zero;
             clickMarker.transform.DOScale(0.2f * Vector3.one , 0.2f);
         }
+    }
+
+    public void Aim()
+    {
+        playerManager.aiming.StartAim(playerManager);
+    }
+
+    public void Move()
+    {
+        playerAgent.speed = playerManager.moveSpeed + 0.5f;
+    }
+
+    public void EndMove()
+    {
+        playerManager.moveSpeed = 0.1f;
     }
 }
