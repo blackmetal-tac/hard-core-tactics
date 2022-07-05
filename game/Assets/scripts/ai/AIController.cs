@@ -19,8 +19,7 @@ public class AIController : MonoBehaviour
 
         unitAgent = GetComponent<NavMeshAgent>();
         unitManager = GetComponentInChildren<UnitManager>();
-        unitManager.target = target;
-        unitAgent.speed = 0;        
+        unitManager.target = target;     
     }
 
     public void SetPath()

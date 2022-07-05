@@ -36,6 +36,7 @@ public class UnitManager : MonoBehaviour
     {
         isDead = false;
         rotSpeed = 0.5f;
+        moveSpeed = 0.1f;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         firePoint = transform.Find("FirePoint").gameObject;
         projectile = GameObject.Find("Bullet").GetComponent<Projectile>();
