@@ -9,8 +9,8 @@ public class UnitManager : MonoBehaviour
     private ShrinkBar shrinkBar;
 
     // Stats    
-    public float HP {get; set;}
-    public float shield { get; set; }
+    public float HP;
+    public float shield;
     public float shieldRegen;
     public float heat; // Total unit heat
     public float cooling; // Cooling modifier
@@ -41,7 +41,7 @@ public class UnitManager : MonoBehaviour
         firePoint = transform.Find("FirePoint").gameObject;
         projectile = GameObject.Find("Bullet").GetComponent<Projectile>();
         aiming = firePoint.GetComponent<Aiming>();
-        shrinkBar = GetComponentInChildren<ShrinkBar>();        
+        shrinkBar = GetComponentInChildren<ShrinkBar>();
 
         // Load HP, Shield, Heat bars
         this.Progress(gameManager.loadTime, () => {
@@ -60,7 +60,9 @@ public class UnitManager : MonoBehaviour
                 heat -= Time.deltaTime * 0.6f;
             }
 
-            shrinkBar.UpdateShield();            
+            shrinkBar.UpdateShield();
+            shrinkBar.UpdateHealth();
+            shrinkBar.UpdateHeat();
         });
 
         // Load Heat
@@ -107,6 +109,12 @@ public class UnitManager : MonoBehaviour
         {
             heat -= Time.deltaTime * cooling;
             heat = Mathf.Round(100 * heat) / 100;
+            shrinkBar.UpdateHeat();
+        }
+
+        if (gameManager.inAction && !isDead)
+        {
+            shrinkBar.UpdateHealth();
         }
     }
 
@@ -161,13 +169,16 @@ public class UnitManager : MonoBehaviour
     // Take damage
     public void TakeDamage(float damage)
     {
+        // Reset HP bar damage animation
+        shrinkTimer = 0.5f;
+
         if (shield > 0)
         {
             shield -= damage;
         }
         else
         {
-            HP -= damage;
+            HP -= damage;            
         }
 
         // Death

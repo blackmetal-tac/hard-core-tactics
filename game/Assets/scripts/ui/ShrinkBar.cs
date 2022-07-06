@@ -5,9 +5,9 @@ public class ShrinkBar : MonoBehaviour
 {
     private Camera camMain;
     private Image shieldImage, shieldDmgImage, shieldImageInd, shieldDmgImageInd, healthImage, healthDmgImage,
-        healthImageInd, healthDmgImageInd, heatImage, heatIndicator;
+        healthImageInd, healthDmgImageInd, heatImage, heatImageInd;
     private UnitManager unitManager;
-    private GameObject unitUI, shieldIndicator, healthIndicator;
+    private GameObject unitUI, shieldIndicator, healthIndicator, heatIndicator;
     private CanvasGroup shieldCanvasGroup, healthCanvasGroup, heatCanvasGroup;
     private GameManager gameManager;
 
@@ -29,18 +29,18 @@ public class ShrinkBar : MonoBehaviour
         shieldDmgImageInd = shieldIndicator.transform.Find("Damage").GetComponent<Image>();
 
         // Health
-        healthImage = transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetComponent<Image>();
-        healthDmgImage = transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>();
+        healthImage = transform.GetChild(0).GetChild(0).GetChild(1).GetChild(1).GetComponent<Image>();
+        healthDmgImage = transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>();
         healthIndicator = GameObject.Find("HealthIndicator");
         healthCanvasGroup = healthIndicator.GetComponent<CanvasGroup>();
         healthImageInd = healthIndicator.transform.Find("Health").GetComponent<Image>();
         healthDmgImageInd = healthIndicator.transform.Find("Damage").GetComponent<Image>();
 
-
         // Heat
-        heatImage = transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetComponent<Image>();
-        heatIndicator = GameObject.Find("HeatIndicator").GetComponent<Image>();
-        heatCanvasGroup = heatIndicator.GetComponent<CanvasGroup>();        
+        heatImage = transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>();
+        heatIndicator = GameObject.Find("HeatIndicator");
+        heatCanvasGroup = heatIndicator.GetComponent<CanvasGroup>();
+        heatImageInd = heatIndicator.transform.Find("Health").GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -51,39 +51,40 @@ public class ShrinkBar : MonoBehaviour
 
     public void UpdateShield()
     {
-        Shrink(shieldImage, shieldDmgImage);
+        Shrink(shieldImage, shieldDmgImage, unitManager.shield);
 
         if (unitManager.transform.parent.name == "Player")
         {
             shieldCanvasGroup.alpha = gameManager.crosshairBars + ((1 - shieldImage.fillAmount) / 2);
-            Shrink(shieldImageInd, shieldDmgImageInd);
+            Shrink(shieldImageInd, shieldDmgImageInd, unitManager.shield);
         }
     }
 
     public void UpdateHealth()
     {
-        Shrink(healthImage, healthDmgImage);
+        Shrink(healthImage, healthDmgImage, unitManager.HP);
 
         if (unitManager.transform.parent.name == "Player")
         {
             healthCanvasGroup.alpha = gameManager.crosshairBars + ((1 - healthImage.fillAmount) / 2);
-            Shrink(healthImageInd, healthDmgImageInd);
+            Shrink(healthImageInd, healthDmgImageInd, unitManager.HP);
         }
     }
 
     public void UpdateHeat()
     {
-        heatImage.fillAmount = unitManager.heat;
+        heatImage.fillAmount = unitManager.heat;        
 
         if (unitManager.transform.parent.name == "Player")
-        {
-            heatCanvasGroup.alpha = gameManager.crosshairBars + ((1 - healthImage.fillAmount) / 2);
+        {           
+            heatCanvasGroup.alpha = gameManager.crosshairBars + (unitManager.heat * 0.8f);
+            heatImageInd.fillAmount = unitManager.heat;
         }
     }
 
-    private void Shrink(Image healthImage, Image damageImage)
+    private void Shrink(Image healthImage, Image damageImage, float healthValue)
     {
-        healthImage.fillAmount = unitManager.shield;
+        healthImage.fillAmount = healthValue;
 
         // Health bar damage animation
         unitManager.shrinkTimer -= Time.deltaTime;

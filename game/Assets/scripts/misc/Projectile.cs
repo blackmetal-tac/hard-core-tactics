@@ -24,9 +24,6 @@ public class Projectile : MonoBehaviour
         if (collider.name == "Body") 
         {
             collider.GetComponent<UnitManager>().TakeDamage(damage);
-
-            // Reset HP bar damage animation
-            collider.GetComponent<UnitManager>().shrinkTimer = 0.5f;                        
         }
 
         bullet.velocity = Vector3.zero;       
