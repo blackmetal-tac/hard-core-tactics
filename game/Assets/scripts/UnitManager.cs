@@ -7,6 +7,7 @@ public class UnitManager : MonoBehaviour
 {
     private GameManager gameManager;
     private ShrinkBar shrinkBar;
+    private NavMeshAgent navMeshAgent;
 
     // Stats    
     public float HP;
@@ -29,7 +30,7 @@ public class UnitManager : MonoBehaviour
     public float shrinkTimer {get; set;}
     private float lastBurst;
 
-    private bool isDead; // ???
+    public bool isDead; // ???
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +40,8 @@ public class UnitManager : MonoBehaviour
         moveSpeed = 0.1f;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         firePoint = transform.Find("FirePoint").gameObject;
+        navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
+
         projectile = GameObject.Find("Bullet").GetComponent<Projectile>();
         aiming = firePoint.GetComponent<Aiming>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();
@@ -176,7 +179,7 @@ public class UnitManager : MonoBehaviour
         {
             shield -= damage;
         }
-        else
+        else if (HP > 0)
         {
             HP -= damage;            
         }
@@ -184,12 +187,9 @@ public class UnitManager : MonoBehaviour
         // Death
         if (HP <= 0)
         {
-            transform.localScale = Vector3.zero;
-            //transform.GetComponent<Collider>().enabled = false;
-            //transform.GetComponentInParent<NavMeshAgent>().enabled = false;
-            //transform.parent.gameObject.SetActive(false);
-            //this.gameObject.SetActive(false);
             isDead = true;
+            navMeshAgent.enabled = false;
+            transform.localScale = Vector3.zero;
         }
     }
 }

@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
         // UI
         clickMarker = GameObject.Find("ClickMarker");
         executeButton = GameObject.Find("ExecuteButton");
-        actionMask = GameObject.Find("ActionMask");
+        actionMask = executeButton.transform.Find("ActionMask").gameObject;
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonFrame = executeButton.transform.GetChild(1).gameObject;
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
@@ -86,28 +86,37 @@ public class GameManager : MonoBehaviour
             buttonFrame.transform.DOScaleX(1f, 0.1f);
         });
 
-        playerController.playerAgent.speed = playerManager.moveSpeed;
         inAction = true;
-        AIController.SetPath();
-        AIController.Move();
 
+        // Disable buttons
+        actionMask.transform.localScale = Vector3.one;
+
+        // Enemy actions
+        if (!enemyManager.isDead)
+        {
+            AIController.SetPath();
+            AIController.Move();
+        }
+
+        // Player actions
         playerController.Move();
 
         // Action phase
         this.Progress(turnTime, () => {
-
-            // Disable buttons
-            actionMask.transform.localScale = Vector3.one;
-
+            
             timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
             timeValue -= Time.deltaTime;
 
+            // Enemy actions
+            if (!enemyManager.isDead)
+            {
+                AIController.Aim();
+                enemyManager.FireBurst(enemyManager.firePoint, bulletsPool, enemyManager.projectile);
+            }
+
+            // Player actions
             playerController.Aim();
-
-            AIController.Aim();            
-
-            playerManager.FireBurst(playerManager.firePoint, bulletsPool, playerManager.projectile);
-            enemyManager.FireBurst(enemyManager.firePoint, bulletsPool, enemyManager.projectile);
+            playerManager.FireBurst(playerManager.firePoint, bulletsPool, playerManager.projectile);            
         });
 
         // At the end of turn
@@ -121,9 +130,13 @@ public class GameManager : MonoBehaviour
             timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
             inAction = false;
 
-            playerController.EndMove();
+            // Enemy actions
+            if (!enemyManager.isDead)
+            {
+                AIController.EndMove();
+            }            
 
-            AIController.EndMove();
+            playerController.EndMove();
 
             // Update crosshair size after end moving
             crosshairScr.Yoyo();
