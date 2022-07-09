@@ -3,46 +3,45 @@ using TMPro;
 
 public class SongName : MonoBehaviour
 {
+    public int textSpeed;
     private AudioClip song;
     private TextMeshProUGUI textmeshPro;
-    private float width, scrollPos, startPos, posX;
-    private RectTransform rectTransform;
+    private float scrollPos, startPos, posX;
+    private bool isReady;
 
     // Start is called before the first frame update
     void Start()
     {
         song = GameObject.Find("AudioManager").GetComponent<AudioSource>().clip;      
         textmeshPro = GetComponent<TextMeshProUGUI>();
-        scrollPos = 0;
-        //startPos = textmeshPro.transform.position.x;
-        startPos = transform.localPosition.x;
-        posX = startPos;
+
+        this.Wait(1f, () =>
+        {
+            scrollPos = 0;
+            startPos = transform.position.x;
+            posX = startPos;
+            isReady = true;
+        });
     }
 
     // Update is called once per frame
     void Update()
-    {       
+    {
         //Double strings and spaces
-        textmeshPro.text = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString() +
-        "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString();
+        textmeshPro.text = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString() +
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString();
 
-        //Set reset modifier for animation
-        width = textmeshPro.preferredWidth / 2;        
-
-        //Text animation
-        //textmeshPro.transform.position = new Vector3(-scrollPos + posX,
-          //  textmeshPro.transform.position.y, textmeshPro.transform.position.z);
-
-        transform.localPosition = new Vector3(-scrollPos + posX,
-            transform.localPosition.y, transform.localPosition.z);
-        scrollPos += Time.deltaTime / 2000;
-
-        Debug.Log(transform.localPosition.x);
-
-        if (transform.localPosition.x <= -width)
+        if (isReady)
         {
-            scrollPos = 0;
-            posX = startPos;
+            transform.position = new Vector3(-scrollPos + posX,
+                transform.position.y, transform.position.z);
+            scrollPos += Time.deltaTime / textSpeed;
+
+            if (transform.position.x / 2 >= -scrollPos)
+            {
+                scrollPos = 0.02f;
+                posX = startPos;
+            }
         }
     }
 }

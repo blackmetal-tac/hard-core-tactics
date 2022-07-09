@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     // UI settings
     public float crosshairBars;
     public float loadTime;
+    public float songTitleSpeed;
 
     // Audio
     private AudioSource audioUI;
