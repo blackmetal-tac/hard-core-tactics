@@ -360,7 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.8
+  scale: 0.7
   time: 1
   delay: 3
 --- !u!1 &169871071
@@ -4824,6 +4824,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -144
+      objectReference: {fileID: 0}
+    - target: {fileID: 6201401810142072086, guid: 3d0095722918fc841b285b542ac6b624,
+        type: 3}
+      propertyPath: offset
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6201401810142072086, guid: 3d0095722918fc841b285b542ac6b624,
         type: 3}
