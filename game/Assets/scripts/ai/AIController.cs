@@ -34,7 +34,7 @@ public class AIController : MonoBehaviour
 
     public void Aim()
     {
-        unitManager.aiming.StartAim(unitManager);
+        unitManager.aimingRightWPN.StartAim(unitManager);
     }
 
     public void Move()

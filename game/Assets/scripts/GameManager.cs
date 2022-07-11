@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
         crosshairScr = crosshair.GetComponent<Crosshair>();
         enemy = GameObject.Find("Enemy");
 
-        bulletsPool = new ObjectPool<PoolObject>(playerController.projectile, 15);
+        bulletsPool = new ObjectPool<PoolObject>(playerManager.rightWPN.projectileOBJ, 15);
     }
 
     // Update is called once per frame
@@ -112,12 +112,12 @@ public class GameManager : MonoBehaviour
             if (!enemyManager.isDead)
             {
                 AIController.Aim();
-                enemyManager.FireBurst(enemyManager.firePoint, bulletsPool, enemyManager.projectile);
+                enemyManager.rightWPN.FireBurst(enemyManager.rightWPN.firePoint, bulletsPool);
             }
 
             // Player actions
             playerController.Aim();
-            playerManager.FireBurst(playerManager.firePoint, bulletsPool, playerManager.projectile);            
+            playerManager.rightWPN.FireBurst(playerManager.rightWPN.firePoint, bulletsPool);            
         });
 
         // At the end of turn

@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
 
     public void Aim()
     {
-        playerManager.aiming.StartAim(playerManager);
+        playerManager.aimingRightWPN.StartAim(playerManager);
     }
 
     public void Move()

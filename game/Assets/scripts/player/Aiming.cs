@@ -11,8 +11,7 @@ public class Aiming : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        unitManager = GetComponentInParent<UnitManager>();
-        transform.LookAt(unitManager.target.transform.position);
+          
     }
 
     public void StartAim(UnitManager unitManager)

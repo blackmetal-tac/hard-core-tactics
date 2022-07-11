@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
-using OWS.ObjectPooling;
 
 public class UnitManager : MonoBehaviour
 {
@@ -17,18 +15,16 @@ public class UnitManager : MonoBehaviour
     public float cooling; // Cooling modifier
     public int walkDistance; // Speed (max distance)
     public float moveSpeed; // Actual agents speed
-    public int burstSize; // Shooting stats
-    public float fireDelay; //
-    public float fireRate; //
     private float rotSpeed;
 
-    public GameObject firePoint, target; // Aiming objects
-    public Aiming aiming;
+    public GameObject target; // Aiming objects
     private Vector3 direction; // Rotate body to the enemy
-    public Projectile projectile;
+
+    public WPNManager rightWPN;
+    public Aiming aimingRightWPN;
+    public Projectile projectileRightWPN;
 
     public float shrinkTimer {get; set;}
-    private float lastBurst;
 
     public bool isDead; // ???
 
@@ -39,11 +35,12 @@ public class UnitManager : MonoBehaviour
         rotSpeed = 0.5f;
         moveSpeed = 0.1f;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        firePoint = transform.Find("FirePoint").gameObject;
-        navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
 
-        projectile = GameObject.Find("Bullet").GetComponent<Projectile>();
-        aiming = firePoint.GetComponent<Aiming>();
+        rightWPN = transform.Find("Torso").transform.Find("RightArm").GetChild(0)
+            .GetChild(0).GetComponent<WPNManager>();
+        aimingRightWPN = rightWPN.firePoint.GetComponent<Aiming>();
+
+        navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();
 
         // Load HP, Shield, Heat bars
@@ -79,10 +76,7 @@ public class UnitManager : MonoBehaviour
             {
                 HP += Time.deltaTime * 0.6f;
             }
-        });
-
-        // Reset burst fire
-        lastBurst = 0f;      
+        });  
     }
 
     private void FixedUpdate()
@@ -118,28 +112,6 @@ public class UnitManager : MonoBehaviour
         if (gameManager.inAction && !isDead)
         {
             shrinkBar.UpdateHealth();
-        }
-    }
-
-    // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
-    public void FireBurst(GameObject firePoint, ObjectPool<PoolObject> objectPool, Projectile projectile)
-    {
-        if (Time.time > lastBurst + fireDelay)
-        {
-            StartCoroutine(FireBurstCoroutine(firePoint, objectPool, projectile));
-            lastBurst = Time.time;
-        }
-    }
-
-    // Coroutine for separate bursts
-    private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, Projectile projectile)
-    {
-        float bulletDelay = 60 / fireRate;
-        for (int i = 0; i < burstSize; i++)
-        {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectile);
-            firePoint.GetComponentInParent<UnitManager>().heat += 0.01f;
-            yield return new WaitForSeconds(bulletDelay);
         }
     }
 

@@ -3,17 +3,14 @@ using OWS.ObjectPooling;
 
 public class Projectile : MonoBehaviour
 {
-    public float damage;
-    public float heat;
-    public float speed;
-    public float size;
-
+    private WPNManager wpnManager;
     private Rigidbody bullet;
     private PoolObject poolObject;
 
     // Start is called before the first frame update
     void Start()
     {
+        wpnManager = GetComponentInParent<WPNManager>();
         poolObject = GetComponent<PoolObject>();
         bullet = GetComponent<Rigidbody>();
     } 
@@ -23,7 +20,7 @@ public class Projectile : MonoBehaviour
     {
         if (collider.name == "Body") 
         {
-            collider.GetComponent<UnitManager>().TakeDamage(damage);
+            collider.GetComponent<UnitManager>().TakeDamage(wpnManager.damage);
         }
 
         bullet.velocity = Vector3.zero;       
