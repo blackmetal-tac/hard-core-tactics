@@ -13,20 +13,23 @@ public class WPNManager : MonoBehaviour
     public int burstSize; 
     public float fireDelay;
     public float fireRate;
+    public float spread;
 
     public GameObject firePoint, projectileOBJ;
     private Projectile projectile;
-    private UnitManager unitManager;
+    public UnitManager unitManager;
 
     private float lastBurst;
+    public ObjectPool<PoolObject> projectilesPool;
 
     // Start is called before the first frame update
     void Start()
     {
-        firePoint = transform.Find("FirePoint").gameObject;        
+        firePoint = transform.Find("FirePoint").gameObject;
         projectile = GetComponentInChildren<Projectile>();
+        projectile.damage = damage;
         projectileOBJ = projectile.gameObject;
-        unitManager = GetComponentInParent<UnitManager>();
+        projectilesPool = new ObjectPool<PoolObject>(projectileOBJ, 15);
 
         // Reset burst fire
         lastBurst = 0f;

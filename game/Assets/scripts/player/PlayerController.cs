@@ -9,12 +9,11 @@ public class PlayerController : MonoBehaviour
 
     // Objects
     private GameObject clickMarker;
-    public GameObject projectile, target;
     private UnitManager playerManager;
     private Crosshair crosshair;
 
     // NavMesh
-    public NavMeshAgent playerAgent;
+    private NavMeshAgent playerAgent;
     private LineRenderer walkPath;
 
     // Start is called before the first frame update
@@ -24,7 +23,6 @@ public class PlayerController : MonoBehaviour
 
         // UI
         crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
-        target = GameObject.Find("Enemy");
 
         // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();        
@@ -38,7 +36,6 @@ public class PlayerController : MonoBehaviour
         walkPath.positionCount = 0;
 
         playerManager = GetComponentInChildren<UnitManager>();
-        playerManager.target = target;
     }
 
     // Update is called once per frame
@@ -96,11 +93,8 @@ public class PlayerController : MonoBehaviour
             clickMarker.transform.localScale = Vector3.zero;
             clickMarker.transform.DOScale(0.2f * Vector3.one , 0.2f);
         }
-    }
 
-    public void Aim()
-    {
-        playerManager.aimingRightWPN.StartAim(playerManager);
+        clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
     }
 
     public void Move()

@@ -17,27 +17,27 @@ public class ShrinkBar : MonoBehaviour
         camMain = Camera.main;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         unitManager = transform.GetComponentInParent<UnitManager>();
-        unitUI = transform.GetChild(0).gameObject;
+        unitUI = transform.Find("UnitUI").gameObject;
 
-        // Health status
+        // Health status Health
         // Shield
-        shieldImage = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<Image>();
-        shieldDmgImage = transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>();        
+        shieldImage = unitUI.transform.Find("Background").Find("Shield").Find("Health").GetComponent<Image>();
+        shieldDmgImage = shieldImage.transform.parent.Find("Damage").GetComponent<Image>();      
         shieldIndicator = GameObject.Find("ShieldIndicator");
         shieldCanvasGroup = shieldIndicator.GetComponent<CanvasGroup>();
         shieldImageInd = shieldIndicator.transform.Find("Health").GetComponent<Image>();
         shieldDmgImageInd = shieldIndicator.transform.Find("Damage").GetComponent<Image>();
 
         // Health
-        healthImage = transform.GetChild(0).GetChild(0).GetChild(1).GetChild(1).GetComponent<Image>();
-        healthDmgImage = transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<Image>();
+        healthImage = unitUI.transform.Find("Background").Find("Health").Find("Health").GetComponent<Image>();
+        healthDmgImage = healthImage.transform.parent.Find("Damage").GetComponent<Image>();
         healthIndicator = GameObject.Find("HealthIndicator");
         healthCanvasGroup = healthIndicator.GetComponent<CanvasGroup>();
         healthImageInd = healthIndicator.transform.Find("Health").GetComponent<Image>();
         healthDmgImageInd = healthIndicator.transform.Find("Damage").GetComponent<Image>();
 
         // Heat
-        heatImage = transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetComponent<Image>();
+        heatImage = unitUI.transform.Find("Heat").Find("Background").Find("Health").GetComponent<Image>();
         heatIndicator = GameObject.Find("HeatIndicator");
         heatCanvasGroup = heatIndicator.GetComponent<CanvasGroup>();
         heatImageInd = heatIndicator.transform.Find("Health").GetComponent<Image>();

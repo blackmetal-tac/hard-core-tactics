@@ -7,7 +7,7 @@ using OWS.ObjectPooling;
 public class GameManager : MonoBehaviour
 {
     private Camera camMain;
-    private GameObject executeButton, buttonFrame, crosshair, enemy, actionMask, 
+    private GameObject executeButton, buttonBorder, crosshair, enemy, actionMask, 
         clickMarker;
     private PlayerController playerController;
     private AIController AIController;
@@ -28,9 +28,7 @@ public class GameManager : MonoBehaviour
     private float timeValue;
     public float turnTime;
 
-    public bool inAction { get; set; }
-
-    public ObjectPool<PoolObject> bulletsPool;
+    public bool inAction { get; set; }    
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +46,7 @@ public class GameManager : MonoBehaviour
         executeButton = GameObject.Find("ExecuteButton");
         actionMask = executeButton.transform.Find("ActionMask").gameObject;
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
-        buttonFrame = executeButton.transform.GetChild(1).gameObject;
+        buttonBorder = executeButton.transform.Find("ButtonBorder").gameObject;
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
 
         // Turn timer
@@ -60,31 +58,24 @@ public class GameManager : MonoBehaviour
         crosshair = GameObject.Find("Crosshair");
         crosshairScr = crosshair.GetComponent<Crosshair>();
         enemy = GameObject.Find("Enemy");
-
-        bulletsPool = new ObjectPool<PoolObject>(playerManager.rightWPN.projectileOBJ, 15);
     }
 
     // Update is called once per frame
     void Update()
     {
         // Crosshair position
-        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
-
-        if (playerController.playerAgent.hasPath)
-        {
-            clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
-        }        
+        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);     
     }
 
     // Start turn
     public void ExecuteOrder()
     {
         audioUI.PlayOneShot(buttonClick);
-        buttonFrame.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
+        buttonBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
 
         this.Wait(MainMenu.buttonDelay, () => 
         {
-            buttonFrame.transform.DOScaleX(1f, 0.1f);
+            buttonBorder.transform.DOScaleX(1f, 0.1f);
         });
 
         inAction = true;
@@ -95,7 +86,7 @@ public class GameManager : MonoBehaviour
         // Enemy actions
         if (!enemyManager.isDead)
         {
-            AIController.SetPath();
+            AIController.SetPath(playerController.gameObject);
             AIController.Move();
         }
 
@@ -111,13 +102,13 @@ public class GameManager : MonoBehaviour
             // Enemy actions
             if (!enemyManager.isDead)
             {
-                AIController.Aim();
-                enemyManager.rightWPN.FireBurst(enemyManager.rightWPN.firePoint, bulletsPool);
+                enemyManager.StartAim(playerController.gameObject);
+                enemyManager.StartShoot();
             }
 
             // Player actions
-            playerController.Aim();
-            playerManager.rightWPN.FireBurst(playerManager.rightWPN.firePoint, bulletsPool);            
+            playerManager.StartAim(AIController.gameObject);
+            playerManager.StartShoot();
         });
 
         // At the end of turn

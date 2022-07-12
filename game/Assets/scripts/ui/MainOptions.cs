@@ -28,8 +28,8 @@ public class MainOptions : MonoBehaviour
         closeOptions = GameObject.Find("CloseOptions");
         applyButton = GameObject.Find("ApplyButton");
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
-        closeBorder = closeOptions.transform.GetChild(1).gameObject;
-        applyBorder = applyButton.transform.GetChild(1).gameObject;        
+        closeBorder = closeOptions.transform.Find("ButtonBorder").gameObject;
+        applyBorder = applyButton.transform.Find("ButtonBorder").gameObject;        
 
         resLabel = GameObject.Find("ResolutionText").GetComponent<TextMeshProUGUI>();
         masterVol = GameObject.Find("MasterSlider").GetComponent<Slider>();

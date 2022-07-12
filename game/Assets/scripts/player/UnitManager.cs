@@ -17,15 +17,10 @@ public class UnitManager : MonoBehaviour
     public float moveSpeed; // Actual agents speed
     private float rotSpeed;
 
-    public GameObject target; // Aiming objects
     private Vector3 direction; // Rotate body to the enemy
-
-    public WPNManager rightWPN;
-    public Aiming aimingRightWPN;
-    public Projectile projectileRightWPN;
+    private WPNManager rightWPN;
 
     public float shrinkTimer {get; set;}
-
     public bool isDead; // ???
 
     // Start is called before the first frame update
@@ -36,9 +31,8 @@ public class UnitManager : MonoBehaviour
         moveSpeed = 0.1f;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
-        rightWPN = transform.Find("Torso").transform.Find("RightArm").GetChild(0)
-            .GetChild(0).GetComponent<WPNManager>();
-        aimingRightWPN = rightWPN.firePoint.GetComponent<Aiming>();
+        rightWPN = transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>();
+        rightWPN.unitManager = this; 
 
         navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();
@@ -81,13 +75,7 @@ public class UnitManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Rotate body to target
-        if (gameManager.inAction && !isDead)
-        {            
-            direction = target.transform.position - transform.position;
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
-        }        
+  
     }
 
     // Update is called once per frame
@@ -98,7 +86,7 @@ public class UnitManager : MonoBehaviour
         {
             shield += Time.deltaTime * shieldRegen;
             shield = Mathf.Round(100 * shield) / 100;
-            shrinkBar.UpdateShield();            
+            shrinkBar.UpdateShield();
         }
 
         // Heat dissipation
@@ -139,6 +127,32 @@ public class UnitManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void StartAim(GameObject target)
+    {
+        Aim(rightWPN, target);
+    }
+
+    public void StartShoot()
+    {
+        rightWPN.FireBurst(rightWPN.firePoint, rightWPN.projectilesPool);
+    }
+
+    private void Aim(WPNManager wpnManager, GameObject target)
+    {
+        float spreadMult = 0.5f;
+
+        Vector3 spread = new Vector3(
+            Random.Range((-moveSpeed * spreadMult) - wpnManager.spread, (moveSpeed * spreadMult) + wpnManager.spread),
+            Random.Range((-moveSpeed * spreadMult) - wpnManager.spread / 2, (moveSpeed * spreadMult) + wpnManager.spread / 2),
+            Random.Range((-moveSpeed * spreadMult) - wpnManager.spread, (moveSpeed * spreadMult) + wpnManager.spread));
+        rightWPN.firePoint.transform.LookAt(target.transform.position + spread);
+
+        // Rotate body to target
+        direction = target.transform.position - transform.position;
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
     }
 
     // Take damage

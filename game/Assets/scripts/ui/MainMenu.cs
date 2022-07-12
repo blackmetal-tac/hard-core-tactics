@@ -21,9 +21,9 @@ public class MainMenu : MonoBehaviour
         openOptions = GameObject.Find("OptionsButton");        
         exitButton = GameObject.Find("CloseButton");
 
-        startBorder = startButton.transform.GetChild(1).gameObject;
-        optionsBorder = openOptions.transform.GetChild(1).gameObject;
-        exitBorder = exitButton.transform.GetChild(1).gameObject;
+        startBorder = startButton.transform.Find("ButtonBorder").gameObject;
+        optionsBorder = openOptions.transform.Find("ButtonBorder").gameObject;
+        exitBorder = exitButton.transform.Find("ButtonBorder").gameObject;
 
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;

@@ -3,11 +3,8 @@ using UnityEngine.AI;
 
 public class AIController : MonoBehaviour
 {
-    public NavMeshAgent unitAgent;
+    private NavMeshAgent unitAgent;
     private UnitManager unitManager;
-
-    // Set objects
-    public GameObject projectile, target;
 
     // Move parameters
     private int moveOffset = 10;    
@@ -15,14 +12,11 @@ public class AIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        target = GameObject.Find("Player");
-
         unitAgent = GetComponent<NavMeshAgent>();
-        unitManager = GetComponentInChildren<UnitManager>();
-        unitManager.target = target;     
+        unitManager = GetComponentInChildren<UnitManager>();  
     }
 
-    public void SetPath()
+    public void SetPath(GameObject target)
     {
         unitAgent.SetDestination(new Vector3(
          target.transform.position.x + Random.Range(-moveOffset, moveOffset),
@@ -30,11 +24,6 @@ public class AIController : MonoBehaviour
          target.transform.position.z));
 
         unitManager.SetDestination(unitAgent.destination, unitAgent);
-    }
-
-    public void Aim()
-    {
-        unitManager.aimingRightWPN.StartAim(unitManager);
     }
 
     public void Move()
