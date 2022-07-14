@@ -5561,6 +5561,13 @@ MonoBehaviour:
   fireDelay: 1
   fireRate: 800
   spread: 0.5
+  weaponModes:
+  - modeName: Stop
+    fireMode: 0
+  - modeName: x3
+    fireMode: 3
+  - modeName: x5
+    fireMode: 5
   firePoint: {fileID: 0}
   projectileOBJ: {fileID: 0}
   unitManager: {fileID: 0}
@@ -5916,6 +5923,7 @@ MonoBehaviour:
   fireDelay: 1
   fireRate: 800
   spread: 0.5
+  weaponModes: []
   firePoint: {fileID: 0}
   projectileOBJ: {fileID: 0}
   unitManager: {fileID: 0}

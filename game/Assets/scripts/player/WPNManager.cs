@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using OWS.ObjectPooling;
 
 public class WPNManager : MonoBehaviour
@@ -15,6 +16,15 @@ public class WPNManager : MonoBehaviour
     public float fireRate;
     public float spread;
 
+    [System.Serializable]
+    public class WeaponModes
+    {
+        public string modeName;
+        public int fireMode;
+    }
+
+    public List<WeaponModes> weaponModes;
+
     public GameObject firePoint, projectileOBJ;
     private Projectile projectile;
     public UnitManager unitManager;
@@ -29,7 +39,7 @@ public class WPNManager : MonoBehaviour
         projectile = GetComponentInChildren<Projectile>();
         projectile.damage = damage;
         projectileOBJ = projectile.gameObject;
-        projectilesPool = new ObjectPool<PoolObject>(projectileOBJ, 15);
+        projectilesPool = new ObjectPool<PoolObject>(projectileOBJ, burstSize);
 
         // Reset burst fire
         lastBurst = 0f;
@@ -55,5 +65,10 @@ public class WPNManager : MonoBehaviour
             unitManager.heat += heat;
             yield return new WaitForSeconds(bulletDelay);
         }
+    }
+
+    public void ChangeMode()
+    {
+        burstSize = 0;
     }
 }
