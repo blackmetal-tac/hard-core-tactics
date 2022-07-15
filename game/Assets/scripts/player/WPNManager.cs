@@ -14,6 +14,7 @@ public class WPNManager : MonoBehaviour
     public int burstSize; 
     public float fireDelay;
     public float fireRate;
+    public float baseSpread;
     public float spread;
 
     [System.Serializable]
@@ -65,10 +66,5 @@ public class WPNManager : MonoBehaviour
             unitManager.heat += heat;
             yield return new WaitForSeconds(bulletDelay);
         }
-    }
-
-    public void ChangeMode()
-    {
-        burstSize = 0;
     }
 }

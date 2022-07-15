@@ -1412,7 +1412,7 @@ MonoBehaviour:
   shield: 0
   shieldRegen: 0.2
   heat: 1
-  cooling: 0.1
+  cooling: 0.3
   walkDistance: 3
   moveSpeed: 0.1
   isDead: 0
@@ -3525,7 +3525,7 @@ GameObject:
   - component: {fileID: 825358613}
   - component: {fileID: 825358612}
   m_Layer: 5
-  m_Name: Text (TMP) (2)
+  m_Name: RightArmMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5518,7 +5518,7 @@ GameObject:
   - component: {fileID: 1308685868}
   - component: {fileID: 1308685869}
   m_Layer: 0
-  m_Name: Gun
+  m_Name: TestGun-01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5560,13 +5560,14 @@ MonoBehaviour:
   burstSize: 5
   fireDelay: 1
   fireRate: 800
+  baseSpread: 0.5
   spread: 0.5
   weaponModes:
-  - modeName: Stop
+  - modeName: off
     fireMode: 0
-  - modeName: x3
+  - modeName: burst-3
     fireMode: 3
-  - modeName: x5
+  - modeName: burst-5
     fireMode: 5
   firePoint: {fileID: 0}
   projectileOBJ: {fileID: 0}
@@ -5922,6 +5923,7 @@ MonoBehaviour:
   burstSize: 5
   fireDelay: 1
   fireRate: 800
+  baseSpread: 0
   spread: 0.5
   weaponModes: []
   firePoint: {fileID: 0}
@@ -5937,7 +5939,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1482891363}
   m_Layer: 5
-  m_Name: UI
+  m_Name: RightArmUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8183,7 +8185,7 @@ MonoBehaviour:
   shield: 0
   shieldRegen: 0.2
   heat: 0
-  cooling: 0.1
+  cooling: 0.3
   walkDistance: 3
   moveSpeed: 3
   isDead: 0
