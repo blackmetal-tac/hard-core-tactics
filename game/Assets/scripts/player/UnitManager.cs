@@ -43,15 +43,31 @@ public class UnitManager : MonoBehaviour
             { 
                 shield += Time.deltaTime * 0.6f; 
             }
+            else
+            {
+                shield = 1;
+            }
 
             if (HP < 1)
             {
                 HP += Time.deltaTime * 0.6f;
+                float round = Mathf.Round(100 * HP) / 100;
+                HP = round;
+            }
+            else
+            {
+                HP = 1;
             }
 
             if (heat > 0)
             { 
                 heat -= Time.deltaTime * 0.6f;
+                float round = Mathf.Round(100 * heat) / 100;
+                heat = round;
+            }
+            else
+            {
+                heat = 0;
             }
 
             shrinkBar.UpdateShield();

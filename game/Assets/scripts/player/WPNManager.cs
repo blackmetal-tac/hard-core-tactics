@@ -14,7 +14,7 @@ public class WPNManager : MonoBehaviour
     public int burstSize; 
     public float fireDelay;
     public float fireRate;
-    public float baseSpread;
+    public float recoil;
     public float spread;
 
     [System.Serializable]
@@ -27,15 +27,19 @@ public class WPNManager : MonoBehaviour
     public List<WeaponModes> weaponModes;
 
     public GameObject firePoint, projectileOBJ;
+    private GameObject crosshair;
     private Projectile projectile;
     public UnitManager unitManager;
 
     private float lastBurst;
     public ObjectPool<PoolObject> projectilesPool;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        crosshair = GameObject.Find("Crosshair");
         firePoint = transform.Find("FirePoint").gameObject;
         projectile = GetComponentInChildren<Projectile>();
         projectile.damage = damage;
@@ -45,7 +49,24 @@ public class WPNManager : MonoBehaviour
         // Reset burst fire
         lastBurst = 0f;
     }
-    
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Shield regeneration
+        if ((spread > 0) && gameManager.inAction)
+        {
+            spread -= Time.deltaTime / 5;
+            float round = Mathf.Round(100f * spread) / 100f;
+            spread = round;
+            crosshair.transform.localScale = spread * Vector3.one;
+        }
+        else
+        {
+            spread = 0;
+        }
+    }
+
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
     public void FireBurst(GameObject firePoint, ObjectPool<PoolObject> objectPool)
     {
@@ -56,6 +77,7 @@ public class WPNManager : MonoBehaviour
         }
     }
 
+
     // Coroutine for separate bursts
     private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, Projectile projectile)
     {
@@ -64,6 +86,7 @@ public class WPNManager : MonoBehaviour
         {
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, projectileSpeed);
             unitManager.heat += heat;
+            spread += recoil;
             yield return new WaitForSeconds(bulletDelay);
         }
     }

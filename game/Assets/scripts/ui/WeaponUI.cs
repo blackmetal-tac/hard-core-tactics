@@ -36,7 +36,6 @@ public class WeaponUI : MonoBehaviour
     {
         rightWPN.burstSize = rightWPN.weaponModes[(int)rightWPNui.value].fireMode;
         float modifier = (rightWPN.weaponModes[(int)rightWPNui.value].fireMode) / 10;
-        rightWPN.spread = rightWPN.baseSpread + modifier;
         modeText.text = rightWPN.weaponModes[(int)rightWPNui.value].modeName;
         //crosshair.Yoyo();
     }
