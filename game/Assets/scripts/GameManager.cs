@@ -130,7 +130,7 @@ public class GameManager : MonoBehaviour
             playerController.EndMove();
 
             // Update crosshair size after end moving
-            crosshairScr.Yoyo();
+            //crosshairScr.Yoyo();
         });
     }
 }

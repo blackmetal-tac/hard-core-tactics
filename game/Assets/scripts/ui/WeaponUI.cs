@@ -4,7 +4,6 @@ using TMPro;
 
 public class WeaponUI : MonoBehaviour
 {
-    private Crosshair crosshair;
     private WPNManager rightWPN;
     private Slider rightWPNui;
     private TextMeshProUGUI weaponName;
@@ -13,7 +12,6 @@ public class WeaponUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
         rightWPNui = GameObject.Find("RightArmUI").GetComponentInChildren<Slider>();
         weaponName = rightWPNui.transform.parent.Find("Weapon").GetComponent<TextMeshProUGUI>();
         modeText = GameObject.Find("RightArmMode").GetComponent<TextMeshProUGUI>();
@@ -35,8 +33,6 @@ public class WeaponUI : MonoBehaviour
     private void ChangeWPNmode()
     {
         rightWPN.burstSize = rightWPN.weaponModes[(int)rightWPNui.value].fireMode;
-        float modifier = (rightWPN.weaponModes[(int)rightWPNui.value].fireMode) / 10;
         modeText.text = rightWPN.weaponModes[(int)rightWPNui.value].modeName;
-        //crosshair.Yoyo();
     }
 }

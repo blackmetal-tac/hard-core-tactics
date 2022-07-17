@@ -27,7 +27,7 @@ public class WPNManager : MonoBehaviour
     public List<WeaponModes> weaponModes;
 
     public GameObject firePoint, projectileOBJ;
-    private GameObject crosshair;
+    private Crosshair crosshair;
     private Projectile projectile;
     public UnitManager unitManager;
 
@@ -39,7 +39,7 @@ public class WPNManager : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        crosshair = GameObject.Find("Crosshair");
+        crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
         firePoint = transform.Find("FirePoint").gameObject;
         projectile = GetComponentInChildren<Projectile>();
         projectile.damage = damage;
@@ -57,9 +57,8 @@ public class WPNManager : MonoBehaviour
         if ((spread > 0) && gameManager.inAction)
         {
             spread -= Time.deltaTime / 5;
-            float round = Mathf.Round(100f * spread) / 100f;
-            spread = round;
-            crosshair.transform.localScale = spread * Vector3.one;
+            spread = Mathf.Round(100f * spread) / 100f;
+            //crosshair.transform.localScale = (crosshair.size + spread / 2) * Vector3.one;
         }
         else
         {

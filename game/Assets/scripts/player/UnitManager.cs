@@ -51,8 +51,7 @@ public class UnitManager : MonoBehaviour
             if (HP < 1)
             {
                 HP += Time.deltaTime * 0.6f;
-                float round = Mathf.Round(100 * HP) / 100;
-                HP = round;
+                HP = Mathf.Round(100 * HP) / 100;               
             }
             else
             {
@@ -62,8 +61,7 @@ public class UnitManager : MonoBehaviour
             if (heat > 0)
             { 
                 heat -= Time.deltaTime * 0.6f;
-                float round = Mathf.Round(100 * heat) / 100;
-                heat = round;
+                heat = Mathf.Round(100 * heat) / 100;
             }
             else
             {

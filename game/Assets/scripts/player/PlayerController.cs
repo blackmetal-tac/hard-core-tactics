@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
             if (!gameManager.inAction)
             {
                 MoveToClick();
-                crosshair.Yoyo();
+                //crosshair.Yoyo();
             }
         }
 
