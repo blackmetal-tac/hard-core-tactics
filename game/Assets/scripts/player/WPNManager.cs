@@ -17,6 +17,8 @@ public class WPNManager : MonoBehaviour
     public float recoil;
     public float spread;
 
+    private float size;
+
     [System.Serializable]
     public class WeaponModes
     {
@@ -27,7 +29,8 @@ public class WPNManager : MonoBehaviour
     public List<WeaponModes> weaponModes;
 
     public GameObject firePoint, projectileOBJ;
-    private Crosshair crosshair;
+    private GameObject crosshair;
+    private float crosshairScale = 0.15f;
     private Projectile projectile;
     public UnitManager unitManager;
 
@@ -39,7 +42,7 @@ public class WPNManager : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
+        crosshair = GameObject.Find("Crosshair");
         firePoint = transform.Find("FirePoint").gameObject;
         projectile = GetComponentInChildren<Projectile>();
         projectile.damage = damage;
@@ -52,18 +55,21 @@ public class WPNManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        // Shield regeneration
+    {  
+        // Bullet spread
         if ((spread > 0) && gameManager.inAction)
         {
-            spread -= Time.deltaTime / 5;
+            spread -= Time.deltaTime / 3;
             spread = Mathf.Round(100f * spread) / 100f;
-            //crosshair.transform.localScale = (crosshair.size + spread / 2) * Vector3.one;
+            size = Mathf.Lerp(size, crosshairScale + spread, Time.deltaTime);
         }
         else
         {
             spread = 0;
+            size = Mathf.Lerp(size, crosshairScale, Time.deltaTime);
         }
+
+        crosshair.transform.localScale = size * Vector3.one;
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate

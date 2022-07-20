@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     private PlayerController playerController;
     private AIController AIController;
     private UnitManager playerManager, enemyManager;
-    private Crosshair crosshairScr;
 
     // UI settings
     public float crosshairBars;
@@ -55,7 +54,6 @@ public class GameManager : MonoBehaviour
 
         // Set target
         crosshair = GameObject.Find("Crosshair");
-        crosshairScr = crosshair.GetComponent<Crosshair>();
         enemy = GameObject.Find("Enemy");
     }
 
@@ -128,9 +126,6 @@ public class GameManager : MonoBehaviour
             }            
 
             playerController.EndMove();
-
-            // Update crosshair size after end moving
-            //crosshairScr.Yoyo();
         });
     }
 }

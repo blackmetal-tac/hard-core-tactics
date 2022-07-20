@@ -3851,8 +3851,6 @@ GameObject:
   - component: {fileID: 920306048}
   - component: {fileID: 920306050}
   - component: {fileID: 920306049}
-  - component: {fileID: 920306051}
-  - component: {fileID: 920306052}
   - component: {fileID: 920306053}
   m_Layer: 5
   m_Name: Crosshair
@@ -3921,35 +3919,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920306047}
   m_CullTransparentMesh: 1
---- !u!114 &920306051
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 920306047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2e3e11488d57e8438b7f3cfdf936021, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerManager: {fileID: 0}
-  crosshairSize: 0.15
---- !u!114 &920306052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 920306047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scale: 0.15
-  time: 1
-  delay: 3
 --- !u!225 &920306053
 CanvasGroup:
   m_ObjectHideFlags: 0
