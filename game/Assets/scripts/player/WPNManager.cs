@@ -15,9 +15,8 @@ public class WPNManager : MonoBehaviour
     public float fireDelay;
     public float fireRate;
     public float recoil;
-    public float spread;
-
-    private float size;
+    private float spread;
+    private float spreadMult = 0.5f;
 
     [System.Serializable]
     public class WeaponModes
@@ -29,8 +28,6 @@ public class WPNManager : MonoBehaviour
     public List<WeaponModes> weaponModes;
 
     public GameObject firePoint, projectileOBJ;
-    private GameObject crosshair;
-    private float crosshairScale = 0.15f;
     private Projectile projectile;
     public UnitManager unitManager;
 
@@ -42,7 +39,6 @@ public class WPNManager : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        crosshair = GameObject.Find("Crosshair");
         firePoint = transform.Find("FirePoint").gameObject;
         projectile = GetComponentInChildren<Projectile>();
         projectile.damage = damage;
@@ -61,23 +57,27 @@ public class WPNManager : MonoBehaviour
         {
             spread -= Time.deltaTime / 3;
             spread = Mathf.Round(100f * spread) / 100f;
-            size = Mathf.Lerp(size, crosshairScale + spread, Time.deltaTime);
+            unitManager.spread = spread;           
         }
         else
         {
             spread = 0;
-            size = Mathf.Lerp(size, crosshairScale, Time.deltaTime);
+            unitManager.spread = spread;
         }
-
-        crosshair.transform.localScale = size * Vector3.one;
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
-    public void FireBurst(GameObject firePoint, ObjectPool<PoolObject> objectPool)
+    public void FireBurst(GameObject target)
     {
+        Vector3 spreadVector = new Vector3(
+            Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
+            Random.Range((-unitManager.moveSpeed * spreadMult) - spread / 2, (unitManager.moveSpeed * spreadMult) + spread / 2),
+            Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
+        firePoint.transform.LookAt(target.transform.position + spreadVector);
+
         if (Time.time > lastBurst + fireDelay)
         {
-            StartCoroutine(FireBurstCoroutine(firePoint, objectPool, projectile));
+            StartCoroutine(FireBurstCoroutine(firePoint, projectilesPool, projectile));
             lastBurst = Time.time;
         }
     }

@@ -8,21 +8,22 @@ public class PlayerController : MonoBehaviour
     private GameManager gameManager;
 
     // Objects
-    private GameObject clickMarker;
+    private GameObject clickMarker, crosshair;
     private UnitManager playerManager;
-    private Crosshair crosshair;
 
     // NavMesh
     private NavMeshAgent playerAgent;
     private LineRenderer walkPath;
 
+    private float crosshairSize;
+    private float crosshairScale = 0.15f;
+
+
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
-        // UI
-        crosshair = GameObject.Find("Crosshair").GetComponent<Crosshair>();
+        crosshair = GameObject.Find("Crosshair");
 
         // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();        
@@ -49,8 +50,7 @@ public class PlayerController : MonoBehaviour
 
             if (!gameManager.inAction)
             {
-                MoveToClick();
-                //crosshair.Yoyo();
+                MoveToClick();                
             }
         }
 
@@ -58,7 +58,11 @@ public class PlayerController : MonoBehaviour
         if (playerAgent.hasPath)
         {
             DrawPath();
-        }              
+        }
+
+        // Dynamic crosshair
+        crosshairSize = Mathf.Lerp(crosshairSize, crosshairScale + playerManager.spread / 2 + playerManager.moveSpeed / 10, Time.deltaTime * 3);
+        crosshair.transform.localScale = crosshairSize * Vector3.one;
     }
 
     private void MoveToClick()

@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     private Camera camMain;
     private GameObject executeButton, buttonBorder, crosshair, enemy, actionMask, 
-        clickMarker;
+        clickMarker, rightWPNuiMask;
     private PlayerController playerController;
     private AIController AIController;
     private UnitManager playerManager, enemyManager;
@@ -46,6 +46,9 @@ public class GameManager : MonoBehaviour
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonBorder = executeButton.transform.Find("ButtonBorder").gameObject;
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
+
+        // UI masks
+        rightWPNuiMask = GameObject.Find("RightArmUI").transform.parent.Find("ActionMask").gameObject;
 
         // Turn timer
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
@@ -99,13 +102,11 @@ public class GameManager : MonoBehaviour
             // Enemy actions
             if (!enemyManager.isDead)
             {
-                enemyManager.StartAim(playerController.gameObject);
-                enemyManager.StartShoot();
+                enemyManager.StartShoot(playerController.gameObject);
             }
 
             // Player actions
-            playerManager.StartAim(AIController.gameObject);
-            playerManager.StartShoot();
+            playerManager.StartShoot(AIController.gameObject);
         });
 
         // At the end of turn
@@ -119,13 +120,16 @@ public class GameManager : MonoBehaviour
             timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
             inAction = false;
 
-            // Enemy actions
+            // Units actions
             if (!enemyManager.isDead)
             {
                 AIController.EndMove();
             }            
 
             playerController.EndMove();
+
+            // Update UI
+            rightWPNuiMask.transform.localScale = Vector3.zero;
         });
     }
 }

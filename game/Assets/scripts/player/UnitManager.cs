@@ -16,12 +16,15 @@ public class UnitManager : MonoBehaviour
     public int walkDistance; // Speed (max distance)
     public float moveSpeed; // Actual agents speed
     private float rotSpeed;
+    public float spread;
 
     private Vector3 direction; // Rotate body to the enemy
     private WPNManager rightWPN;
 
     public float shrinkTimer {get; set;}
     public bool isDead; // ???
+
+    private float lastCheck, delay = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -84,7 +87,9 @@ public class UnitManager : MonoBehaviour
             {
                 HP += Time.deltaTime * 0.6f;
             }
-        });  
+        });
+
+        lastCheck = 0f;
     }
 
     // Update is called once per frame
@@ -104,6 +109,15 @@ public class UnitManager : MonoBehaviour
             heat -= Time.deltaTime * cooling;
             heat = Mathf.Round(100 * heat) / 100;
             shrinkBar.UpdateHeat();
+        }
+
+        if ((heat > 0.7f) && gameManager.inAction && !isDead) // Roll heat penalty
+        {
+            if (Time.time > lastCheck + delay)
+            {
+                Overheat();
+                lastCheck = Time.time;
+            }
         }
 
         if (gameManager.inAction && !isDead)
@@ -126,6 +140,7 @@ public class UnitManager : MonoBehaviour
             {
                 navAgent.SetDestination(target);
                 moveSpeed = segmentDistance / gameManager.turnTime;
+                moveSpeed = Mathf.Round(100 * moveSpeed) / 100;
             }
             else
             {
@@ -138,30 +153,14 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public void StartAim(GameObject target)
+    public void StartShoot(GameObject target)
     {
-        Aim(rightWPN, target);
-    }
-
-    public void StartShoot()
-    {
-        rightWPN.FireBurst(rightWPN.firePoint, rightWPN.projectilesPool);
-    }
-
-    private void Aim(WPNManager wpnManager, GameObject target)
-    {
-        float spreadMult = 0.5f;
-
-        Vector3 spread = new Vector3(
-            Random.Range((-moveSpeed * spreadMult) - wpnManager.spread, (moveSpeed * spreadMult) + wpnManager.spread),
-            Random.Range((-moveSpeed * spreadMult) - wpnManager.spread / 2, (moveSpeed * spreadMult) + wpnManager.spread / 2),
-            Random.Range((-moveSpeed * spreadMult) - wpnManager.spread, (moveSpeed * spreadMult) + wpnManager.spread));
-        rightWPN.firePoint.transform.LookAt(target.transform.position + spread);
-
         // Rotate body to target
         direction = target.transform.position - transform.position;
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
+
+        rightWPN.FireBurst(target);
     }
 
     // Take damage
@@ -185,6 +184,18 @@ public class UnitManager : MonoBehaviour
             isDead = true;
             navMeshAgent.enabled = false;
             transform.localScale = Vector3.zero;
+        }
+    }
+
+    private void Overheat()
+    {
+        int heatSafe = 5;
+        int rollHeat = Random.Range(0,10);
+        Debug.Log(rollHeat);
+
+        if (heatSafe < rollHeat)
+        { 
+            
         }
     }
 }
