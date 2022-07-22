@@ -78,14 +78,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0.03
-  heat: 0.02
+  heat: 0.05
   projectileSpeed: 10
   projectileSize: 0.05
-  burstSize: 5
   fireDelay: 1
   fireRate: 800
-  recoil: 0.01
-  spread: 0
+  recoil: 0.08
+  burstSize: 5
+  isDown: 0
   weaponModes:
   - modeName: off
     fireMode: 0

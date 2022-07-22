@@ -6,17 +6,11 @@ using OWS.ObjectPooling;
 public class WPNManager : MonoBehaviour
 {
     // Weapon stats
-    public float damage;
-    public float heat;
-    public float projectileSpeed;
-    public float projectileSize;
-
-    public int burstSize; 
-    public float fireDelay;
-    public float fireRate;
-    public float recoil;
-    private float spread;
-    private float spreadMult = 0.5f;
+    public float damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil;
+    public int burstSize;
+    private float spread, lastBurst = 0f;
+    private readonly float spreadMult = 0.5f;
+    public bool isDown = false;
 
     [System.Serializable]
     public class WeaponModes
@@ -31,7 +25,6 @@ public class WPNManager : MonoBehaviour
     private Projectile projectile;
     public UnitManager unitManager;
 
-    private float lastBurst;
     public ObjectPool<PoolObject> projectilesPool;
     private GameManager gameManager;
 
@@ -44,9 +37,6 @@ public class WPNManager : MonoBehaviour
         projectile.damage = damage;
         projectileOBJ = projectile.gameObject;
         projectilesPool = new ObjectPool<PoolObject>(projectileOBJ, burstSize);
-
-        // Reset burst fire
-        lastBurst = 0f;
     }
 
     // Update is called once per frame
@@ -90,8 +80,17 @@ public class WPNManager : MonoBehaviour
         for (int i = 0; i < burstSize; i++)
         {
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, projectileSpeed);
-            unitManager.heat += heat;
-            spread += recoil;
+
+            if (unitManager.heat < 1)
+            {
+                unitManager.heat += heat;
+            }
+
+            if (spread < 1)
+            {
+                spread += recoil;
+            }            
+
             yield return new WaitForSeconds(bulletDelay);
         }
     }

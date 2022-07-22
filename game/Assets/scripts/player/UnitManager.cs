@@ -8,23 +8,18 @@ public class UnitManager : MonoBehaviour
     private NavMeshAgent navMeshAgent;
 
     // Stats    
-    public float HP;
-    public float shield;
-    public float shieldRegen;
-    public float heat; // Total unit heat
-    public float cooling; // Cooling modifier
-    public int walkDistance; // Speed (max distance)
-    public float moveSpeed; // Actual agents speed
-    private float rotSpeed;
-    public float spread;
+    public float HP, shield, shieldRegen, heat, cooling;
+    public int safeHeat = 5, walkDistance;
+
+    private float rotSpeed, delay = 3f;
 
     private Vector3 direction; // Rotate body to the enemy
     private WPNManager rightWPN;
 
-    public float shrinkTimer {get; set;}
-    public bool isDead; // ???
-
-    private float lastCheck, delay = 1f;
+    public float moveSpeed { set; get; }
+    public float spread { set; get; }
+    public float shrinkTimer { set; get; }
+    public bool isDead; // Death trigger
 
     // Start is called before the first frame update
     void Start()
@@ -88,13 +83,11 @@ public class UnitManager : MonoBehaviour
                 HP += Time.deltaTime * 0.6f;
             }
         });
-
-        lastCheck = 0f;
     }
 
     // Update is called once per frame
     void Update()
-    {     
+    {
         // Shield regeneration
         if ((shield < 1) && gameManager.inAction && !isDead)
         {
@@ -106,17 +99,23 @@ public class UnitManager : MonoBehaviour
         // Heat dissipation
         if ((heat > 0) && gameManager.inAction && !isDead)
         {
-            heat -= Time.deltaTime * cooling;
-            heat = Mathf.Round(100 * heat) / 100;
-            shrinkBar.UpdateHeat();
-        }
-
-        if ((heat > 0.7f) && gameManager.inAction && !isDead) // Roll heat penalty
-        {
-            if (Time.time > lastCheck + delay)
+            float heatCheck = 0f;
+            if (Time.time > heatCheck + 10)
             {
-                Overheat();
-                lastCheck = Time.time;
+                heat -= 0.05f;
+                //heat = Mathf.Round(100 * heat) / 100;
+                shrinkBar.UpdateHeat();
+                heatCheck = Time.time;
+            }
+
+            if (heat > 0.7f) // Roll heat penalty
+            {
+                float lastCheck = 0f;
+                if (Time.time > lastCheck + delay)
+                {
+                    Overheat();
+                    lastCheck = Time.time;
+                }
             }
         }
 
@@ -160,7 +159,10 @@ public class UnitManager : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
 
-        rightWPN.FireBurst(target);
+        if (!rightWPN.isDown)
+        {
+            rightWPN.FireBurst(target);
+        }        
     }
 
     // Take damage
@@ -189,13 +191,18 @@ public class UnitManager : MonoBehaviour
 
     private void Overheat()
     {
-        int heatSafe = 5;
-        int rollHeat = Random.Range(0,10);
-        Debug.Log(rollHeat);
+        int rollHeat = Random.Range(0,10);        
 
-        if (heatSafe < rollHeat)
-        { 
-            
+        if (safeHeat < rollHeat)
+        {            
+            int wpnIndex = Random.Range(1, 6);
+            Debug.Log(wpnIndex);
+            rightWPN.isDown = true;
+
+            if (wpnIndex == 1)
+            {
+               
+            }
         }
     }
 }
