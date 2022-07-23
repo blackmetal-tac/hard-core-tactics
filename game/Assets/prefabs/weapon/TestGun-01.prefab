@@ -83,7 +83,7 @@ MonoBehaviour:
   projectileSize: 0.05
   fireDelay: 1
   fireRate: 800
-  recoil: 0.08
+  recoil: 0.1
   burstSize: 5
   isDown: 0
   weaponModes:

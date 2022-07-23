@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         // UI
         clickMarker = GameObject.Find("ClickMarker");
         executeButton = GameObject.Find("ExecuteButton");
-        actionMask = executeButton.transform.Find("ActionMask").gameObject;
+        actionMask = executeButton.transform.parent.Find("ActionMask").gameObject;
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonBorder = executeButton.transform.Find("ButtonBorder").gameObject;
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Crosshair position
-        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);     
+        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
     }
 
     // Start turn

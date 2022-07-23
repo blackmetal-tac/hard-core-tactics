@@ -11,7 +11,7 @@ public class UnitManager : MonoBehaviour
     public float HP, shield, shieldRegen, heat, cooling;
     public int safeHeat = 5, walkDistance;
 
-    private float rotSpeed, delay = 3f;
+    private float rotSpeed, delay = 5f;
 
     private Vector3 direction; // Rotate body to the enemy
     private WPNManager rightWPN;
@@ -20,6 +20,8 @@ public class UnitManager : MonoBehaviour
     public float spread { set; get; }
     public float shrinkTimer { set; get; }
     public bool isDead; // Death trigger
+
+    private float lastCheck = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -48,8 +50,7 @@ public class UnitManager : MonoBehaviour
 
             if (HP < 1)
             {
-                HP += Time.deltaTime * 0.6f;
-                HP = Mathf.Round(100 * HP) / 100;               
+                HP += Time.deltaTime * 0.6f;             
             }
             else
             {
@@ -59,7 +60,6 @@ public class UnitManager : MonoBehaviour
             if (heat > 0)
             { 
                 heat -= Time.deltaTime * 0.6f;
-                heat = Mathf.Round(100 * heat) / 100;
             }
             else
             {
@@ -92,30 +92,19 @@ public class UnitManager : MonoBehaviour
         if ((shield < 1) && gameManager.inAction && !isDead)
         {
             shield += Time.deltaTime * shieldRegen;
-            shield = Mathf.Round(100 * shield) / 100;
             shrinkBar.UpdateShield();
         }
 
         // Heat dissipation
         if ((heat > 0) && gameManager.inAction && !isDead)
         {
-            float heatCheck = 0f;
-            if (Time.time > heatCheck + 10)
-            {
-                heat -= 0.05f;
-                //heat = Mathf.Round(100 * heat) / 100;
-                shrinkBar.UpdateHeat();
-                heatCheck = Time.time;
-            }
+            heat -= Time.deltaTime * cooling;
+            shrinkBar.UpdateHeat();
 
-            if (heat > 0.7f) // Roll heat penalty
-            {
-                float lastCheck = 0f;
-                if (Time.time > lastCheck + delay)
-                {
-                    Overheat();
-                    lastCheck = Time.time;
-                }
+            if (heat > 0.7f && Time.time > lastCheck + 1f) // Roll heat penalty
+            { 
+                Overheat();
+                lastCheck = Time.time;
             }
         }
 

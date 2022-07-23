@@ -45,8 +45,7 @@ public class WPNManager : MonoBehaviour
         // Bullet spread
         if ((spread > 0) && gameManager.inAction)
         {
-            spread -= Time.deltaTime / 3;
-            spread = Mathf.Round(100f * spread) / 100f;
+            spread -= Time.deltaTime / 3; 
             unitManager.spread = spread;           
         }
         else
