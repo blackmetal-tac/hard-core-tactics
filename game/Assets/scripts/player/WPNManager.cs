@@ -10,7 +10,8 @@ public class WPNManager : MonoBehaviour
     public int burstSize;
     private float spread, lastBurst = 0f;
     private readonly float spreadMult = 0.5f;
-    public bool isDown = false;
+
+    public int downTimer { get; set; }
 
     [System.Serializable]
     public class WeaponModes

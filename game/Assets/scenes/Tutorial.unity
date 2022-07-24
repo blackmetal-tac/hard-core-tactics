@@ -1414,6 +1414,7 @@ MonoBehaviour:
   shieldRegen: 0.05
   heat: 1
   cooling: 0.1
+  heatCheck: 1
   safeHeat: 5
   walkDistance: 3
   isDead: 0
@@ -5649,7 +5650,7 @@ GameObject:
   - component: {fileID: 1556342582}
   - component: {fileID: 1556342583}
   m_Layer: 5
-  m_Name: Buttons
+  m_Name: WeaponUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7770,6 +7771,7 @@ MonoBehaviour:
   shieldRegen: 0.05
   heat: 0
   cooling: 0.1
+  heatCheck: 1
   safeHeat: 5
   walkDistance: 3
   isDead: 0

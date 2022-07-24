@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
 {
@@ -8,13 +9,15 @@ public class UnitManager : MonoBehaviour
     private NavMeshAgent navMeshAgent;
 
     // Stats    
-    public float HP, shield, shieldRegen, heat, cooling;
+    public float HP, shield, shieldRegen, heat, cooling, heatCheck = 1f;
     public int safeHeat = 5, walkDistance;
 
-    private float rotSpeed, delay = 5f;
+    private float rotSpeed;
 
     private Vector3 direction; // Rotate body to the enemy
-    private WPNManager rightWPN;
+
+    public List<WPNManager> weaponList;
+    private WeaponUI weaponUI;
 
     public float moveSpeed { set; get; }
     public float spread { set; get; }
@@ -30,9 +33,10 @@ public class UnitManager : MonoBehaviour
         rotSpeed = 0.5f;
         moveSpeed = 0.1f;
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
 
-        rightWPN = transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>();
-        rightWPN.unitManager = this; 
+        weaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
+        weaponList[0].unitManager = this; 
 
         navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();
@@ -101,10 +105,14 @@ public class UnitManager : MonoBehaviour
             heat -= Time.deltaTime * cooling;
             shrinkBar.UpdateHeat();
 
-            if (heat > 0.7f && Time.time > lastCheck + 1f) // Roll heat penalty
-            { 
-                Overheat();
+            if (heat > 0.7f && Time.time > lastCheck + heatCheck) // Roll heat penalty
+            {
+                OverheatRoll();
                 lastCheck = Time.time;
+            }
+            else if (heat >= 1f)
+            {
+                Overheat();
             }
         }
 
@@ -148,9 +156,9 @@ public class UnitManager : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
 
-        if (!rightWPN.isDown)
+        if (weaponList[0].downTimer <= 0)
         {
-            rightWPN.FireBurst(target);
+            weaponList[0].FireBurst(target);
         }        
     }
 
@@ -178,20 +186,23 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    private void OverheatRoll()
+    {
+        int rollHeat = Random.Range(1,10);
+        if (safeHeat < rollHeat)
+        {
+            Overheat();
+        }
+    }
+
     private void Overheat()
     {
-        int rollHeat = Random.Range(0,10);        
+        int wpnIndex = Random.Range(0, 5);
+        weaponList[wpnIndex].downTimer = 2;
 
-        if (safeHeat < rollHeat)
-        {            
-            int wpnIndex = Random.Range(1, 6);
-            Debug.Log(wpnIndex);
-            rightWPN.isDown = true;
-
-            if (wpnIndex == 1)
-            {
-               
-            }
+        if (transform.parent.name == "Player")
+        {
+            weaponUI.weaponMasks[wpnIndex].transform.localScale = Vector3.one;
         }
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 using TMPro;
 
 public class WeaponUI : MonoBehaviour
@@ -8,16 +9,16 @@ public class WeaponUI : MonoBehaviour
     private Slider rightWPNui;
     private TextMeshProUGUI weaponName, modeText;
     private GameManager gameManager;
-    private GameObject rightWPNuiMask;
-
+    public List<ActionMask> weaponMasks;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
         rightWPNui = GameObject.Find("RightArmUI").GetComponentInChildren<Slider>();
-        rightWPNuiMask = GameObject.Find("RightArmUI").transform.parent.Find("ActionMask").gameObject;
+
+        weaponMasks.Add(GameObject.Find("RightArmUI").transform.parent.GetComponentInChildren<ActionMask>());
+
         weaponName = rightWPNui.transform.parent.Find("Weapon").GetComponent<TextMeshProUGUI>();
         modeText = GameObject.Find("RightArmMode").GetComponent<TextMeshProUGUI>();
         rightWPNui.onValueChanged.AddListener(delegate { ChangeWPNmode(); });
@@ -42,7 +43,7 @@ public class WeaponUI : MonoBehaviour
 
         if (gameManager.inAction) 
         {
-            rightWPNuiMask.transform.localScale = Vector3.one;
+            weaponMasks[0].transform.localScale = Vector3.one;
         }
     }
 }

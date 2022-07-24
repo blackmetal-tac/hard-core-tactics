@@ -128,8 +128,22 @@ public class GameManager : MonoBehaviour
 
             playerController.EndMove();
 
+            // Update weapon status
+            foreach (WPNManager weapon in enemyManager.weaponList)
+            {
+                weapon.downTimer -= 1;
+            }
+
+            foreach (WPNManager weapon in playerManager.weaponList)
+            {
+                weapon.downTimer -= 1;
+            }
+
             // Update UI
-            rightWPNuiMask.transform.localScale = Vector3.zero;
+            if (playerManager.weaponList[0].downTimer <= 0)
+            {
+                rightWPNuiMask.transform.localScale = Vector3.zero;
+            }
         });
     }
 }

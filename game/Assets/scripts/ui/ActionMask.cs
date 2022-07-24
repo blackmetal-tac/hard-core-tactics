@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DisabledMask : MonoBehaviour
+public class ActionMask : MonoBehaviour
 {
     private GameManager gameManager;
 
