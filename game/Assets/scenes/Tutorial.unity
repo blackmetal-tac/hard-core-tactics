@@ -1417,6 +1417,7 @@ MonoBehaviour:
   heatCheck: 1
   safeHeat: 5
   walkDistance: 3
+  weaponList: []
   isDead: 0
 --- !u!1 &331471048
 GameObject:
@@ -3380,7 +3381,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -20}
-  m_SizeDelta: {x: 100, y: 5}
+  m_SizeDelta: {x: 200, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &825358612
 MonoBehaviour:
@@ -5693,6 +5694,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62c98d041fa52740895fbf32b4e8f20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modeText: {fileID: 0}
+  weaponMasks: []
 --- !u!1 &1562068687
 GameObject:
   m_ObjectHideFlags: 0
@@ -7774,6 +7777,7 @@ MonoBehaviour:
   heatCheck: 1
   safeHeat: 5
   walkDistance: 3
+  weaponList: []
   isDead: 0
 --- !u!1 &2015514941
 GameObject:

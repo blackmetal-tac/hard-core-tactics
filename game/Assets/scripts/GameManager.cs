@@ -102,11 +102,13 @@ public class GameManager : MonoBehaviour
             // Enemy actions
             if (!enemyManager.isDead)
             {
-                enemyManager.StartShoot(playerController.gameObject);
+                enemyManager.StartAction();
+                enemyManager.StartShoot(playerController.gameObject); //???
             }
 
             // Player actions
-            playerManager.StartShoot(AIController.gameObject);
+            playerManager.StartAction();
+            playerManager.StartShoot(AIController.gameObject); //???
         });
 
         // At the end of turn
@@ -124,23 +126,15 @@ public class GameManager : MonoBehaviour
             if (!enemyManager.isDead)
             {
                 AIController.EndMove();
-            }            
-
-            playerController.EndMove();
-
-            // Update weapon status
-            foreach (WPNManager weapon in enemyManager.weaponList)
-            {
-                weapon.downTimer -= 1;
             }
 
-            foreach (WPNManager weapon in playerManager.weaponList)
+            if (!playerManager.isDead)
             {
-                weapon.downTimer -= 1;
+                playerController.EndMove();
             }
 
             // Update UI
-            if (playerManager.weaponList[0].downTimer <= 0)
+            if (playerManager.weaponList[0].downTimer <= 0) // ???
             {
                 rightWPNuiMask.transform.localScale = Vector3.zero;
             }

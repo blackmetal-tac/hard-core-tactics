@@ -89,39 +89,6 @@ public class UnitManager : MonoBehaviour
         });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Shield regeneration
-        if ((shield < 1) && gameManager.inAction && !isDead)
-        {
-            shield += Time.deltaTime * shieldRegen;
-            shrinkBar.UpdateShield();
-        }
-
-        // Heat dissipation
-        if ((heat > 0) && gameManager.inAction && !isDead)
-        {
-            heat -= Time.deltaTime * cooling;
-            shrinkBar.UpdateHeat();
-
-            if (heat > 0.7f && Time.time > lastCheck + heatCheck) // Roll heat penalty
-            {
-                OverheatRoll();
-                lastCheck = Time.time;
-            }
-            else if (heat >= 1f)
-            {
-                Overheat();
-            }
-        }
-
-        if (gameManager.inAction && !isDead)
-        {
-            shrinkBar.UpdateHealth();
-        }
-    }
-
     // Set move position and maximum move distance (speed)
     public void SetDestination(Vector3 target, NavMeshAgent navAgent)
     {
@@ -156,10 +123,40 @@ public class UnitManager : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
 
-        if (weaponList[0].downTimer <= 0)
+        weaponList[0].FireBurst(target);       
+    }
+
+    // Do actions in Update
+    public void StartAction()
+    {
+        // Shield regeneration
+        if (shield < 1 && !isDead)
         {
-            weaponList[0].FireBurst(target);
-        }        
+            shield += Time.deltaTime * shieldRegen;
+            shrinkBar.UpdateShield();
+        }
+
+        // Heat dissipation
+        if (heat > 0 && !isDead)
+        {
+            heat -= Time.deltaTime * cooling;
+            shrinkBar.UpdateHeat();
+
+            if (heat > 0.7f && Time.time > lastCheck + heatCheck) // Roll heat penalty
+            {
+                OverheatRoll();
+                lastCheck = Time.time;
+            }
+            else if (heat >= 1f)
+            {
+                Overheat();
+            }
+        }
+
+        if (!isDead)
+        {
+            shrinkBar.UpdateHealth();
+        }
     }
 
     // Take damage
@@ -197,12 +194,23 @@ public class UnitManager : MonoBehaviour
 
     private void Overheat()
     {
-        int wpnIndex = Random.Range(0, 5);
+        int wpnIndex = Random.Range(0, weaponList.Count - 1);
         weaponList[wpnIndex].downTimer = 2;
+        weaponList[wpnIndex].burstSize = weaponList[wpnIndex].weaponModes[0].fireMode;
 
         if (transform.parent.name == "Player")
         {
-            weaponUI.weaponMasks[wpnIndex].transform.localScale = Vector3.one;
+            weaponUI.WeaponDown(wpnIndex, weaponList[wpnIndex].downTimer);
         }
+    }
+
+    public void UpdateTimer()
+    {
+        foreach (WPNManager weapon in weaponList)
+        {
+            weapon.downTimer -= 1;
+        }
+
+        weaponUI.UpdateTimer(weaponList[0].downTimer);
     }
 }

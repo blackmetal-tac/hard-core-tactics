@@ -9,7 +9,7 @@ public class WeaponUI : MonoBehaviour
     private Slider rightWPNui;
     private TextMeshProUGUI weaponName, modeText;
     private GameManager gameManager;
-    public List<ActionMask> weaponMasks;
+    private List<ActionMask> weaponMasks;
 
     // Start is called before the first frame update
     void Start()
@@ -45,5 +45,17 @@ public class WeaponUI : MonoBehaviour
         {
             weaponMasks[0].transform.localScale = Vector3.one;
         }
+    }
+
+    public void WeaponDown(int wpnIndex, int downTimer)
+    {
+        weaponMasks[wpnIndex].transform.localScale = Vector3.one;
+        rightWPNui.value = 0;
+        UpdateTimer(downTimer);
+    }
+
+    public void UpdateTimer(int downTimer)
+    {
+        modeText.text = "Down: " + downTimer + " Turns";
     }
 }
