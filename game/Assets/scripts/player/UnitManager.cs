@@ -34,17 +34,20 @@ public class UnitManager : MonoBehaviour
 
         /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
               left top, rigth shoulder, left shoulder) */
-        FillWeaponList(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
-        FillWeaponList(transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
-        FillWeaponList(transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        FillWeaponList(transform.Find("Torso").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
-        FillWeaponList(transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
-        FillWeaponList(transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+        weaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
+        weaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
+        weaponList.Add(transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
+        weaponList.Add(transform.Find("Torso").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+        weaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
+        weaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
 
         // ??? assign unit manager for each weapon
         foreach (WPNManager weapon in weaponList)
-        { 
-            weapon.unitManager = this;
+        {
+            if (weapon != null)
+            {
+                weapon.unitManager = this;
+            }            
         }
 
         navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
@@ -194,6 +197,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    // Roll chance for overheat
     private void OverheatRoll()
     {
         int rollHeat = Random.Range(1,10);
@@ -203,40 +207,41 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    // Roll a weapon to overheat
     private void Overheat()
     {
         int wpnIndex = Random.Range(0, weaponList.Count - 1);
-        weaponList[wpnIndex].downTimer = 2;
-        weaponList[wpnIndex].burstSize = weaponList[wpnIndex].weaponModes[0].fireMode;
 
-        if (transform.parent.name == "Player")
+        if (weaponList[wpnIndex] != null)
         {
-            weaponUI.WeaponDown(wpnIndex, weaponList[wpnIndex].downTimer);
+            weaponList[wpnIndex].downTimer = 2;
+            weaponList[wpnIndex].burstSize = weaponList[wpnIndex].weaponModes[0].fireMode;
+
+            if (transform.parent.name == "Player")
+            {
+                weaponUI.WeaponDown(wpnIndex, weaponList[wpnIndex].downTimer);
+            }
         }
     }
 
+    // Update timers for overheated weapon
     public void UpdateTimer()
     {
         foreach (WPNManager weapon in weaponList)
         {
-            weapon.downTimer -= 1;
-        }
+            if (weapon != null)
+            {
+                weapon.downTimer -= 1;
 
-        if (transform.parent.name == "Player" && weaponList[0].downTimer > 0)
-        {
-            weaponUI.UpdateStatus(weaponList[0].downTimer);
+                if (transform.parent.name == "Player" && weapon.downTimer > 0)
+                {
+                    weaponUI.UpdateStatus(weapon.downTimer); // ???
+                }
+                else if (transform.parent.name == "Player" && weapon.downTimer <= 0)
+                {
+                    weaponUI.WeaponUp();
+                }
+            }        
         }
-        else if (transform.parent.name == "Player" && weaponList[0].downTimer <= 0)
-        {
-            weaponUI.WeaponUp();
-        }
-    }
-
-    private void FillWeaponList(WPNManager weapon)
-    {
-        if (weapon != null)
-        {
-            weaponList.Add(weapon);
-        }            
     }
 }

@@ -17,11 +17,20 @@ public class WeaponUI : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         rightWPNui = GameObject.Find("RightArmUI").GetComponentInChildren<Slider>();
 
+        /* Fill the list of all weapon slots (ORDER: rigth arm, left arm, rigth top,
+              left top, rigth shoulder, left shoulder) */
         weaponMasks = new List<ActionMask>();
+        weaponMasks.Add(GameObject.Find("RightArmUI").transform.parent.GetComponentInChildren<ActionMask>());
+        weaponMasks.Add(GameObject.Find("LeftArmUI").transform.parent.GetComponentInChildren<ActionMask>());
+        weaponMasks.Add(GameObject.Find("RightArmUI").transform.parent.GetComponentInChildren<ActionMask>());
+        weaponMasks.Add(GameObject.Find("RightArmUI").transform.parent.GetComponentInChildren<ActionMask>());
+        weaponMasks.Add(GameObject.Find("RightArmUI").transform.parent.GetComponentInChildren<ActionMask>());
         weaponMasks.Add(GameObject.Find("RightArmUI").transform.parent.GetComponentInChildren<ActionMask>());
 
         weaponName = rightWPNui.transform.parent.Find("Weapon").GetComponent<TextMeshProUGUI>();
+
         modeText = GameObject.Find("RightArmMode").GetComponent<TextMeshProUGUI>();
+
         rightWPNui.onValueChanged.AddListener(delegate { ChangeWPNmode(); });
 
         UpdateUI();
