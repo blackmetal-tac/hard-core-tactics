@@ -13,10 +13,11 @@ public class WeaponUI : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {      
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         rightWPNui = GameObject.Find("RightArmUI").GetComponentInChildren<Slider>();
 
+        weaponMasks = new List<ActionMask>();
         weaponMasks.Add(GameObject.Find("RightArmUI").transform.parent.GetComponentInChildren<ActionMask>());
 
         weaponName = rightWPNui.transform.parent.Find("Weapon").GetComponent<TextMeshProUGUI>();
@@ -29,7 +30,7 @@ public class WeaponUI : MonoBehaviour
     public void UpdateUI()
     {
         rightWPN = GameObject.Find("Player").transform.Find("Body").Find("Torso").Find("RightArm")
-            .Find("RightArmWPN").GetComponentInChildren<WPNManager>();
+            .Find("RightArmWPN").GetComponentInChildren<WPNManager>();        
 
         weaponName.text = rightWPN.name;
         
@@ -39,9 +40,9 @@ public class WeaponUI : MonoBehaviour
     private void ChangeWPNmode()
     {
         rightWPN.burstSize = rightWPN.weaponModes[(int)rightWPNui.value].fireMode;
-        modeText.text = rightWPN.weaponModes[(int)rightWPNui.value].modeName;
+        WeaponUp();
 
-        if (gameManager.inAction) 
+        if (gameManager.inAction)
         {
             weaponMasks[0].transform.localScale = Vector3.one;
         }
@@ -51,11 +52,16 @@ public class WeaponUI : MonoBehaviour
     {
         weaponMasks[wpnIndex].transform.localScale = Vector3.one;
         rightWPNui.value = 0;
-        UpdateTimer(downTimer);
+        UpdateStatus(downTimer);
     }
 
-    public void UpdateTimer(int downTimer)
+    public void UpdateStatus(int downTimer)
     {
         modeText.text = "Down: " + downTimer + " Turns";
+    }
+
+    public void WeaponUp()
+    {
+        modeText.text = rightWPN.weaponModes[(int)rightWPNui.value].modeName;
     }
 }

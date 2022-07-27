@@ -12,7 +12,7 @@ public class UnitManager : MonoBehaviour
     public float HP, shield, shieldRegen, heat, cooling, heatCheck = 1f;
     public int safeHeat = 5, walkDistance;
 
-    private float rotSpeed;
+    private float rotSpeed = 0.5f;
 
     private Vector3 direction; // Rotate body to the enemy
 
@@ -22,21 +22,30 @@ public class UnitManager : MonoBehaviour
     public float moveSpeed { set; get; }
     public float spread { set; get; }
     public float shrinkTimer { set; get; }
-    public bool isDead; // Death trigger
+    public bool isDead = false; // Death trigger
 
     private float lastCheck = 0f;
 
     // Start is called before the first frame update
     void Start()
-    {
-        isDead = false;
-        rotSpeed = 0.5f;
-        moveSpeed = 0.1f;
+    { 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
 
-        weaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
-        weaponList[0].unitManager = this; 
+        /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
+              left top, rigth shoulder, left shoulder) */
+        FillWeaponList(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
+        FillWeaponList(transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
+        FillWeaponList(transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
+        FillWeaponList(transform.Find("Torso").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+        FillWeaponList(transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
+        FillWeaponList(transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+
+        // ??? assign unit manager for each weapon
+        foreach (WPNManager weapon in weaponList)
+        { 
+            weapon.unitManager = this;
+        }
 
         navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();
@@ -87,6 +96,8 @@ public class UnitManager : MonoBehaviour
                 HP += Time.deltaTime * 0.6f;
             }
         });
+
+        moveSpeed = 0.1f;
     }
 
     // Set move position and maximum move distance (speed)
@@ -211,6 +222,21 @@ public class UnitManager : MonoBehaviour
             weapon.downTimer -= 1;
         }
 
-        weaponUI.UpdateTimer(weaponList[0].downTimer);
+        if (transform.parent.name == "Player" && weaponList[0].downTimer > 0)
+        {
+            weaponUI.UpdateStatus(weaponList[0].downTimer);
+        }
+        else if (transform.parent.name == "Player" && weaponList[0].downTimer <= 0)
+        {
+            weaponUI.WeaponUp();
+        }
+    }
+
+    private void FillWeaponList(WPNManager weapon)
+    {
+        if (weapon != null)
+        {
+            weaponList.Add(weapon);
+        }            
     }
 }
