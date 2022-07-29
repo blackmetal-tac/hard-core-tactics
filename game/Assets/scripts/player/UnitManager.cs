@@ -137,7 +137,15 @@ public class UnitManager : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
 
-        weaponList[0].FireBurst(target);       
+        //weaponList[0].FireBurst(target);
+
+        foreach (WPNManager weapon in weaponList)
+        {
+            if (weapon != null)
+            {
+                weapon.FireBurst(target);
+            }            
+        }
     }
 
     // Do actions in Update
@@ -211,8 +219,9 @@ public class UnitManager : MonoBehaviour
     private void Overheat()
     {
         int wpnIndex = Random.Range(0, weaponList.Count - 1);
+        Debug.Log(wpnIndex);
 
-        if (weaponList[wpnIndex] != null)
+        if (weaponList[wpnIndex] != null && weaponList[wpnIndex].downTimer <= 0)
         {
             weaponList[wpnIndex].downTimer = 2;
             weaponList[wpnIndex].burstSize = weaponList[wpnIndex].weaponModes[0].fireMode;
@@ -227,21 +236,21 @@ public class UnitManager : MonoBehaviour
     // Update timers for overheated weapon
     public void UpdateTimer()
     {
-        foreach (WPNManager weapon in weaponList)
+        for (int i = 0; i < weaponList.Count; i++)
         {
-            if (weapon != null)
+            if (weaponList[i] != null)
             {
-                weapon.downTimer -= 1;
+                weaponList[i].downTimer -= 1;
 
-                if (transform.parent.name == "Player" && weapon.downTimer > 0)
+                if (transform.parent.name == "Player" && weaponList[i].downTimer > 0)
                 {
-                    weaponUI.UpdateStatus(weapon.downTimer); // ???
+                    weaponUI.UpdateStatus(i, weaponList[i].downTimer); // ???
                 }
-                else if (transform.parent.name == "Player" && weapon.downTimer <= 0)
+                else if (transform.parent.name == "Player" && weaponList[i].downTimer <= 0)
                 {
                     weaponUI.WeaponUp();
                 }
-            }        
+            }
         }
     }
 }
