@@ -166,12 +166,21 @@ public class UnitManager : MonoBehaviour
 
             if (heat > 0.7f && Time.time > lastCheck + heatCheck) // Roll heat penalty
             {
+                if (transform.parent.name == "Player")
+                {
+                    Debug.Log("Roll");
+                }
                 OverheatRoll();
                 lastCheck = Time.time;
             }
-            else if (heat >= 1f)
+            else if (heat >= 1f && Time.time > lastCheck + heatCheck)
             {
+                if (transform.parent.name == "Player")
+                {
+                    Debug.Log("Max overheat");
+                }
                 Overheat();
+                lastCheck = Time.time;
             }
         }
 
@@ -219,7 +228,11 @@ public class UnitManager : MonoBehaviour
     private void Overheat()
     {
         int wpnIndex = Random.Range(0, weaponList.Count - 1);
-        Debug.Log(wpnIndex);
+
+        if (transform.parent.name == "Player")
+        {
+            Debug.Log(wpnIndex);
+        }        
 
         if (weaponList[wpnIndex] != null && weaponList[wpnIndex].downTimer <= 0)
         {
