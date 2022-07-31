@@ -933,10 +933,12 @@ MonoBehaviour:
   shieldRegen: 0.05
   heat: 1
   cooling: 0.1
-  heatCheck: 1
-  safeHeat: 5
+  heatTreshold: 0.7
+  heatCheckTime: 1
+  heatSafeRoll: 5
   walkDistance: 3
   weaponList: []
+  weaponCount: 0
   isDead: 0
 --- !u!1 &362386522
 GameObject:
@@ -2365,7 +2367,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  maxHeight: 10
+  maxHeight: 8
   minHeight: 3
   heightDampening: 5
   keyboardZoomingSensitivity: 2
@@ -6689,10 +6691,12 @@ MonoBehaviour:
   shieldRegen: 0.05
   heat: 0
   cooling: 0.1
-  heatCheck: 1
-  safeHeat: 5
+  heatTreshold: 0.7
+  heatCheckTime: 1
+  heatSafeRoll: 5
   walkDistance: 3
   weaponList: []
+  weaponCount: 0
   isDead: 0
 --- !u!1001 &2013747566
 PrefabInstance:

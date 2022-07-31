@@ -72,14 +72,20 @@ public class WeaponUI : MonoBehaviour
     }
 
     // Enable weapon (update UI text)
-    public void WeaponUp()
+    public void WeaponUp(int wpnIndex)
+    {
+        weaponButtons[wpnIndex].slider.modeName.text = playerManager.weaponList[wpnIndex]
+            .weaponModes[(int)weaponButtons[wpnIndex].slider.slider.value].modeName;
+    }
+
+    // Update player weapon counters
+    public void DecreaseCounter()
     {
         for (int i = 0; i < playerManager.weaponList.Count; i++)
         {
-            if (playerManager.weaponList[i] != null)
+            if (playerManager.weaponList[i] != null && playerManager.weaponList[i].downTimer <= 0)
             {
-                weaponButtons[i].slider.modeName.text = playerManager.weaponList[i]
-                    .weaponModes[(int)weaponButtons[i].slider.slider.value].modeName;
+                weaponButtons[i].actionMask.transform.localScale = Vector3.zero;
             }
         }
     }

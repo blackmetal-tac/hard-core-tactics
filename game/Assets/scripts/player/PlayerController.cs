@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private UnitManager playerManager;
 
     // NavMesh
-    private NavMeshAgent playerAgent;
+    public NavMeshAgent playerAgent;
     private LineRenderer walkPath;
 
     private float crosshairSize;

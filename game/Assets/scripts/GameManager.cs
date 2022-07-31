@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private PlayerController playerController;
     private AIController AIController;
     private UnitManager playerManager, enemyManager;
+    private WeaponUI weaponUI;
 
     // UI settings
     public float crosshairBars;
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
         enemyManager = AIController.GetComponentInChildren<UnitManager>();
 
         // UI
+        weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         clickMarker = GameObject.Find("ClickMarker");
         executeButton = GameObject.Find("ExecuteButton");
         actionMask = executeButton.transform.parent.Find("ActionMask").gameObject;
@@ -86,7 +88,7 @@ public class GameManager : MonoBehaviour
         // Enemy actions
         if (!enemyManager.isDead)
         {
-            AIController.SetPath(playerController.gameObject);
+            AIController.SetPath(playerController.playerAgent);
             AIController.Move();
         }
 
@@ -133,11 +135,8 @@ public class GameManager : MonoBehaviour
                 playerController.EndMove();
             }
 
-            // Update UI
-            if (playerManager.weaponList[0].downTimer <= 0) // ???
-            {
-                rightWPNuiMask.transform.localScale = Vector3.zero;
-            }
+            // Update player weapon counters
+            weaponUI.DecreaseCounter();
         });
     }
 }

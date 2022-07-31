@@ -9,14 +9,16 @@ public class UnitManager : MonoBehaviour
     private NavMeshAgent navMeshAgent;
 
     // Stats    
-    public float HP, shield, shieldRegen, heat, cooling, heatCheck = 1f;
-    public int safeHeat = 5, walkDistance;
-
-    private float rotSpeed = 0.5f;
+    public float HP, shield, shieldRegen, heat, cooling;
+    [Range(0, 1)] public float heatTreshold, heatCheckTime;
+    [Range(0, 10)] public int heatSafeRoll;
+    public int walkDistance;
 
     private Vector3 direction; // Rotate body to the enemy
+    private float rotSpeed = 0.5f;
 
     public List<WPNManager> weaponList;
+    public int weaponCount = 0;
     private WeaponUI weaponUI;
 
     public float moveSpeed { set; get; }
@@ -31,6 +33,8 @@ public class UnitManager : MonoBehaviour
     { 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
+        navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
+        shrinkBar = GetComponentInChildren<ShrinkBar>();
 
         /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
               left top, rigth shoulder, left shoulder) */
@@ -47,11 +51,9 @@ public class UnitManager : MonoBehaviour
             if (weapon != null)
             {
                 weapon.unitManager = this;
+                weaponCount += 1;
             }            
         }
-
-        navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
-        shrinkBar = GetComponentInChildren<ShrinkBar>();
 
         // Load HP, Shield, Heat bars
         this.Progress(gameManager.loadTime, () => {
@@ -137,8 +139,6 @@ public class UnitManager : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
 
-        //weaponList[0].FireBurst(target);
-
         foreach (WPNManager weapon in weaponList)
         {
             if (weapon != null)
@@ -164,21 +164,13 @@ public class UnitManager : MonoBehaviour
             heat -= Time.deltaTime * cooling;
             shrinkBar.UpdateHeat();
 
-            if (heat > 0.7f && Time.time > lastCheck + heatCheck) // Roll heat penalty
+            if (heat > heatTreshold && Time.time > lastCheck + heatCheckTime) // Roll heat penalty
             {
-                if (transform.parent.name == "Player")
-                {
-                    Debug.Log("Roll");
-                }
                 OverheatRoll();
                 lastCheck = Time.time;
             }
-            else if (heat >= 1f && Time.time > lastCheck + heatCheck)
+            else if (heat >= 1f && Time.time > lastCheck + 0.3f)
             {
-                if (transform.parent.name == "Player")
-                {
-                    Debug.Log("Max overheat");
-                }
                 Overheat();
                 lastCheck = Time.time;
             }
@@ -218,7 +210,7 @@ public class UnitManager : MonoBehaviour
     private void OverheatRoll()
     {
         int rollHeat = Random.Range(1,10);
-        if (safeHeat < rollHeat)
+        if (heatSafeRoll < rollHeat)
         {
             Overheat();
         }
@@ -227,16 +219,10 @@ public class UnitManager : MonoBehaviour
     // Roll a weapon to overheat
     private void Overheat()
     {
-        int wpnIndex = Random.Range(0, weaponList.Count - 1);
-
-        if (transform.parent.name == "Player")
-        {
-            Debug.Log(wpnIndex);
-        }        
-
+        int wpnIndex = Random.Range(0, weaponCount);
         if (weaponList[wpnIndex] != null && weaponList[wpnIndex].downTimer <= 0)
         {
-            weaponList[wpnIndex].downTimer = 2;
+            weaponList[wpnIndex].downTimer = 3;
             weaponList[wpnIndex].burstSize = weaponList[wpnIndex].weaponModes[0].fireMode;
 
             if (transform.parent.name == "Player")
@@ -261,7 +247,7 @@ public class UnitManager : MonoBehaviour
                 }
                 else if (transform.parent.name == "Player" && weaponList[i].downTimer <= 0)
                 {
-                    weaponUI.WeaponUp();
+                    weaponUI.WeaponUp(i);
                 }
             }
         }
