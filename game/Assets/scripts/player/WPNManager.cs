@@ -24,6 +24,7 @@ public class WPNManager : MonoBehaviour
 
     public GameObject firePoint, projectileOBJ;
     private Projectile projectile;
+    private Missile missile;
     public UnitManager unitManager;
 
     public ObjectPool<PoolObject> projectilesPool;
@@ -34,9 +35,20 @@ public class WPNManager : MonoBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         firePoint = transform.Find("FirePoint").gameObject;
+
         projectile = GetComponentInChildren<Projectile>();
-        projectile.damage = damage;
-        projectileOBJ = projectile.gameObject;
+        missile = GetComponentInChildren<Missile>();
+        if (projectile != null)
+        {
+            projectile.damage = damage;
+            projectileOBJ = projectile.gameObject;
+        }
+        else 
+        {
+            missile.damage = damage;
+            projectileOBJ = missile.gameObject;
+        }
+        
         projectilesPool = new ObjectPool<PoolObject>(projectileOBJ, burstSize);
     }
 
@@ -67,20 +79,28 @@ public class WPNManager : MonoBehaviour
 
         if (Time.time > lastBurst + fireDelay)
         {
-            StartCoroutine(FireBurstCoroutine(firePoint, projectilesPool, projectile));
+            if (projectile != null)
+            {
+                StartCoroutine(FireBurstCoroutine(firePoint, projectilesPool));
+            }
+            else 
+            {
+                StartCoroutine(FireMissilesCoroutine(firePoint, projectilesPool, target.transform.position));
+            }
+
             lastBurst = Time.time;
         }
     }
 
 
     // Coroutine for separate bursts
-    private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, Projectile projectile)
+    private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool)
     {
         float bulletDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, projectileSpeed);
-
+          
             if (unitManager.heat < 1)
             {
                 unitManager.heat += heat;
@@ -90,6 +110,28 @@ public class WPNManager : MonoBehaviour
             {
                 spread += recoil;
             }            
+
+            yield return new WaitForSeconds(bulletDelay);
+        }
+    }
+
+    // Coroutine for missiles
+    private IEnumerator FireMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, Vector3 target)
+    {
+        float bulletDelay = 60 / fireRate;
+        for (int i = 0; i < burstSize; i++)
+        {
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, projectileSpeed, target);
+
+            if (unitManager.heat < 1)
+            {
+                unitManager.heat += heat;
+            }
+
+            if (spread < 1)
+            {
+                spread += recoil;
+            }
 
             yield return new WaitForSeconds(bulletDelay);
         }

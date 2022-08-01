@@ -82,7 +82,17 @@ namespace OWS.ObjectPooling
             go.transform.position = position;
             go.transform.rotation = rotation;
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
-            go.gameObject.GetComponent<Rigidbody>().velocity = speed * go.transform.TransformDirection(Vector3.forward);
+            go.GetComponent<Rigidbody>().velocity = speed * go.transform.TransformDirection(Vector3.forward);
+            return go;
+        }
+
+        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float speed, Vector3 target)
+        {
+            GameObject go = Pull().gameObject;
+            go.transform.position = position;
+            go.transform.rotation = rotation;
+            go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
+            go.GetComponent<Missile>().target = target;
             return go;
         }
 

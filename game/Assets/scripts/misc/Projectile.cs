@@ -3,7 +3,7 @@ using OWS.ObjectPooling;
 
 public class Projectile : MonoBehaviour
 {
-    public float damage;
+    public float damage { get; set; }
     private Rigidbody bullet;
     private PoolObject poolObject;
 
@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
             collider.GetComponent<UnitManager>().TakeDamage(damage);
         }
 
-        bullet.velocity = Vector3.zero;       
+        bullet.velocity = Vector3.zero;
         poolObject.ReturnToPool();
     }
 }

@@ -85,7 +85,6 @@ MonoBehaviour:
   fireRate: 800
   recoil: 0.1
   burstSize: 5
-  isDown: 0
   weaponModes:
   - modeName: off
     fireMode: 0
@@ -126,7 +125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636598228670951436}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.450157, y: -1.5000001, z: 4.2280116}
+  m_LocalPosition: {x: 0, y: -1.5000001, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
