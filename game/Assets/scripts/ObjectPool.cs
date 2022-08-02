@@ -82,7 +82,7 @@ namespace OWS.ObjectPooling
             go.transform.position = position;
             go.transform.rotation = rotation;
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
-            go.GetComponent<Rigidbody>().velocity = speed * go.transform.TransformDirection(Vector3.forward);
+            go.GetComponent<Rigidbody>().velocity = speed * go.transform.forward;
             return go;
         }
 
@@ -92,7 +92,10 @@ namespace OWS.ObjectPooling
             go.transform.position = position;
             go.transform.rotation = rotation;
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
-            go.GetComponent<Missile>().target = target;
+            Missile missile = go.GetComponentInChildren<Missile>();
+            missile.target = target;
+            missile.speed = speed;
+            //missile.missileBody.velocity = speed * go.transform.forward;
             return go;
         }
 

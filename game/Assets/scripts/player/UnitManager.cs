@@ -15,18 +15,17 @@ public class UnitManager : MonoBehaviour
     public int walkDistance;
 
     private Vector3 direction; // Rotate body to the enemy
-    private float rotSpeed = 0.5f;
+    private readonly float rotSpeed = 0.5f;
 
     public List<WPNManager> weaponList;
     public int weaponCount = 0;
     private WeaponUI weaponUI;
 
-    public float moveSpeed { set; get; }
-    public float spread { set; get; }
-    public float shrinkTimer { set; get; }
+    [HideInInspector] public float moveSpeed = 0.1f;
+    [HideInInspector] public float spread;
+    [HideInInspector] public float shrinkTimer;
     public bool isDead = false; // Death trigger
-
-    private float lastCheck = 0f;
+    private float lastCheck;
 
     // Start is called before the first frame update
     void Start()
@@ -101,8 +100,6 @@ public class UnitManager : MonoBehaviour
                 HP += Time.deltaTime * 0.6f;
             }
         });
-
-        moveSpeed = 0.1f;
     }
 
     // Set move position and maximum move distance (speed)

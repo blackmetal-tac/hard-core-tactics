@@ -8,10 +8,9 @@ public class WPNManager : MonoBehaviour
     // Weapon stats
     public float damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil;
     public int burstSize;
-    private float spread, lastBurst = 0f;
+    private float spread, lastBurst;
     private readonly float spreadMult = 0.5f;
-
-    public int downTimer { get; set; }
+    [HideInInspector] public int downTimer;
 
     [System.Serializable]
     public class WeaponModes
@@ -36,8 +35,7 @@ public class WPNManager : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         firePoint = transform.Find("FirePoint").gameObject;
 
-        projectile = GetComponentInChildren<Projectile>();
-        missile = GetComponentInChildren<Missile>();
+        projectile = GetComponentInChildren<Projectile>();        
         if (projectile != null)
         {
             projectile.damage = damage;
@@ -45,8 +43,9 @@ public class WPNManager : MonoBehaviour
         }
         else 
         {
+            missile = transform.Find("Missile").GetComponentInChildren<Missile>();
             missile.damage = damage;
-            projectileOBJ = missile.gameObject;
+            projectileOBJ = missile.transform.parent.gameObject;
         }
         
         projectilesPool = new ObjectPool<PoolObject>(projectileOBJ, burstSize);

@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     private Camera camMain;
     private GameObject executeButton, buttonBorder, crosshair, enemy, actionMask, 
-        clickMarker, rightWPNuiMask;
+        clickMarker;
     private PlayerController playerController;
     private AIController AIController;
     private UnitManager playerManager, enemyManager;
@@ -26,14 +26,12 @@ public class GameManager : MonoBehaviour
     private static TextMeshProUGUI timer;    
     private float timeValue;
     public float turnTime;
-
-    public bool inAction { get; set; }    
+    public bool inAction = false;
 
     // Start is called before the first frame update
     void Start()
     {
         camMain = Camera.main;
-        inAction = false;
 
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         AIController = GameObject.Find("Enemy").GetComponent<AIController>();
@@ -48,10 +46,7 @@ public class GameManager : MonoBehaviour
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonBorder = executeButton.transform.Find("ButtonBorder").gameObject;
         buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
-
-        // UI masks
-        rightWPNuiMask = GameObject.Find("RightArmUI").transform.parent.Find("ActionMask").gameObject;
-
+       
         // Turn timer
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
         timeValue = turnTime;
