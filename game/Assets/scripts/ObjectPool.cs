@@ -95,7 +95,6 @@ namespace OWS.ObjectPooling
             Missile missile = go.GetComponentInChildren<Missile>();
             missile.target = target;
             missile.speed = speed;
-            //missile.missileBody.velocity = speed * go.transform.forward;
             return go;
         }
 

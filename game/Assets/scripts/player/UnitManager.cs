@@ -199,6 +199,7 @@ public class UnitManager : MonoBehaviour
         {
             isDead = true;
             navMeshAgent.enabled = false;
+            GetComponent<Collider>().enabled = false;
             transform.localScale = Vector3.zero;
         }
     }
