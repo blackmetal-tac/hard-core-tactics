@@ -8,9 +8,10 @@ public class WPNManager : MonoBehaviour
     // Weapon stats
     public float damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil;
     public int burstSize;
-    private float spread, lastBurst;
+    private float spread;
     private readonly float spreadMult = 0.5f;
     [HideInInspector] public int downTimer;
+    [HideInInspector] public float lastBurst;
 
     [System.Serializable]
     public class WeaponModes
@@ -39,7 +40,7 @@ public class WPNManager : MonoBehaviour
         if (projectile != null)
         {
             projectile.damage = damage;
-            projectileOBJ = projectile.gameObject;
+            projectileOBJ = projectile.transform.parent.gameObject;
         }
         else 
         {
@@ -81,14 +82,14 @@ public class WPNManager : MonoBehaviour
             if (projectile != null)
             {
                 StartCoroutine(FireBurstCoroutine(firePoint, projectilesPool));
+                lastBurst = Time.time;
             }
             else 
             {
                 StartCoroutine(FireMissilesCoroutine(firePoint, projectilesPool, target.transform.position));
-            }
-
-            lastBurst = Time.time;
-        }
+                lastBurst = Time.time + gameManager.turnTime - fireDelay; // fire burst once (increase delay)
+            }            
+        }        
     }
 
 

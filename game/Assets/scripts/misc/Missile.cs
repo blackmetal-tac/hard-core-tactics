@@ -41,8 +41,8 @@ public class Missile : MonoBehaviour
             collider.GetComponent<UnitManager>().TakeDamage(damage);            
         }
 
-        missileBody.velocity = Vector3.zero;
         timer = 2f;
+        missileBody.velocity = Vector3.zero;
         poolObject.ReturnToPool();
     }
 

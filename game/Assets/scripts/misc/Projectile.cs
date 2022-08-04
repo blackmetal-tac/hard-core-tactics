@@ -10,7 +10,7 @@ public class Projectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        poolObject = GetComponent<PoolObject>();
+        poolObject = GetComponentInParent<PoolObject>();
         projectileBody = GetComponent<Rigidbody>();
     } 
 

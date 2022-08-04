@@ -26,7 +26,8 @@ public class SliderScr : MonoBehaviour
         modeName.text = weapon.weaponModes[(int)slider.value].modeName;
 
         if (gameManager.inAction)
-        { 
+        {
+            weapon.lastBurst = 0f;
             actionMask.transform.localScale = Vector3.one;
         }
     }
