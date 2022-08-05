@@ -6,6 +6,9 @@ using OWS.ObjectPooling;
 public class WPNManager : MonoBehaviour
 {
     // Weapon stats
+    public enum ProjectileType { Bullet, Missile }
+
+    public ProjectileType projectileType;
     public float damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil;
     public int burstSize;
     private float spread;
@@ -19,15 +22,10 @@ public class WPNManager : MonoBehaviour
         public string modeName;
         public int fireMode;
     }
-
     public List<WeaponModes> weaponModes;
 
-    public GameObject firePoint, projectileOBJ;
-    private Projectile projectile;
-    private Missile missile;
-    public UnitManager unitManager;
-
-    public ObjectPool<PoolObject> projectilesPool;
+    [HideInInspector] public GameObject firePoint, projectileOBJ;
+    [HideInInspector] public UnitManager unitManager;
     private GameManager gameManager;
 
     // Start is called before the first frame update
@@ -35,21 +33,6 @@ public class WPNManager : MonoBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         firePoint = transform.Find("FirePoint").gameObject;
-
-        projectile = GetComponentInChildren<Projectile>();        
-        if (projectile != null)
-        {
-            projectile.damage = damage;
-            projectileOBJ = projectile.transform.parent.gameObject;
-        }
-        else 
-        {
-            missile = transform.Find("Missile").GetComponentInChildren<Missile>();
-            missile.damage = damage;
-            projectileOBJ = missile.transform.parent.gameObject;
-        }
-        
-        projectilesPool = new ObjectPool<PoolObject>(projectileOBJ, burstSize);
     }
 
     // Update is called once per frame
@@ -79,14 +62,14 @@ public class WPNManager : MonoBehaviour
 
         if (Time.time > lastBurst + fireDelay)
         {
-            if (projectile != null)
+            if (projectileType == ProjectileType.Bullet)
             {
-                StartCoroutine(FireBurstCoroutine(firePoint, projectilesPool));
+                StartCoroutine(FireBurstCoroutine(firePoint, gameManager.bulletsPool));
                 lastBurst = Time.time;
             }
-            else 
+            else if (projectileType == ProjectileType.Missile)
             {
-                StartCoroutine(FireMissilesCoroutine(firePoint, projectilesPool, target.transform.position));
+                StartCoroutine(FireMissilesCoroutine(firePoint, gameManager.missilesPool, target.transform.position));
                 lastBurst = Time.time + gameManager.turnTime - fireDelay; // fire burst once (increase delay)
             }            
         }        
@@ -99,7 +82,7 @@ public class WPNManager : MonoBehaviour
         float bulletDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, projectileSpeed);
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed);
           
             if (unitManager.heat < 1)
             {
@@ -121,7 +104,7 @@ public class WPNManager : MonoBehaviour
         float bulletDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, projectileSpeed, target);
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed, target);
 
             if (unitManager.heat < 1)
             {

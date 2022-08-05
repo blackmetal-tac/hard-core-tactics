@@ -2,6 +2,7 @@ using TMPro;
 using System;
 using UnityEngine;
 using DG.Tweening;
+using OWS.ObjectPooling;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class GameManager : MonoBehaviour
     private AIController AIController;
     private UnitManager playerManager, enemyManager;
     private WeaponUI weaponUI;
+
+    public ObjectPool<PoolObject> bulletsPool;
+    public ObjectPool<PoolObject> missilesPool;
+    private GameObject projectileOBJ;
 
     // UI settings
     public float crosshairBars;
@@ -32,11 +37,16 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         camMain = Camera.main;
-
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         AIController = GameObject.Find("Enemy").GetComponent<AIController>();
         playerManager = playerController.GetComponentInChildren<UnitManager>();
         enemyManager = AIController.GetComponentInChildren<UnitManager>();
+
+        // Find projectiles and create pools
+        projectileOBJ = GameObject.Find("Projectiles").transform.Find("Bullet").gameObject;
+        bulletsPool = new ObjectPool<PoolObject>(projectileOBJ);
+        projectileOBJ = GameObject.Find("Projectiles").transform.Find("Missile").gameObject;
+        missilesPool = new ObjectPool<PoolObject>(projectileOBJ);
 
         // UI
         weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();

@@ -76,17 +76,18 @@ namespace OWS.ObjectPooling
             return go;
         }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float speed)
+        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed)
         {
             GameObject go = Pull().gameObject;
             go.transform.position = position;
             go.transform.rotation = rotation;
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
+            go.GetComponentInChildren<Projectile>().damage = damage;
             go.GetComponentInChildren<Rigidbody>().velocity = speed * go.transform.forward;
             return go;
         }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float speed, Vector3 target)
+        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, Vector3 target)
         {
             GameObject go = Pull().gameObject;
             go.transform.position = position;
@@ -94,6 +95,7 @@ namespace OWS.ObjectPooling
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
             Missile missile = go.GetComponentInChildren<Missile>();
             missile.target = target;
+            missile.damage = damage;
             missile.speed = speed;
             return go;
         }

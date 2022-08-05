@@ -6,9 +6,9 @@ public class SliderScr : MonoBehaviour
 {
     private GameObject actionMask;
     private GameManager gameManager;
-    public Slider slider { get; set; }
-    public WPNManager weapon { get; set; }
-    public TextMeshProUGUI modeName { get; set; }
+    [HideInInspector] public Slider slider;
+    [HideInInspector] public WPNManager weapon;
+    [HideInInspector] public TextMeshProUGUI modeName;
 
     // Start is called before the first frame update
     void Start()
