@@ -82,7 +82,7 @@ public class WPNManager : MonoBehaviour
             else if (projectileType == ProjectileType.AMS)
             {
                 GameObject targetMissile = colliderAMS.gameObject;
-                StartCoroutine(FireMissilesCoroutine(firePoint, gameManager.bulletsPool, targetMissile.transform.position));
+                StartCoroutine(FireBurstCoroutine(firePoint, gameManager.bulletsPool));
                 lastBurst = Time.time;
             }
         }        

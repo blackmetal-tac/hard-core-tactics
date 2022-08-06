@@ -9,7 +9,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Projectiles
+  - 
   - Water
   - UI
   - Distortion
@@ -17,9 +17,9 @@ TagManager:
   - Lighting
   - Ground
   - Postprocessing
-  - 
-  - 
-  - 
+  - Bullet
+  - Missile
+  - AMS
   - 
   - 
   - 

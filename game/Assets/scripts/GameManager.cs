@@ -14,8 +14,7 @@ public class GameManager : MonoBehaviour
     private UnitManager playerManager, enemyManager;
     private WeaponUI weaponUI;
 
-    public ObjectPool<PoolObject> bulletsPool;
-    public ObjectPool<PoolObject> missilesPool;
+    public ObjectPool<PoolObject> bulletsPool, missilesPool, amsPool;
     private GameObject projectileOBJ;
 
     // UI settings
@@ -47,6 +46,8 @@ public class GameManager : MonoBehaviour
         bulletsPool = new ObjectPool<PoolObject>(projectileOBJ);
         projectileOBJ = transform.Find("Projectiles").Find("Missile").gameObject;
         missilesPool = new ObjectPool<PoolObject>(projectileOBJ);
+        projectileOBJ = transform.Find("Projectiles").Find("AMS").gameObject;
+        amsPool = new ObjectPool<PoolObject>(projectileOBJ);
 
         // UI
         weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
