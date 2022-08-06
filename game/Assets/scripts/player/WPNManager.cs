@@ -6,14 +6,13 @@ using OWS.ObjectPooling;
 public class WPNManager : MonoBehaviour
 {
     // Weapon stats
-    public enum ProjectileType { Bullet, Missile }
+    public enum ProjectileType { Bullet, Missile, AMS }
 
     public ProjectileType projectileType;
-    public float damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil;
-    public int burstSize;
+    public float damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil, radiusAMS;
     private float spread;
     private readonly float spreadMult = 0.5f;
-    [HideInInspector] public int downTimer;
+    [HideInInspector] public int burstSize,downTimer;
     [HideInInspector] public float lastBurst;
 
     [System.Serializable]
@@ -27,12 +26,20 @@ public class WPNManager : MonoBehaviour
     [HideInInspector] public GameObject firePoint, projectileOBJ;
     [HideInInspector] public UnitManager unitManager;
     private GameManager gameManager;
+    private Collider colliderAMS;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         firePoint = transform.Find("FirePoint").gameObject;
+
+        if (projectileType == ProjectileType.AMS)
+        {
+            colliderAMS = GetComponentInChildren<Collider>();
+            colliderAMS.enabled = true;
+            colliderAMS.transform.localScale = radiusAMS * Vector3.one;
+        }
     }
 
     // Update is called once per frame
@@ -71,7 +78,13 @@ public class WPNManager : MonoBehaviour
             {
                 StartCoroutine(FireMissilesCoroutine(firePoint, gameManager.missilesPool, target.transform.position));
                 lastBurst = Time.time + gameManager.turnTime - fireDelay; // fire burst once (increase delay)
-            }            
+            }
+            else if (projectileType == ProjectileType.AMS)
+            {
+                GameObject targetMissile = colliderAMS.gameObject;
+                StartCoroutine(FireMissilesCoroutine(firePoint, gameManager.bulletsPool, targetMissile.transform.position));
+                lastBurst = Time.time;
+            }
         }        
     }
 

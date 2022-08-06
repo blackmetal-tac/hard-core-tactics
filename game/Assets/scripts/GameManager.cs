@@ -43,9 +43,9 @@ public class GameManager : MonoBehaviour
         enemyManager = AIController.GetComponentInChildren<UnitManager>();
 
         // Find projectiles and create pools
-        projectileOBJ = GameObject.Find("Projectiles").transform.Find("Bullet").gameObject;
+        projectileOBJ = transform.Find("Projectiles").Find("Bullet").gameObject;
         bulletsPool = new ObjectPool<PoolObject>(projectileOBJ);
-        projectileOBJ = GameObject.Find("Projectiles").transform.Find("Missile").gameObject;
+        projectileOBJ = transform.Find("Projectiles").Find("Missile").gameObject;
         missilesPool = new ObjectPool<PoolObject>(projectileOBJ);
 
         // UI
