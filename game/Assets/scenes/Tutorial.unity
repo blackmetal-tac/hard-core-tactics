@@ -756,17 +756,17 @@ PrefabInstance:
     - target: {fileID: 5226917327009510874, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.26798075
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5226917327009510874, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.022822512
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5226917327009510874, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -386.5265
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5226917327009510874, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
@@ -6276,7 +6276,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 753842249}
-  m_PlaneDistance: 1
+  m_PlaneDistance: 0.4
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -7581,6 +7581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileType: 2
+  radiusAMS: 10
   damage: 0
   heat: 0.01
   projectileSpeed: 15
@@ -7588,7 +7589,6 @@ MonoBehaviour:
   fireDelay: 1
   fireRate: 800
   recoil: 0.05
-  radiusAMS: 10
   burstSize: 5
   downTimer: 0
   lastBurst: 0
@@ -7602,6 +7602,7 @@ MonoBehaviour:
   firePoint: {fileID: 0}
   projectileOBJ: {fileID: 0}
   unitManager: {fileID: 0}
+  targetAMS: {fileID: 0}
 --- !u!1 &636598228772769807
 GameObject:
   m_ObjectHideFlags: 0
@@ -7749,17 +7750,17 @@ PrefabInstance:
     - target: {fileID: 645734298742888792, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.24134892
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 645734298742888792, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0041748285
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 645734298742888792, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.2747672
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 645734298742888792, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using OWS.ObjectPooling;
+using UnityEngine.Events;
 
 public class WPNManager : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class WPNManager : MonoBehaviour
     public enum ProjectileType { Bullet, Missile, AMS }
 
     public ProjectileType projectileType;
-    public float damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil, radiusAMS;
+    public float radiusAMS, damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil;
     private float spread;
     private readonly float spreadMult = 0.5f;
     [HideInInspector] public int burstSize,downTimer;
@@ -27,6 +28,7 @@ public class WPNManager : MonoBehaviour
     [HideInInspector] public UnitManager unitManager;
     private GameManager gameManager;
     private Collider colliderAMS;
+    public GameObject targetAMS;
 
     // Start is called before the first frame update
     void Start()
@@ -61,11 +63,21 @@ public class WPNManager : MonoBehaviour
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
     public void FireBurst(GameObject target)
     {
-        Vector3 spreadVector = new Vector3(
-            Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
-            Random.Range((-unitManager.moveSpeed * spreadMult) - spread / 2, (unitManager.moveSpeed * spreadMult) + spread / 2),
-            Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
-        firePoint.transform.LookAt(target.transform.position + spreadVector);
+        Vector3 spreadVector = new(
+                Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
+                Random.Range((-unitManager.moveSpeed * spreadMult) - spread / 2, (unitManager.moveSpeed * spreadMult) + spread / 2),
+                Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
+
+        if (projectileType != ProjectileType.AMS)
+        {
+            firePoint.transform.LookAt(target.transform.position + spreadVector);
+        }
+        if (targetAMS != null)
+        {
+            Debug.Log("looking");
+            firePoint.transform.LookAt(targetAMS.transform.position + spreadVector);
+        }
+            
 
         if (Time.time > lastBurst + fireDelay)
         {
@@ -80,10 +92,9 @@ public class WPNManager : MonoBehaviour
                 lastBurst = Time.time + gameManager.turnTime - fireDelay; // fire burst once (increase delay)
             }
             else if (projectileType == ProjectileType.AMS)
-            {
-                GameObject targetMissile = colliderAMS.gameObject;
+            {                
                 StartCoroutine(FireBurstCoroutine(firePoint, gameManager.bulletsPool));
-                lastBurst = Time.time;
+                lastBurst = Time.time;// && targetAMS != null
             }
         }        
     }
@@ -92,44 +103,37 @@ public class WPNManager : MonoBehaviour
     // Coroutine for separate bursts
     private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool)
     {
-        float bulletDelay = 60 / fireRate;
+        float shotDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed);
-          
-            if (unitManager.heat < 1)
-            {
-                unitManager.heat += heat;
-            }
-
-            if (spread < 1)
-            {
-                spread += recoil;
-            }            
-
-            yield return new WaitForSeconds(bulletDelay);
+            HeatRecoil();
+            yield return new WaitForSeconds(shotDelay);
         }
     }
 
     // Coroutine for missiles
     private IEnumerator FireMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, Vector3 target)
     {
-        float bulletDelay = 60 / fireRate;
+        float shotDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed, target);
+            HeatRecoil();
+            yield return new WaitForSeconds(shotDelay);
+        }
+    }
 
-            if (unitManager.heat < 1)
-            {
-                unitManager.heat += heat;
-            }
+    private void HeatRecoil()
+    {
+        if (unitManager.heat < 1)
+        {
+            unitManager.heat += heat;
+        }
 
-            if (spread < 1)
-            {
-                spread += recoil;
-            }
-
-            yield return new WaitForSeconds(bulletDelay);
+        if (spread < 1)
+        {
+            spread += recoil;
         }
     }
 }

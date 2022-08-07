@@ -41,9 +41,24 @@ public class Missile : MonoBehaviour
             collider.GetComponent<UnitManager>().TakeDamage(damage);            
         }
 
-        timer = 2f;
-        missileBody.velocity = Vector3.zero;
-        poolObject.ReturnToPool();
+        if (collider.name != "ColliderAMS")
+        {
+            timer = 2f;
+            missileBody.velocity = Vector3.zero;
+            poolObject.ReturnToPool();
+        }
+    }
+
+    private void OnTriggerStay(Collider collider)
+    {
+        if (collider.name == "ColliderAMS")
+        {
+            GameObject targetAMS = collider.GetComponentInParent<WPNManager>().targetAMS;
+            if (targetAMS == null)
+            {
+                targetAMS = this.gameObject;
+            }
+        }
     }
 
     public void MoveTowards()
