@@ -6114,6 +6114,7 @@ GameObject:
   - component: {fileID: 1879822149}
   - component: {fileID: 1879822148}
   - component: {fileID: 1879822147}
+  - component: {fileID: 1879822150}
   m_Layer: 13
   m_Name: ColliderAMS
   m_TagString: Untagged
@@ -6199,6 +6200,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879822145}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1879822150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879822145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cdf23a46030d3d4cb73b153c7296ae3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1883712108 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 636598228297172975, guid: e0deff1a45b1eab4289b3a205e48f1e0,

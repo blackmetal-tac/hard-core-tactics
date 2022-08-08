@@ -49,18 +49,6 @@ public class Missile : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider collider)
-    {
-        if (collider.name == "ColliderAMS")
-        {
-            GameObject targetAMS = collider.GetComponentInParent<WPNManager>().targetAMS;
-            if (targetAMS == null)
-            {
-                targetAMS = this.gameObject;
-            }
-        }
-    }
-
     public void MoveTowards()
     {        
         if (Time.time > lastCheck + delay && timer > 0)

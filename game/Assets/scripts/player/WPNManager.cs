@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using OWS.ObjectPooling;
-using UnityEngine.Events;
 
 public class WPNManager : MonoBehaviour
 {
@@ -74,7 +73,6 @@ public class WPNManager : MonoBehaviour
         }
         if (targetAMS != null)
         {
-            Debug.Log("looking");
             firePoint.transform.LookAt(targetAMS.transform.position + spreadVector);
         }
             
