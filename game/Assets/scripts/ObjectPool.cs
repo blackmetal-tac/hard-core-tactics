@@ -94,6 +94,7 @@ namespace OWS.ObjectPooling
             go.transform.rotation = rotation;
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
             Missile missile = go.GetComponentInChildren<Missile>();
+            missile.missileCollider.enabled = true;
             missile.target = target;
             missile.damage = damage;
             missile.speed = speed;

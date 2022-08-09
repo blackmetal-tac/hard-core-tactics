@@ -7,6 +7,7 @@ public class Missile : MonoBehaviour
     [HideInInspector] public float speed;
     [HideInInspector] public Vector3 target;
     [HideInInspector] public Rigidbody missileBody;
+    [HideInInspector] public Collider missileCollider;
     [HideInInspector] public float timer = 2f;
     private PoolObject poolObject;
     private readonly float spread = 0.5f, delay = 1f;
@@ -18,6 +19,7 @@ public class Missile : MonoBehaviour
     {
         poolObject = GetComponentInParent<PoolObject>();
         missileBody = GetComponent<Rigidbody>();
+        missileCollider = GetComponent<Collider>();
 
         spreadVector = new(
             Random.Range(-spread, spread) + target.x - poolObject.transform.position.x,
@@ -38,13 +40,18 @@ public class Missile : MonoBehaviour
     {
         if (collider.name == "Body")
         {
-            collider.GetComponent<UnitManager>().TakeDamage(damage);            
+            collider.GetComponent<UnitManager>().TakeDamage(damage);
+        }
+        else if (collider.name == "Bullet")
+        {
+            Debug.Log("Intercepted");
         }
 
         if (collider.name != "ColliderAMS")
         {
             timer = 2f;
             missileBody.velocity = Vector3.zero;
+            missileCollider.enabled = false;
             poolObject.ReturnToPool();
         }
     }

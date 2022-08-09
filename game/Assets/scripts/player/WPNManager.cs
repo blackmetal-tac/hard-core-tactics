@@ -74,8 +74,11 @@ public class WPNManager : MonoBehaviour
         if (targetAMS != null)
         {
             firePoint.transform.LookAt(targetAMS.transform.position + spreadVector);
+            if (targetAMS.transform.parent.localScale == Vector3.zero)
+            {
+                targetAMS = null;
+            }
         }
-            
 
         if (Time.time > lastBurst + fireDelay)
         {
@@ -89,7 +92,7 @@ public class WPNManager : MonoBehaviour
                 StartCoroutine(FireMissilesCoroutine(firePoint, gameManager.missilesPool, target.transform.position));
                 lastBurst = Time.time + gameManager.turnTime - fireDelay; // fire burst once (increase delay)
             }
-            else if (projectileType == ProjectileType.AMS)
+            else if (projectileType == ProjectileType.AMS && targetAMS != null)
             {                
                 StartCoroutine(FireBurstCoroutine(firePoint, gameManager.bulletsPool));
                 lastBurst = Time.time;// && targetAMS != null

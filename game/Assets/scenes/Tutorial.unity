@@ -7601,7 +7601,7 @@ MonoBehaviour:
   projectileSize: 0.02
   fireDelay: 1
   fireRate: 800
-  recoil: 0.05
+  recoil: 0.01
   burstSize: 5
   downTimer: 0
   lastBurst: 0
@@ -7834,6 +7834,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2121252000121988496, guid: 0e900c9216f3c194f9edc241dbf2edb5,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2121252000121988496, guid: 0e900c9216f3c194f9edc241dbf2edb5,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3951382612890237716, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}
