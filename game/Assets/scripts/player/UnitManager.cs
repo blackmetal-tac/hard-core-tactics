@@ -9,7 +9,8 @@ public class UnitManager : MonoBehaviour
     private NavMeshAgent navMeshAgent;
 
     // Stats    
-    public float HP, shield, shieldRegen, heat, cooling;
+    [HideInInspector] public float HP, shield, heat;
+    [Range(0, 0.5f)] public float shieldRegen, cooling;
     [Range(0, 1)] public float heatTreshold, heatCheckTime;
     [Range(0, 10)] public int heatSafeRoll;
     public int walkDistance;
@@ -18,7 +19,7 @@ public class UnitManager : MonoBehaviour
     private readonly float rotSpeed = 0.5f;
 
     public List<WPNManager> weaponList;
-    public int weaponCount = 0;
+    [HideInInspector] public int weaponCount = 0;
     private WeaponUI weaponUI;
 
     [HideInInspector] public float moveSpeed = 0.1f;

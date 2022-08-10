@@ -16,4 +16,9 @@ public class CollisionAMS : MonoBehaviour
             wpnManager.targetAMS = collider.gameObject;
         }
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        wpnManager.targetAMS = null;
+    }
 }

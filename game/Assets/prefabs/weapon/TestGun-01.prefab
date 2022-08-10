@@ -77,8 +77,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileType: 0
+  radiusAMS: 0
   damage: 0.03
-  heat: 0.05
+  heat: 0.02
   projectileSpeed: 10
   projectileSize: 0.05
   fireDelay: 1
@@ -97,3 +98,4 @@ MonoBehaviour:
   firePoint: {fileID: 0}
   projectileOBJ: {fileID: 0}
   unitManager: {fileID: 0}
+  targetAMS: {fileID: 0}

@@ -7,13 +7,15 @@ public class WPNManager : MonoBehaviour
 {
     // Weapon stats
     public enum ProjectileType { Bullet, Missile, AMS }
-
     public ProjectileType projectileType;
-    public float radiusAMS, damage, heat, projectileSpeed, projectileSize, fireDelay, fireRate, recoil;
-    private float spread;
-    private readonly float spreadMult = 0.5f;
+    [Range(0, 0.5f)] public float projectileSize, heat, recoil;
+    [Range(0, 1)] public float damage, fireDelay;
+    [Range(0, 15)] public int radiusAMS, projectileSpeed;
+    [Range(0, 3000)] public float fireRate;
     [HideInInspector] public int burstSize,downTimer;
     [HideInInspector] public float lastBurst;
+    private float spread;
+    private readonly float spreadMult = 0.5f;
 
     [System.Serializable]
     public class WeaponModes
@@ -23,11 +25,10 @@ public class WPNManager : MonoBehaviour
     }
     public List<WeaponModes> weaponModes;
 
-    [HideInInspector] public GameObject firePoint, projectileOBJ;
+    [HideInInspector] public GameObject firePoint, projectileOBJ, targetAMS;
     [HideInInspector] public UnitManager unitManager;
     private GameManager gameManager;
     private Collider colliderAMS;
-    public GameObject targetAMS;
 
     // Start is called before the first frame update
     void Start()

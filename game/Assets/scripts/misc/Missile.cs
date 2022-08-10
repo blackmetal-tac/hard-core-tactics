@@ -42,13 +42,14 @@ public class Missile : MonoBehaviour
         {
             collider.GetComponent<UnitManager>().TakeDamage(damage);
         }
-        else if (collider.name == "Bullet")
+
+        if (collider.name == "BulletMesh")
         {
             Debug.Log("Intercepted");
         }
 
         if (collider.name != "ColliderAMS")
-        {
+        {    
             timer = 2f;
             missileBody.velocity = Vector3.zero;
             missileCollider.enabled = false;

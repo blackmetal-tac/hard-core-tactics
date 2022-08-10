@@ -961,8 +961,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 0
   shield: 0
-  shieldRegen: 0.05
   heat: 1
+  shieldRegen: 0.05
   cooling: 0.1
   heatTreshold: 0.7
   heatCheckTime: 1
@@ -4922,6 +4922,7 @@ MonoBehaviour:
     type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!114 &1567707579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6930,8 +6931,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 0
   shield: 0
-  shieldRegen: 0.05
   heat: 0
+  shieldRegen: 0.05
   cooling: 0.1
   heatTreshold: 0.7
   heatCheckTime: 1
@@ -7594,14 +7595,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileType: 2
-  radiusAMS: 10
   damage: 0
   heat: 0.01
   projectileSpeed: 15
-  projectileSize: 0.02
-  fireDelay: 1
-  fireRate: 800
+  projectileSize: 0.03
+  fireDelay: 0.4
   recoil: 0.01
+  radiusAMS: 10
+  fireRate: 3000
   burstSize: 5
   downTimer: 0
   lastBurst: 0
