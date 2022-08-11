@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 7621868886553932494}
   - component: {fileID: 4385243021783310066}
   - component: {fileID: 914364766225570547}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: BulletMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 786050692067613404}
   - component: {fileID: 7132575781556086076}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Missile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 2121252000121988496}
   - component: {fileID: 143397280253153136}
   - component: {fileID: 1389490711747376812}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: MissileMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -434,4 +434,5 @@ MonoBehaviour:
   speed: 0
   target: {x: 0, y: 0, z: 0}
   missileBody: {fileID: 0}
+  missileCollider: {fileID: 0}
   timer: 2

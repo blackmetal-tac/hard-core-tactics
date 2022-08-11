@@ -18,10 +18,10 @@ TagManager:
   - Ground
   - Postprocessing
   - Bullet
-  - Missile
-  - AMS
-  - 
-  - 
+  - MissileFriend
+  - MissileFoe
+  - AMSFriend
+  - AMSFoe
   - 
   - 
   - 

@@ -27,6 +27,7 @@ public class WPNManager : MonoBehaviour
 
     [HideInInspector] public GameObject firePoint, projectileOBJ, targetAMS;
     [HideInInspector] public UnitManager unitManager;
+    [HideInInspector] public bool isFriend;
     private GameManager gameManager;
     private Collider colliderAMS;
 
@@ -38,9 +39,23 @@ public class WPNManager : MonoBehaviour
 
         if (projectileType == ProjectileType.AMS)
         {
+            damage = 0;
             colliderAMS = GetComponentInChildren<Collider>();
+            if (unitManager.transform.parent.parent.name == "PlayerSquad")
+            {
+                colliderAMS.gameObject.layer = 14;
+            }
+            else
+            {
+                colliderAMS.gameObject.layer = 15;
+            }
             colliderAMS.enabled = true;
             colliderAMS.transform.localScale = radiusAMS * Vector3.one;
+        }
+
+        if (projectileType == ProjectileType.Missile && unitManager.transform.parent.parent.name == "PlayerSquad")
+        {
+            isFriend = true;
         }
     }
 
@@ -51,12 +66,12 @@ public class WPNManager : MonoBehaviour
         if ((spread > 0) && gameManager.inAction)
         {
             spread -= Time.deltaTime / 3; 
-            unitManager.spread = spread;           
+            //unitManager.spread = spread;           
         }
         else
         {
             spread = 0;
-            unitManager.spread = spread;
+            //unitManager.spread = spread;
         }
     }
 
@@ -120,7 +135,7 @@ public class WPNManager : MonoBehaviour
         float shotDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed, target);
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed, target, isFriend);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
         }

@@ -28,20 +28,15 @@ public class UnitManager : MonoBehaviour
     public bool isDead = false; // Death trigger
     private float lastCheck;
 
-    // Start is called before the first frame update
-    void Start()
-    { 
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
-        navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
-        shrinkBar = GetComponentInChildren<ShrinkBar>();
-
+    // ??? Set UnitManager for all weapons before Start
+    void Awake()
+    {
         /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
-              left top, rigth shoulder, left shoulder) */
+            left top, rigth shoulder, left shoulder) */
         weaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
         weaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
         weaponList.Add(transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        weaponList.Add(transform.Find("Torso").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+        weaponList.Add(transform.Find("Torso").Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
         weaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
         weaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
 
@@ -52,8 +47,17 @@ public class UnitManager : MonoBehaviour
             {
                 weapon.unitManager = this;
                 weaponCount += 1;
-            }            
+            }
         }
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    { 
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
+        navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
+        shrinkBar = GetComponentInChildren<ShrinkBar>();
 
         // Load HP, Shield, Heat bars
         this.Progress(gameManager.loadTime, () => {

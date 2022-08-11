@@ -43,11 +43,6 @@ public class Missile : MonoBehaviour
             collider.GetComponent<UnitManager>().TakeDamage(damage);
         }
 
-        if (collider.name == "BulletMesh")
-        {
-            Debug.Log("Intercepted");
-        }
-
         if (collider.name != "ColliderAMS")
         {    
             timer = 2f;
