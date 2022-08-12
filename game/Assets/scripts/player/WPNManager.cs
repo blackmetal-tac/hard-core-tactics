@@ -14,8 +14,10 @@ public class WPNManager : MonoBehaviour
     [Range(0, 3000)] public float fireRate;
     [HideInInspector] public int burstSize,downTimer;
     [HideInInspector] public float lastBurst;
-    private float spread;
     private readonly float spreadMult = 0.5f;
+    
+    private float spread, timer;
+    private readonly float delay = 0.1f;
 
     [System.Serializable]
     public class WeaponModes
@@ -36,6 +38,7 @@ public class WPNManager : MonoBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         firePoint = transform.Find("FirePoint").gameObject;
+        timer = Time.fixedTime + delay;
 
         if (projectileType == ProjectileType.AMS)
         {
@@ -60,18 +63,29 @@ public class WPNManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {  
-        // Bullet spread
-        if ((spread > 0) && gameManager.inAction)
+    void FixedUpdate()
+    {
+        // Timer to slow update
+        if (Time.fixedTime >= timer)
         {
-            spread -= Time.deltaTime / 3; 
-            //unitManager.spread = spread;           
-        }
-        else
-        {
-            spread = 0;
-            //unitManager.spread = spread;
+            // Bullet spread 
+            if (unitManager.transform.parent.name == "Player" && unitManager.spread < 2
+                && gameManager.inAction && projectileType != ProjectileType.AMS)
+            {
+                unitManager.spread += spread / 50;
+            }
+
+            if (spread > 0)
+            {
+                spread -= Time.fixedDeltaTime * 2;
+                unitManager.spread = spread;
+            }
+            else
+            {
+                spread = 0;
+                unitManager.spread = spread;
+            }
+            timer = Time.fixedTime + delay;
         }
     }
 

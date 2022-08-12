@@ -27,7 +27,7 @@ public class Missile : MonoBehaviour
             Random.Range(-spread, spread) + target.z - poolObject.transform.position.z);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (poolObject.transform.localScale != Vector3.zero)
         {
