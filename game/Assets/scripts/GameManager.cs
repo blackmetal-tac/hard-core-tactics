@@ -18,9 +18,7 @@ public class GameManager : MonoBehaviour
     private GameObject projectileOBJ;
 
     // UI settings
-    public float crosshairBars;
-    public float loadTime;
-    public float songTitleSpeed;
+    public float crosshairBars, loadTime, songTitleSpeed;
 
     // Audio
     private AudioSource audioUI;
@@ -66,8 +64,7 @@ public class GameManager : MonoBehaviour
         enemy = GameObject.Find("Enemy");
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // Crosshair position
         crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);

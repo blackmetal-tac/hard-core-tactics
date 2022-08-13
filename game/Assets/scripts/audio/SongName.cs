@@ -17,8 +17,7 @@ public class SongName : MonoBehaviour
         scrollPos = transform.localPosition.x;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Double strings and spaces
         textmeshPro.text = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString() +
@@ -26,7 +25,7 @@ public class SongName : MonoBehaviour
 
         transform.localPosition = new Vector3(-scrollPos,
             transform.localPosition.y, transform.localPosition.z);
-        scrollPos += Time.deltaTime * textSpeed;
+        scrollPos += Time.fixedDeltaTime * textSpeed;
 
         if (-textmeshPro.preferredWidth / 2 >= transform.localPosition.x)
         {

@@ -43,8 +43,7 @@ public class ShrinkBar : MonoBehaviour
         heatImageInd = heatIndicator.transform.Find("Health").GetComponent<Image>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         unitUI.transform.position = camMain.WorldToScreenPoint(transform.parent.transform.position);
     }

@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
+
 public class PlayerController : MonoBehaviour
 {
     private GameManager gameManager;
@@ -12,12 +13,13 @@ public class PlayerController : MonoBehaviour
     private UnitManager playerManager;
 
     // NavMesh
-    public NavMeshAgent playerAgent;
+    [HideInInspector] public NavMeshAgent playerAgent;
     private LineRenderer walkPath;
 
     private float crosshairSize;
-    private float crosshairScale = 0.15f;
+    private readonly float crosshairScale = 0.15f;
 
+    public LayerMask IgnoreLayers;
 
     // Start is called before the first frame update
     void Start()
@@ -50,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
             if (!gameManager.inAction)
             {
-                MoveToClick();                
+                MoveToClick();
             }
         }
 
@@ -68,10 +70,9 @@ public class PlayerController : MonoBehaviour
     private void MoveToClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        bool isHit = Physics.Raycast(ray, out hit);
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~IgnoreLayers);
 
-        if(isHit)
+        if (isHit)
         {
             playerManager.SetDestination(hit.point, playerAgent);
         }       
@@ -90,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 1; i < playerAgent.path.corners.Length; i++)
         {
-            Vector3 pointPosition = new Vector3(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y,
+            Vector3 pointPosition = new(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y,
                     playerAgent.path.corners[i].z);
             walkPath.SetPosition(i, pointPosition);
             clickMarker.transform.position = new Vector3(pointPosition.x, 0.05f, pointPosition.z);

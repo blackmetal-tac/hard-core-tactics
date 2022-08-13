@@ -7,7 +7,7 @@ public class AIController : MonoBehaviour
     private UnitManager unitManager;
 
     // Move parameters
-    private int moveOffset = 15;    
+    private readonly int moveOffset = 15;    
 
     // Start is called before the first frame update
     void Start()

@@ -265,7 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 70883866}
   - component: {fileID: 70883867}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -700,7 +700,7 @@ GameObject:
   m_Component:
   - component: {fileID: 274143385}
   - component: {fileID: 274143386}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: Quad (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -819,7 +819,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 319027221}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: CollidersBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2081,6 +2081,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAgent: {fileID: 0}
+  IgnoreLayers:
+    serializedVersion: 2
+    m_Bits: 63492
 --- !u!1 &652705616
 GameObject:
   m_ObjectHideFlags: 0
@@ -2091,7 +2094,7 @@ GameObject:
   m_Component:
   - component: {fileID: 652705617}
   - component: {fileID: 652705618}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: Quad (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3390,7 +3393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1164519846}
   - component: {fileID: 1164519847}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: Quad (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4611,7 +4614,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1436642854}
   - component: {fileID: 1436642855}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: Quad (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5287,7 +5290,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1711596204}
   - component: {fileID: 1711596205}
-  m_Layer: 9
+  m_Layer: 2
   m_Name: Quad (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

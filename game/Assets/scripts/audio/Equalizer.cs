@@ -17,8 +17,7 @@ public class Equalizer : MonoBehaviour
         VFX = GetComponent<VisualEffect>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
             //audio waves low to high, need only 6 parameters
             VFX.SetFloat("A", amp * (_ad.samples[0] + _ad.samples[1] + _ad.samples[2] +
