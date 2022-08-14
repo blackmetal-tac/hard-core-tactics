@@ -8,9 +8,10 @@ public class WPNManager : MonoBehaviour
     // Weapon stats
     public enum ProjectileType { Bullet, Missile, AMS }
     public ProjectileType projectileType;
-    [Range(0, 0.5f)] public float projectileSize, heat, recoil;
-    [Range(0, 1)] public float damage, fireDelay;
+    public bool homing;
     [Range(0, 15)] public int radiusAMS, projectileSpeed;
+    [Range(0, 0.5f)] public float projectileSize, heat, recoil;
+    [Range(0, 1)] public float damage, fireDelay;    
     [Range(0, 3000)] public float fireRate;
     [HideInInspector] public int burstSize,downTimer;
     [HideInInspector] public float lastBurst;
@@ -96,10 +97,11 @@ public class WPNManager : MonoBehaviour
                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread / 2, (unitManager.moveSpeed * spreadMult) + spread / 2),
                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
 
-        if (projectileType != ProjectileType.AMS)
+        if (projectileType != ProjectileType.AMS && !homing)
         {
             firePoint.transform.LookAt(target.transform.position + spreadVector);
         }
+
         if (targetAMS != null)
         {
             firePoint.transform.LookAt(targetAMS.transform.position + spreadVector);
@@ -116,9 +118,14 @@ public class WPNManager : MonoBehaviour
                 StartCoroutine(FireBurstCoroutine(firePoint, gameManager.bulletsPool));
                 lastBurst = Time.time;
             }
-            else if (projectileType == ProjectileType.Missile)
+            else if (projectileType == ProjectileType.Missile && !homing)
             {
                 StartCoroutine(FireMissilesCoroutine(firePoint, gameManager.missilesPool, target.transform.position));
+                lastBurst = Time.time + gameManager.turnTime - fireDelay; // fire burst once (increase delay)
+            }
+            else if (projectileType == ProjectileType.Missile && homing)
+            {
+                StartCoroutine(FireHMissilesCoroutine(firePoint, gameManager.missilesPool, target));
                 lastBurst = Time.time + gameManager.turnTime - fireDelay; // fire burst once (increase delay)
             }
             else if (projectileType == ProjectileType.AMS && targetAMS != null)
@@ -144,6 +151,18 @@ public class WPNManager : MonoBehaviour
 
     // Coroutine for missiles
     private IEnumerator FireMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, Vector3 target)
+    {
+        float shotDelay = 60 / fireRate;
+        for (int i = 0; i < burstSize; i++)
+        {
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed, target, isFriend);
+            HeatRecoil();
+            yield return new WaitForSeconds(shotDelay);
+        }
+    }
+
+    // Coroutine for homing missiles
+    private IEnumerator FireHMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, GameObject target)
     {
         float shotDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)

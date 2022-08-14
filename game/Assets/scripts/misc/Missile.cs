@@ -8,10 +8,11 @@ public class Missile : MonoBehaviour
     [HideInInspector] public Vector3 target;
     [HideInInspector] public Rigidbody missileBody;
     [HideInInspector] public Collider missileCollider;
-    [HideInInspector] public float timer = 2f;
+    [HideInInspector] public bool homing;
+    [HideInInspector] public GameObject homingTarget;
     private PoolObject poolObject;
-    private readonly float spread = 0.5f, delay = 1f;
-    private float lastCheck;
+    private readonly float spread = 1f, delay = 1f, baseTimer = 0.7f;
+    private float timer, lastCheck;
     private Vector3 spreadVector;
 
     // Start is called before the first frame update
@@ -20,6 +21,7 @@ public class Missile : MonoBehaviour
         poolObject = GetComponentInParent<PoolObject>();
         missileBody = GetComponent<Rigidbody>();
         missileCollider = GetComponent<Collider>();
+        timer = baseTimer;
 
         spreadVector = new(
             Random.Range(-spread, spread) + target.x - poolObject.transform.position.x,
@@ -27,11 +29,15 @@ public class Missile : MonoBehaviour
             Random.Range(-spread, spread) + target.z - poolObject.transform.position.z);
     }
 
-    void FixedUpdate()
+    void FixedUpdate() 
     {
-        if (poolObject.transform.localScale != Vector3.zero)
+        if (poolObject.transform.localScale != Vector3.zero && !homing)
         {
-            MoveTowards();          
+            MoveTowards();
+        }
+        else if (poolObject.transform.localScale != Vector3.zero && homing)
+        {
+            FollowTarget();
         }
     }
 
@@ -45,7 +51,7 @@ public class Missile : MonoBehaviour
 
         if (collider.name != "ColliderAMS")
         {    
-            timer = 2f;
+            timer = baseTimer;
             missileBody.velocity = Vector3.zero;
             missileCollider.enabled = false;
             poolObject.ReturnToPool();
@@ -56,19 +62,48 @@ public class Missile : MonoBehaviour
     {        
         if (Time.time > lastCheck + delay && timer > 0)
         {
-            spreadVector = new(
-                Random.Range(-spread, spread),
-                Random.Range(-spread / 4, spread / 4),
-                Random.Range(-spread, spread));
+            CalculateSpread();
 
-            lastCheck = Time.time;
-            timer -= Time.deltaTime;
+            lastCheck = Time.time;            
         }
 
         Vector3 direction = target - poolObject.transform.position;
-        poolObject.transform.rotation = Quaternion.RotateTowards(
-            poolObject.transform.rotation, Quaternion.LookRotation(direction + spreadVector), Time.time * 0.01f);
+        poolObject.transform.rotation = Quaternion.RotateTowards(poolObject.transform.rotation, 
+            Quaternion.LookRotation(direction + spreadVector), Time.time * 0.01f);
  
-        poolObject.transform.position += speed * Time.deltaTime * poolObject.transform.forward;
+        poolObject.transform.position += speed * Time.fixedDeltaTime * poolObject.transform.forward;
+        timer -= Time.fixedDeltaTime;
+    }
+
+    public void FollowTarget()
+    {
+        if (Time.time > lastCheck + delay)
+        {
+            CalculateSpread();
+            lastCheck = Time.time;            
+        }
+
+        if (timer > 0)
+        {
+            poolObject.transform.rotation = Quaternion.RotateTowards(poolObject.transform.rotation,
+                Quaternion.LookRotation(spreadVector), Time.time * 0.01f);
+        }
+        else 
+        {
+            Vector3 direction = homingTarget.transform.position - poolObject.transform.position;
+            poolObject.transform.rotation = Quaternion.RotateTowards(poolObject.transform.rotation,
+                Quaternion.LookRotation(direction), Time.time * 1f);
+        }
+
+        poolObject.transform.position += speed * Time.fixedDeltaTime * poolObject.transform.forward;
+        timer -= Time.fixedDeltaTime;
+    }
+
+    public void CalculateSpread()
+    {
+        spreadVector = new(
+            Random.Range(-spread, spread),
+            Random.Range(-spread / 4, spread / 4),
+            Random.Range(-spread, spread));
     }
 }

@@ -5827,7 +5827,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7869050535803505855}
   m_Father: {fileID: 1679561626}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7961,7 +7962,7 @@ PrefabInstance:
     - target: {fileID: 2479452605947280997, guid: db35e3038ac0eca419f2617b6d4819d3,
         type: 3}
       propertyPath: m_Name
-      value: TestMissile-01
+      value: Launcher-01M
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db35e3038ac0eca419f2617b6d4819d3, type: 3}
@@ -8835,3 +8836,104 @@ RectTransform:
   m_AnchoredPosition: {x: -150, y: -2}
   m_SizeDelta: {x: 300, y: 70}
   m_Pivot: {x: 0, y: 0.5}
+--- !u!1 &7869050535252557428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7869050535252557435}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7869050535252557435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7869050535252557428}
+  m_LocalRotation: {x: -0.5, y: 0, z: 0, w: 0.8660254}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7869050535803505855}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -60, y: 0, z: 0}
+--- !u!1 &7869050535803505848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7869050535803505855}
+  - component: {fileID: 7869050535803505854}
+  m_Layer: 0
+  m_Name: Launcher-01HM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &7869050535803505854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7869050535803505848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08f518b814caee24b99627b6c5f14c11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileType: 1
+  homing: 1
+  radiusAMS: 0
+  projectileSpeed: 8
+  projectileSize: 0.1
+  heat: 0.03
+  recoil: 0.1
+  damage: 0.1
+  fireDelay: 1
+  fireRate: 500
+  burstSize: 3
+  downTimer: 0
+  lastBurst: 0
+  weaponModes:
+  - modeName: off
+    fireMode: 0
+  - modeName: 2 missiles
+    fireMode: 2
+  - modeName: 4 missiles
+    fireMode: 4
+  firePoint: {fileID: 0}
+  projectileOBJ: {fileID: 0}
+  targetAMS: {fileID: 0}
+  unitManager: {fileID: 0}
+  isFriend: 0
+--- !u!4 &7869050535803505855
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7869050535803505848}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7869050535252557435}
+  m_Father: {fileID: 1792743058}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

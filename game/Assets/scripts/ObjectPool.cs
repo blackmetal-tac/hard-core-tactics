@@ -102,8 +102,32 @@ namespace OWS.ObjectPooling
             else
             {
                 missile.missileCollider.gameObject.layer = 13;
-            }            
+            }
+            missile.homing = false;
             missile.target = target;
+            missile.damage = damage;
+            missile.speed = speed;
+            return go;
+        }
+
+        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, GameObject target, bool isFriend)
+        {
+            GameObject go = Pull().gameObject;
+            go.transform.position = position;
+            go.transform.rotation = rotation;
+            go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
+            Missile missile = go.GetComponentInChildren<Missile>();
+            missile.missileCollider.enabled = true;
+            if (isFriend)
+            {
+                missile.missileCollider.gameObject.layer = 12;
+            }
+            else
+            {
+                missile.missileCollider.gameObject.layer = 13;
+            }
+            missile.homing = true;
+            missile.homingTarget = target;
             missile.damage = damage;
             missile.speed = speed;
             return go;
