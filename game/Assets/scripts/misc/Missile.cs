@@ -10,14 +10,16 @@ public class Missile : MonoBehaviour
     [HideInInspector] public Collider missileCollider;
     [HideInInspector] public bool homing;
     [HideInInspector] public GameObject homingTarget;
+    private GameManager gameManager;
     private PoolObject poolObject;
-    private readonly float spread = 1f, delay = 1f, baseTimer = 0.7f;
+    private readonly float spread = 1f, delay = 0.1f, baseTimer = 0.5f;
     private float timer, lastCheck;
     private Vector3 spreadVector;
 
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         poolObject = GetComponentInParent<PoolObject>();
         missileBody = GetComponent<Rigidbody>();
         missileCollider = GetComponent<Collider>();
@@ -50,12 +52,14 @@ public class Missile : MonoBehaviour
         }
 
         if (collider.name != "ColliderAMS")
-        {    
+        {
+            Debug.Log(collider.name);
             timer = baseTimer;
             missileBody.velocity = Vector3.zero;
             missileCollider.enabled = false;
+            gameManager.explosionPool.PullGameObject(transform.position, 1f, damage / 2);
             poolObject.ReturnToPool();
-        }
+        }        
     }
 
     public void MoveTowards()
@@ -63,7 +67,6 @@ public class Missile : MonoBehaviour
         if (Time.time > lastCheck + delay && timer > 0)
         {
             CalculateSpread();
-
             lastCheck = Time.time;            
         }
 
@@ -72,7 +75,7 @@ public class Missile : MonoBehaviour
             Quaternion.LookRotation(direction + spreadVector), Time.time * 0.01f);
  
         poolObject.transform.position += speed * Time.fixedDeltaTime * poolObject.transform.forward;
-        timer -= Time.fixedDeltaTime;
+        timer -= Time.fixedDeltaTime / 2;
     }
 
     public void FollowTarget()
@@ -88,11 +91,11 @@ public class Missile : MonoBehaviour
             poolObject.transform.rotation = Quaternion.RotateTowards(poolObject.transform.rotation,
                 Quaternion.LookRotation(spreadVector), Time.time * 0.01f);
         }
-        else 
+        else if (timer < 2 * baseTimer)
         {
             Vector3 direction = homingTarget.transform.position - poolObject.transform.position;
             poolObject.transform.rotation = Quaternion.RotateTowards(poolObject.transform.rotation,
-                Quaternion.LookRotation(direction), Time.time * 1f);
+                Quaternion.LookRotation(direction + spreadVector), Time.time * 1f);
         }
 
         poolObject.transform.position += speed * Time.fixedDeltaTime * poolObject.transform.forward;

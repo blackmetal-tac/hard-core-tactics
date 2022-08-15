@@ -69,10 +69,13 @@ namespace OWS.ObjectPooling
             return Pull().gameObject;
         }
 
-        public GameObject PullGameObject(Vector3 position)
+        public GameObject PullGameObject(Vector3 position, float size, float damage)
         {
             GameObject go = Pull().gameObject;
             go.transform.position = position;
+            Explosion explosion = go.GetComponentInChildren<Explosion>();
+            explosion.damage = damage;
+            explosion.Spawn(size);
             return go;
         }
 

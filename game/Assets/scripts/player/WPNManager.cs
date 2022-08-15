@@ -28,6 +28,9 @@ public class WPNManager : MonoBehaviour
     }
     public List<WeaponModes> weaponModes;
 
+    private Transform tubesContainer;
+    public List<Transform> tubes;
+
     [HideInInspector] public GameObject firePoint, projectileOBJ, targetAMS;
     [HideInInspector] public UnitManager unitManager;
     [HideInInspector] public bool isFriend;
@@ -41,6 +44,7 @@ public class WPNManager : MonoBehaviour
         firePoint = transform.Find("FirePoint").gameObject;
         updateTimer = Time.fixedTime + delay;
 
+        // Set AMS parameters 
         if (projectileType == ProjectileType.AMS)
         {
             damage = 0;
@@ -56,7 +60,17 @@ public class WPNManager : MonoBehaviour
             colliderAMS.enabled = true;
             colliderAMS.transform.localScale = radiusAMS * Vector3.one;
         }
+        else if (projectileType == ProjectileType.Missile)
+        {
+            // Count tubes to fire missile from each
+            tubesContainer = transform.Find("Tubes");
+            for (int i = 0; i < tubesContainer.childCount; i++)
+            {
+                tubes.Add(tubesContainer.GetChild(i));  
+            }
+        }
 
+        // Friend/Foe system for AMS to intercept
         if (projectileType == ProjectileType.Missile && unitManager.transform.parent.parent.name == "PlayerSquad")
         {
             isFriend = true;
@@ -130,8 +144,8 @@ public class WPNManager : MonoBehaviour
             }
             else if (projectileType == ProjectileType.AMS && targetAMS != null)
             {                
-                StartCoroutine(FireBurstCoroutine(firePoint, gameManager.bulletsPool));
-                lastBurst = Time.time;// && targetAMS != null
+                StartCoroutine(FireBurstCoroutine(firePoint, gameManager.amsPool));
+                lastBurst = Time.time;
             }
         }        
     }
@@ -155,6 +169,7 @@ public class WPNManager : MonoBehaviour
         float shotDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
+            firePoint.transform.position = tubes[i].position;
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed, target, isFriend);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
@@ -167,6 +182,7 @@ public class WPNManager : MonoBehaviour
         float shotDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
+            firePoint.transform.position = tubes[i].position;
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed, target, isFriend);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
