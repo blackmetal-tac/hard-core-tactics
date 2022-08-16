@@ -6,17 +6,18 @@ using OWS.ObjectPooling;
 public class WPNManager : MonoBehaviour
 {
     // Weapon stats
-    public enum ProjectileType { Bullet, Missile, AMS }
+    public enum ProjectileType { Bullet, Missile, Laser, AMS }
     public ProjectileType projectileType;
     public bool homing;
     [Range(0, 15)] public int radiusAMS, projectileSpeed;
     [Range(0, 0.5f)] public float projectileSize, heat, recoil;
     [Range(0, 1)] public float damage, fireDelay;    
-    [Range(0, 3000)] public float fireRate;
+    [Range(0, 3000)] public float fireRate, laserRange;
     [HideInInspector] public int burstSize,downTimer;
     [HideInInspector] public float lastBurst;
     private readonly float spreadMult = 0.5f;
-    
+    private Vector3 spreadVector;
+
     private float spread, updateTimer;
     private readonly float delay = 0.1f;
 
@@ -29,13 +30,16 @@ public class WPNManager : MonoBehaviour
     public List<WeaponModes> weaponModes;
 
     private Transform tubesContainer;
-    public List<Transform> tubes;
+    [HideInInspector] public List<Transform> tubes;
 
     [HideInInspector] public GameObject firePoint, projectileOBJ, targetAMS;
     [HideInInspector] public UnitManager unitManager;
     [HideInInspector] public bool isFriend;
     private GameManager gameManager;
     private Collider colliderAMS;
+
+    private LineRenderer lineRenderer;
+    private RaycastHit hit;
 
     // Start is called before the first frame update
     void Start()
@@ -60,13 +64,18 @@ public class WPNManager : MonoBehaviour
             colliderAMS.enabled = true;
             colliderAMS.transform.localScale = radiusAMS * Vector3.one;
         }
-        else if (projectileType == ProjectileType.Missile)
+        else 
+        {
+            radiusAMS = 0;
+        }
+
+        if (projectileType == ProjectileType.Missile)
         {
             // Count tubes to fire missile from each
             tubesContainer = transform.Find("Tubes");
             for (int i = 0; i < tubesContainer.childCount; i++)
             {
-                tubes.Add(tubesContainer.GetChild(i));  
+                tubes.Add(tubesContainer.GetChild(i));
             }
         }
 
@@ -74,6 +83,15 @@ public class WPNManager : MonoBehaviour
         if (projectileType == ProjectileType.Missile && unitManager.transform.parent.parent.name == "PlayerSquad")
         {
             isFriend = true;
+        }
+
+        if (projectileType == ProjectileType.Laser)
+        {
+            lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer.startWidth = 0f;
+            lineRenderer.endWidth = 0f;
+            projectileSpeed = 0;
+            recoil = 0;
         }
     }
 
@@ -101,19 +119,36 @@ public class WPNManager : MonoBehaviour
             }
             updateTimer = Time.fixedTime + delay;
         }
+
+        if (projectileType == ProjectileType.Laser)
+        {
+
+            lineRenderer.SetPosition(0, firePoint.transform.position); 
+            if (Physics.Raycast(firePoint.transform.position, firePoint.transform.forward, out hit, laserRange))
+            {
+                lineRenderer.SetPosition(1, hit.point);
+            }
+        }
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
     public void FireBurst(GameObject target)
-    {
-        Vector3 spreadVector = new(
+    {        
+        if (projectileType != ProjectileType.Laser)
+        {
+            spreadVector = new(
                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread / 2, (unitManager.moveSpeed * spreadMult) + spread / 2),
                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
+        }
 
         if (projectileType != ProjectileType.AMS && !homing)
         {
             firePoint.transform.LookAt(target.transform.position + spreadVector);
+        }
+        else if (projectileType != ProjectileType.Laser)
+        {
+            firePoint.transform.LookAt(target.transform.position);
         }
 
         if (targetAMS != null)
@@ -145,6 +180,11 @@ public class WPNManager : MonoBehaviour
             else if (projectileType == ProjectileType.AMS && targetAMS != null)
             {                
                 StartCoroutine(FireBurstCoroutine(firePoint, gameManager.amsPool));
+                lastBurst = Time.time;
+            }
+            else if (projectileType == ProjectileType.Laser)
+            {
+                StartCoroutine(FireLaserCoroutine());
                 lastBurst = Time.time;
             }
         }        
@@ -185,6 +225,27 @@ public class WPNManager : MonoBehaviour
             firePoint.transform.position = tubes[i].position;
             objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, projectileSize, damage, projectileSpeed, target, isFriend);
             HeatRecoil();
+            yield return new WaitForSeconds(shotDelay);
+        }
+    }
+
+    private IEnumerator FireLaserCoroutine()
+    {
+        float shotDelay = 60 / fireRate;
+        for (int i = 0; i < burstSize; i++)
+        {
+            lineRenderer.startWidth = 0.05f;
+            lineRenderer.endWidth = 0.05f;
+            if (hit.collider.name == "Body")
+            { 
+                hit.collider.GetComponent<UnitManager>().TakeDamage(damage);
+            }
+            HeatRecoil();
+            this.Wait(0.5f, () =>
+            {
+                lineRenderer.startWidth = 0f;
+                lineRenderer.endWidth = 0f;
+            });
             yield return new WaitForSeconds(shotDelay);
         }
     }
