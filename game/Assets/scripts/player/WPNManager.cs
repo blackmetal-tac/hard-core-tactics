@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using OWS.ObjectPooling;
+using DG.Tweening;
 
 public class WPNManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class WPNManager : MonoBehaviour
     private readonly float spreadMult = 0.5f;
     private Vector3 spreadVector;
 
-    private float spread, updateTimer;
+    private float spread, updateTimer, laserWidth;
     private readonly float delay = 0.1f;
 
     [System.Serializable]
@@ -231,21 +232,33 @@ public class WPNManager : MonoBehaviour
 
     private IEnumerator FireLaserCoroutine()
     {
+        bool grow = true;
         float shotDelay = 60 / fireRate;
         for (int i = 0; i < burstSize; i++)
         {
-            lineRenderer.startWidth = 0.05f;
-            lineRenderer.endWidth = 0.05f;
+            
+            if (laserWidth < 0.03f && grow)
+            {
+                laserWidth += 0.01f;
+            }
+            else if (laserWidth > 0 && !grow)
+            {
+                laserWidth -= 0.01f;
+            }
+            lineRenderer.startWidth = laserWidth;
+            lineRenderer.endWidth = laserWidth;
+
             if (hit.collider.name == "Body")
             { 
                 hit.collider.GetComponent<UnitManager>().TakeDamage(damage);
             }
             HeatRecoil();
-            this.Wait(0.5f, () =>
+
+            this.Wait(0.05f, () =>
             {
-                lineRenderer.startWidth = 0f;
-                lineRenderer.endWidth = 0f;
+                grow = false;
             });
+
             yield return new WaitForSeconds(shotDelay);
         }
     }
