@@ -106,16 +106,14 @@ public class GameManager : MonoBehaviour
             timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
             timeValue -= Time.deltaTime;
 
-            // Enemy actions
+            // Enemy actions ???
             if (!enemyManager.isDead)
             {
                 enemyManager.StartAction();
-                enemyManager.StartShoot(playerController.gameObject); //???
             }
 
-            // Player actions
+            // Player actions ???
             playerManager.StartAction();
-            playerManager.StartShoot(AIController.gameObject); //???
         });
 
         // At the end of turn

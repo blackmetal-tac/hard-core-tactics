@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     // Objects
     private GameObject clickMarker, crosshair;
     private UnitManager playerManager;
+    public GameObject target;
 
     // NavMesh
     [HideInInspector] public NavMeshAgent playerAgent;
@@ -18,7 +19,6 @@ public class PlayerController : MonoBehaviour
 
     private float crosshairSize;
     private readonly float crosshairScale = 0.15f;
-
     public LayerMask IgnoreLayers;
 
     // Start is called before the first frame update

@@ -2080,6 +2080,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af96a245eaf239646a24c5ff29a5e7b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 1443547882}
   playerAgent: {fileID: 0}
   IgnoreLayers:
     serializedVersion: 2
@@ -4702,6 +4703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5e419e53b02c9f42bb2c01ff354c10e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 642910583}
 --- !u!4 &1443547885
 Transform:
   m_ObjectHideFlags: 0

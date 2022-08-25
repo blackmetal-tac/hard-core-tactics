@@ -7,6 +7,7 @@ public class UnitManager : MonoBehaviour
     private GameManager gameManager;
     private ShrinkBar shrinkBar;
     private NavMeshAgent navMeshAgent;
+    private GameObject target;
 
     // Stats    
     [HideInInspector] public float HP, shield, heat;
@@ -59,6 +60,15 @@ public class UnitManager : MonoBehaviour
         navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();
 
+        if (transform.parent.name == "Player")
+        {
+            target = transform.GetComponentInParent<PlayerController>().target;
+        }
+        else
+        {
+            target = transform.GetComponentInParent<AIController>().target;
+        }
+
         // Load HP, Shield, Heat bars
         this.Progress(gameManager.loadTime, () => {
             if (shield < 1)
@@ -105,54 +115,22 @@ public class UnitManager : MonoBehaviour
                 HP += Time.deltaTime * 0.6f;
             }
         });
-    }
 
-    // Set move position and maximum move distance (speed)
-    public void SetDestination(Vector3 target, NavMeshAgent navAgent)
-    {
-        NavMeshPath path = new NavMeshPath();
-        navAgent.speed = 0;
-
-        NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
-        for (int i = 0; i < path.corners.Length - 1; i++)
-        {
-            float segmentDistance = (path.corners[i + 1] - path.corners[i]).magnitude;
-            if (segmentDistance <= walkDistance)
-            {
-                navAgent.SetDestination(target);
-                moveSpeed = segmentDistance / gameManager.turnTime;
-                moveSpeed = Mathf.Round(100 * moveSpeed) / 100;
-            }
-            else
-            {
-                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * walkDistance);
-                NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
-                navAgent.SetPath(path);
-                moveSpeed = walkDistance / gameManager.turnTime;
-                break;
-            }
-        }
-    }
-
-    public void StartShoot(GameObject target)
-    {
-        // Rotate body to target
-        direction = target.transform.position - transform.position;
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
-
+        // Aim at the enemy ???
         foreach (WPNManager weapon in weaponList)
         {
             if (weapon != null)
             {
-                weapon.FireBurst(target);
-            }            
+                weapon.firePoint.transform.LookAt(target.transform.position);
+            }
         }
     }
 
     // Do actions in Update
     public void StartAction()
     {
+        StartShoot();
+
         // Shield regeneration
         if (shield < 1 && !isDead)
         {
@@ -181,6 +159,49 @@ public class UnitManager : MonoBehaviour
         if (!isDead)
         {
             shrinkBar.UpdateHealth();
+        }
+    }
+
+    private void StartShoot()
+    {
+        // Rotate body to target
+        direction = target.transform.position - transform.position;
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
+
+        foreach (WPNManager weapon in weaponList)
+        {
+            if (weapon != null)
+            {
+                weapon.FireBurst(target);
+            }
+        }
+    }
+
+    // Set move position and maximum move distance (speed)
+    public void SetDestination(Vector3 target, NavMeshAgent navAgent)
+    {
+        NavMeshPath path = new NavMeshPath();
+        navAgent.speed = 0;
+
+        NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
+        for (int i = 0; i < path.corners.Length - 1; i++)
+        {
+            float segmentDistance = (path.corners[i + 1] - path.corners[i]).magnitude;
+            if (segmentDistance <= walkDistance)
+            {
+                navAgent.SetDestination(target);
+                moveSpeed = segmentDistance / gameManager.turnTime;
+                moveSpeed = Mathf.Round(100 * moveSpeed) / 100;
+            }
+            else
+            {
+                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * walkDistance);
+                NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
+                navAgent.SetPath(path);
+                moveSpeed = walkDistance / gameManager.turnTime;
+                break;
+            }
         }
     }
 

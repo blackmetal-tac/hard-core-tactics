@@ -5,15 +5,16 @@ public class AIController : MonoBehaviour
 {
     private NavMeshAgent unitAgent;
     private UnitManager unitManager;
+    public GameObject target;
 
     // Move parameters
-    private readonly int moveOffset = 15;    
+    private readonly int moveOffset = 15;
 
     // Start is called before the first frame update
     void Start()
     {
         unitAgent = GetComponent<NavMeshAgent>();
-        unitManager = GetComponentInChildren<UnitManager>();  
+        unitManager = GetComponentInChildren<UnitManager>();
     }
 
     public void SetPath(NavMeshAgent target)
@@ -33,14 +34,12 @@ public class AIController : MonoBehaviour
         {
             unitAgent.stoppingDistance = 1f;
         }
-
         unitManager.SetDestination(unitAgent.destination, unitAgent);
     }
 
     public void Move()
     {
         unitAgent.speed = unitManager.moveSpeed + 0.5f;
-
         // Change fire modes depending on heat or enable weapon after overheat
         foreach (WPNManager weapon in unitManager.weaponList)
         {
@@ -56,7 +55,6 @@ public class AIController : MonoBehaviour
             }
         }        
     }
-
     public void EndMove()
     {
         unitManager.moveSpeed = 0.1f;
