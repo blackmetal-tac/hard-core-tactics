@@ -12,9 +12,9 @@ public class WPNManager : MonoBehaviour
     public bool homing;
     [Range(0, 15)] public int radiusAMS, projectileSpeed;
     [Range(0, 0.5f)] public float projectileSize, heat, recoil;
-    [Range(0, 1)] public float damage, fireDelay;    
+    [Range(0, 1)] public float damage, fireDelay;
     [Range(0, 3000)] public float fireRate, laserRange;
-    [HideInInspector] public int burstSize,downTimer;
+    [HideInInspector] public int burstSize, downTimer;
     [HideInInspector] public float lastBurst;
     private readonly float spreadMult = 0.5f;
     private Vector3 spreadVector;
@@ -40,7 +40,8 @@ public class WPNManager : MonoBehaviour
     private Collider colliderAMS;
 
     private LineRenderer lineRenderer;
-    private bool laserOn;
+    private bool laserOn, oneTime;
+    private int shotCount;
 
     void Awake()
     {
@@ -50,7 +51,7 @@ public class WPNManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();        
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         updateTimer = Time.fixedTime + delay;
 
         // Set AMS parameters 
@@ -69,7 +70,7 @@ public class WPNManager : MonoBehaviour
             colliderAMS.enabled = true;
             colliderAMS.transform.localScale = radiusAMS * Vector3.one;
         }
-        else 
+        else
         {
             radiusAMS = 0;
         }
@@ -91,7 +92,7 @@ public class WPNManager : MonoBehaviour
         }
 
         if (projectileType == ProjectileType.Laser)
-        {            
+        {
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.startWidth = 0f;
             lineRenderer.endWidth = 0f;
@@ -128,7 +129,7 @@ public class WPNManager : MonoBehaviour
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
     public void FireBurst(GameObject target)
-    {        
+    {
         if (projectileType != ProjectileType.Laser)
         {
             spreadVector = new(
@@ -136,12 +137,13 @@ public class WPNManager : MonoBehaviour
                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread / 2, (unitManager.moveSpeed * spreadMult) + spread / 2),
                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
         }
-        else 
+        else
         {
-            FireLaser(target);
+            //FireLaser(target);
+            StartCoroutine(FireLaserCoroutine(target));
         }
 
-        if (projectileType != ProjectileType.Laser && projectileType != ProjectileType.AMS 
+        if (projectileType != ProjectileType.Laser && projectileType != ProjectileType.AMS
             && !homing)
         {
             firePoint.transform.LookAt(target.transform.position + spreadVector);
@@ -175,20 +177,21 @@ public class WPNManager : MonoBehaviour
                 lastBurst = Time.time + gameManager.turnTime - fireDelay; // fire burst once (increase delay)
             }
             else if (projectileType == ProjectileType.AMS && targetAMS != null)
-            {                
+            {
                 StartCoroutine(FireBurstCoroutine(firePoint, gameManager.amsPool));
                 lastBurst = Time.time;
-            }        
-        }        
+            }
+        }
     }
 
-    private void FireLaser(GameObject target)
-    {  
+    private IEnumerator FireLaserCoroutine(GameObject target)
+    {
         // Rotate laser when firing
         Vector3 direction = target.transform.position - firePoint.transform.position;
         firePoint.transform.rotation = Quaternion.RotateTowards(firePoint.transform.rotation,
             Quaternion.LookRotation(direction + spreadVector), Time.time * 0.01f);
 
+        // Draw line
         lineRenderer.SetPosition(0, firePoint.transform.position);
         if (Physics.Raycast(firePoint.transform.position, firePoint.transform.forward, out RaycastHit hit, laserRange))
         {
@@ -197,37 +200,50 @@ public class WPNManager : MonoBehaviour
         lineRenderer.startWidth = laserWidth;
         lineRenderer.endWidth = laserWidth;
 
+        // Laser animation
         if (laserOn)
         {
             DOTween.To(() => laserWidth, x => laserWidth = x, 0.03f, fireDelay / 6);
             // Deal laser damage            
-            if (Physics.Raycast(firePoint.transform.position, firePoint.transform.forward, 
+            if (Physics.Raycast(firePoint.transform.position, firePoint.transform.forward,
                 out RaycastHit damageHit, laserRange) && damageHit.collider.name == "Body")
             {
                 damageHit.collider.GetComponent<UnitManager>().TakeDamage(damage);
             }
+            yield return new WaitForSeconds(fireDelay);
         }
         else
         {
             DOTween.To(() => laserWidth, x => laserWidth = x, 0f, fireDelay / 6);
+            yield return new WaitForSeconds(fireDelay);
         }
 
-        if (Time.time > lastBurst + fireDelay)
-        {            
-            spreadVector = new(
-                Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
-                Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
-                Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
-
-            for (int i = 0; i < burstSize; i++)
+        // Set shots count for burst
+        if (!oneTime)
+        {
+            ChangeShotCount();
+            oneTime = true;
+            this.Wait(gameManager.turnTime, () =>
             {
-                laserOn = true;
-                this.Wait(fireDelay / 2, () =>
-                {
-                    laserOn = false;
-                });
-                HeatRecoil();
-            }
+                oneTime = false;
+            });
+        }
+
+        // Shoot laser shotCount > 0 && 
+        if (Time.time > lastBurst + fireDelay)
+        {
+            spreadVector = new(
+                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
+                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
+                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
+
+            laserOn = true;
+            this.Wait(fireDelay / 2, () =>
+            {
+                laserOn = false;
+            });
+            HeatRecoil();
+            shotCount -= 1;
             lastBurst = Time.time;
         }
     }
@@ -281,5 +297,11 @@ public class WPNManager : MonoBehaviour
         {
             spread += recoil;
         }
+    }
+
+    public void ChangeShotCount()
+    {
+        shotCount = burstSize;
+        lastBurst = Time.time;
     }
 }

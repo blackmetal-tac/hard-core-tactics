@@ -179,18 +179,18 @@ public class UnitManager : MonoBehaviour
     }
 
     // Set move position and maximum move distance (speed)
-    public void SetDestination(Vector3 target, NavMeshAgent navAgent)
+    public void SetDestination(Vector3 movePoint, NavMeshAgent navAgent)
     {
         NavMeshPath path = new NavMeshPath();
         navAgent.speed = 0;
 
-        NavMesh.CalculatePath(transform.position, target, NavMesh.AllAreas, path);
+        NavMesh.CalculatePath(transform.position, movePoint, NavMesh.AllAreas, path);
         for (int i = 0; i < path.corners.Length - 1; i++)
         {
             float segmentDistance = (path.corners[i + 1] - path.corners[i]).magnitude;
             if (segmentDistance <= walkDistance)
             {
-                navAgent.SetDestination(target);
+                navAgent.SetDestination(movePoint);
                 moveSpeed = segmentDistance / gameManager.turnTime;
                 moveSpeed = Mathf.Round(100 * moveSpeed) / 100;
             }
@@ -248,6 +248,7 @@ public class UnitManager : MonoBehaviour
         {
             weaponList[wpnIndex].downTimer = 3;
             weaponList[wpnIndex].burstSize = weaponList[wpnIndex].weaponModes[0].fireMode;
+            weaponList[wpnIndex].ChangeShotCount();
 
             if (transform.parent.name == "Player")
             {
