@@ -248,7 +248,7 @@ public class UnitManager : MonoBehaviour
         {
             weaponList[wpnIndex].downTimer = 3;
             weaponList[wpnIndex].burstSize = weaponList[wpnIndex].weaponModes[0].fireMode;
-            weaponList[wpnIndex].ChangeShotCount();
+            weaponList[wpnIndex].ChangeShotsCount();
 
             if (transform.parent.name == "Player")
             {

@@ -24,7 +24,7 @@ public class SliderScr : MonoBehaviour
     {
         weapon.burstSize = weapon.weaponModes[(int)slider.value].fireMode;
         modeName.text = weapon.weaponModes[(int)slider.value].modeName;
-        weapon.ChangeShotCount();
+        weapon.ChangeShotsCount();
 
         if (gameManager.inAction)
         {

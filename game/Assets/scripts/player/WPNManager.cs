@@ -41,7 +41,7 @@ public class WPNManager : MonoBehaviour
 
     private LineRenderer lineRenderer;
     private bool laserOn, oneTime;
-    private int shotCount;
+    private int shotsCount;
 
     void Awake()
     {
@@ -139,8 +139,21 @@ public class WPNManager : MonoBehaviour
         }
         else
         {
-            //FireLaser(target);
-            StartCoroutine(FireLaserCoroutine(target));
+            //FireLaser coroutine to animate beam properly
+            if (!oneTime)
+            {
+                ChangeShotsCount();
+                this.Progress(gameManager.turnTime * 2, () =>
+                {
+                    FireLaser(target);
+                });
+                            
+                oneTime = true;
+                this.Wait(gameManager.turnTime, () =>
+                {
+                    oneTime = false;
+                });
+            }
         }
 
         if (projectileType != ProjectileType.Laser && projectileType != ProjectileType.AMS
@@ -184,7 +197,7 @@ public class WPNManager : MonoBehaviour
         }
     }
 
-    private IEnumerator FireLaserCoroutine(GameObject target)
+    private void FireLaser(GameObject target)
     {
         // Rotate laser when firing
         Vector3 direction = target.transform.position - firePoint.transform.position;
@@ -210,32 +223,25 @@ public class WPNManager : MonoBehaviour
             {
                 damageHit.collider.GetComponent<UnitManager>().TakeDamage(damage);
             }
-            yield return new WaitForSeconds(fireDelay);
         }
         else
         {
             DOTween.To(() => laserWidth, x => laserWidth = x, 0f, fireDelay / 6);
-            yield return new WaitForSeconds(fireDelay);
         }
 
-        // Set shots count for burst
-        if (!oneTime)
+        // Stop laser at the end of turn
+        if (!gameManager.inAction)
         {
-            ChangeShotCount();
-            oneTime = true;
-            this.Wait(gameManager.turnTime, () =>
-            {
-                oneTime = false;
-            });
+            shotsCount = 0;
         }
 
-        // Shoot laser shotCount > 0 && 
-        if (Time.time > lastBurst + fireDelay)
+        // Shoot laser  
+        if (shotsCount > 0 && Time.time > lastBurst + fireDelay)
         {
             spreadVector = new(
-                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
-                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
-                 Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
+                  Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
+                  Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread),
+                  Random.Range((-unitManager.moveSpeed * spreadMult) - spread, (unitManager.moveSpeed * spreadMult) + spread));
 
             laserOn = true;
             this.Wait(fireDelay / 2, () =>
@@ -243,9 +249,9 @@ public class WPNManager : MonoBehaviour
                 laserOn = false;
             });
             HeatRecoil();
-            shotCount -= 1;
+            shotsCount -= 1;       
             lastBurst = Time.time;
-        }
+        }        
     }
 
     // Coroutine for separate bursts
@@ -299,9 +305,9 @@ public class WPNManager : MonoBehaviour
         }
     }
 
-    public void ChangeShotCount()
+    // Set shots count for burst
+    public void ChangeShotsCount()
     {
-        shotCount = burstSize;
-        lastBurst = Time.time;
+        shotsCount = burstSize;        
     }
 }
