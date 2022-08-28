@@ -77,25 +77,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileType: 0
+  homing: 0
   radiusAMS: 0
-  damage: 0.03
-  heat: 0.02
   projectileSpeed: 10
   projectileSize: 0.05
+  heat: 0.02
+  recoil: 0.1
+  damage: 0.03
   fireDelay: 1
   fireRate: 800
-  recoil: 0.1
+  laserRange: 0
   burstSize: 5
   downTimer: 0
   lastBurst: 0
   weaponModes:
   - modeName: off
     fireMode: 0
-  - modeName: burst-3
+  - modeName: 3 brst
     fireMode: 3
-  - modeName: burst-5
+  - modeName: 5 brst
     fireMode: 5
+  tubes: []
   firePoint: {fileID: 0}
   projectileOBJ: {fileID: 0}
-  unitManager: {fileID: 0}
   targetAMS: {fileID: 0}
+  unitManager: {fileID: 0}
+  isFriend: 0

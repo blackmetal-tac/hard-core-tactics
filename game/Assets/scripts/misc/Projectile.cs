@@ -16,8 +16,8 @@ public class Projectile : MonoBehaviour
 
     // Bullet collision
     private void OnTriggerEnter(Collider collider)
-    {      
-        if (collider.name == "Body") 
+    {
+        if (collider.name == "Body")
         {
             collider.GetComponent<UnitManager>().TakeDamage(damage);
         }

@@ -3,7 +3,6 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-
 public class PlayerController : MonoBehaviour
 {
     private GameManager gameManager;
@@ -42,7 +41,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {          
         // Mouse click
         if (Input.GetMouseButtonDown(0))
@@ -63,7 +62,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Dynamic crosshair
-        crosshairSize = Mathf.Lerp(crosshairSize, crosshairScale + playerManager.spread / 2 + playerManager.moveSpeed / 10, Time.deltaTime * 3);
+        crosshairSize = Mathf.Lerp(crosshairSize, crosshairScale + playerManager.spread / 2 + playerManager.moveSpeed / 10, Time.fixedDeltaTime * 3);
         crosshair.transform.localScale = crosshairSize * Vector3.one;
     }
 

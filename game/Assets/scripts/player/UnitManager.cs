@@ -119,7 +119,7 @@ public class UnitManager : MonoBehaviour
         // Aim at the enemy ???
         foreach (WPNManager weapon in weaponList)
         {
-            if (weapon != null)
+            if (weapon != null && !weapon.homing)
             {
                 weapon.firePoint.transform.LookAt(target.transform.position);
             }

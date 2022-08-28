@@ -56,15 +56,16 @@ MonoBehaviour:
   damage: 0.1
   fireDelay: 1
   fireRate: 500
+  laserRange: 0
   burstSize: 3
   downTimer: 0
   lastBurst: 0
   weaponModes:
   - modeName: off
     fireMode: 0
-  - modeName: 2 missiles
+  - modeName: 2 mssl
     fireMode: 2
-  - modeName: 4 missiles
+  - modeName: 4 mssl
     fireMode: 4
   tubes: []
   firePoint: {fileID: 0}

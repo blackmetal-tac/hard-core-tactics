@@ -93,6 +93,13 @@ public class WeaponUI : MonoBehaviour
     // Update weapon counter
     public void UpdateStatus(int wpnIndex, int downTimer)
     {
-        weaponButtons[wpnIndex].slider.modeName.text = "Down: " + downTimer + " Turns";        
+        if (downTimer == 1)
+        {
+            weaponButtons[wpnIndex].slider.modeName.text = "Off: " + downTimer + " trn";
+        }
+        else 
+        {
+            weaponButtons[wpnIndex].slider.modeName.text = "Off: " + downTimer + " trns";
+        }     
     }
 }

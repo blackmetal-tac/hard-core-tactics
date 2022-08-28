@@ -53,7 +53,7 @@ public class Missile : MonoBehaviour
 
         if (collider.name != "ColliderAMS")
         {
-            timer = baseTimer;
+            timer = baseTimer;            
             missileBody.velocity = Vector3.zero;
             missileCollider.enabled = false;
             gameManager.explosionPool.PullGameObject(transform.position, 1f, damage / 2);
