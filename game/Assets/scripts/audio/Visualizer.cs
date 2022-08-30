@@ -41,31 +41,25 @@ public class Visualizer : MonoBehaviour
                 instanceQuad.transform.rotation = transform.rotation;
                 mQuad[i] = instanceQuad;
             }
+            transform.localScale = Vector3.zero;
         }
         else
         {
-            /*for (int i = 0; i < samles; i++)
-            {
-                GameObject instanceQuad = (GameObject)Instantiate(quadPreflab);
-                instanceQuad.transform.position = this.transform.position;
-                instanceQuad.transform.parent = this.transform;
-                instanceQuad.transform.rotation = this.transform.rotation;
-                instanceQuad.name = "Quad" + i;
-                transform.rotation = Quaternion.Euler(0, 0, -1f * (i + 1));
-                instanceQuad.transform.position = new Vector3(transform.position.x + distance * i, transform.position.y,
-                   transform.position.z);
-                quad[i] = instanceQuad;
-            }*/
-
-            float angle = 360f / (float)samles;
+            float angle = 36f / (float)samles;
             for (int i = 0; i < samles; i++)
             {
-                Quaternion rotation = Quaternion.AngleAxis(i * angle, Vector3.up);
-                Vector3 direction = rotation * Vector3.forward;
+                GameObject instanceQuad = (GameObject)Instantiate(quadPrefab);
+                instanceQuad.transform.parent = this.transform;
+                instanceQuad.name = "Quad" + i;
 
-                Vector3 position = transform.position + (direction * 10);
-                Instantiate(quadPrefab, position, rotation);
-            }
+                transform.rotation = Quaternion.Euler(0, 0, 1 * ((i + 1) * angle)); 
+                instanceQuad.transform.position = new Vector3(transform.position.x + distance * i, transform.position.y,
+                   transform.position.z);
+                instanceQuad.transform.rotation = Quaternion.Euler(transform.rotation.x,
+                    transform.rotation.y, -1 * ((i + 1) * angle));
+
+                quad[i] = instanceQuad;
+            }            
         }
     }
 
@@ -79,7 +73,7 @@ public class Visualizer : MonoBehaviour
             {
                 if (quad != null)
                 {
-                    quad[i].transform.localScale = new Vector3(width, audioData.samples[i] * amp * (i + 1) + height, 1);
+                    quad[i].transform.localScale = new Vector3(width, audioData.samples[i] * amp + height, 1);
                 }
             }
 
@@ -87,7 +81,7 @@ public class Visualizer : MonoBehaviour
             {
                 if (quad != null)
                 {
-                    mQuad[i].transform.localScale = new Vector3(width, audioData.samples[i] * amp * (i + 1) + height, 1);
+                    mQuad[i].transform.localScale = new Vector3(width, audioData.samples[i] * amp + height, 1);
                 }
             }
         }
