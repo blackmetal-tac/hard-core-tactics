@@ -4,7 +4,7 @@ using UnityEngine;
 public class AudioData : MonoBehaviour
 {
     AudioSource audioSource;
-    public float[] samples = new float[64];
+    public float[] samples;
 
     // Start is called before the first frame update
     void Start()

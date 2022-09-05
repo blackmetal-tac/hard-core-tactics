@@ -5344,6 +5344,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5603618073123205112, guid: d8d8300fa8aec634fb6d8b1585069934,
         type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5603618073123205112, guid: d8d8300fa8aec634fb6d8b1585069934,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -5391,6 +5396,11 @@ PrefabInstance:
         type: 3}
       propertyPath: textSpeed
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6201401811692622369, guid: 3d0095722918fc841b285b542ac6b624,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6201401811692622374, guid: 3d0095722918fc841b285b542ac6b624,
         type: 3}

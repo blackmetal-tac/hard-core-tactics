@@ -748,6 +748,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5226917327009510872, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
+        type: 3}
+      propertyPath: samples.Array.size
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 5226917327009510874, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
       propertyPath: m_RootOrder
@@ -807,6 +812,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Mute
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5226917327009510875, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
+        type: 3}
+      propertyPath: m_Volume
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4df8b2002728a7d4fbcafc7a40ccd277, type: 3}
@@ -2699,6 +2709,7 @@ MonoBehaviour:
   distance: 0.009
   amp: 4
   mainMenu: 0
+  test: 0
 --- !u!1 &833094241
 GameObject:
   m_ObjectHideFlags: 0
