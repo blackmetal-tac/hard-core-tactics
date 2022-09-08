@@ -7,7 +7,7 @@ public class Shield : MonoBehaviour
 
     void FixedUpdate()
     {
-        shieldSize = Mathf.Lerp(0, scale, Time.fixedDeltaTime);
-        transform.localScale = (0.9f + shieldSize) * Vector3.one;
+        //shieldSize = Mathf.Lerp(0, scale, Time.fixedDeltaTime * 50);
+        transform.localScale = (0.9f + scale) * Vector3.one;
     }
 }
