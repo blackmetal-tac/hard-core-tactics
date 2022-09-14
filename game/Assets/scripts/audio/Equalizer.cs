@@ -25,10 +25,10 @@ public class Equalizer : MonoBehaviour
         // Audio waves low to high, need only 6 parameters 
         // {{0-28}(bass) {29-47}(whisle)} {48-249}(hard hits) {250-}(electric)}
 
-        //bassArray[0] = AnimateWave(bassArray, 0, 0.2f, 10);
-        //whisleArray[0] = AnimateWave(whisleArray, 29, 0.02f, 30);
-        //hitsArray[0] = AnimateWave(hitsArray, 79, 0.02f, 120);
-        electricArray[0] = AnimateWave(electricArray, 250, 0.002f, 220); 
+        bassArray[0] = AnimateWave(bassArray, 0, 0.2f, 10);
+        whisleArray[0] = AnimateWave(whisleArray, 29, 0.02f, 30);
+        hitsArray[0] = AnimateWave(hitsArray, 79, 0.02f, 120);
+        electricArray[0] = AnimateWave(electricArray, 304, 0.004f, 140);
 
         VFX.SetFloat("Bass", bassArray[0]);
         VFX.SetFloat("Whisle", whisleArray[0] * 100);       
@@ -43,7 +43,7 @@ public class Equalizer : MonoBehaviour
         // Set shield scale
         if (shield != null)
         {
-            //shield.scale = electricArray[0];
+            //shield.scale = bassArray[0];
         }
     }
 
@@ -56,20 +56,32 @@ public class Equalizer : MonoBehaviour
         }
         float maxValue = Mathf.Max(array);
 
-        if (maxValue > limit)
-        {            
+        if (maxValue > limit * 2 && mult > 120)
+        {
+            waveArray[1] = mult * maxValue;
+        }
+        else if (maxValue < limit && mult > 120)
+        {
+            waveArray[1] = 0;
+        }
+        else if (maxValue > limit && mult < 120)
+        {
             waveArray[1] += mult * maxValue;
         }
-        else
-        {
-            waveArray[1] += mult * maxValue * 10;
-        }
 
-        if (waveArray[1] > 0)
+        if (waveArray[1] > 0 && mult < 120)
         {
             waveArray[1] -= Time.fixedDeltaTime + (waveArray[1] * 0.85f);
         }
-        waveArray[2] = Mathf.Lerp(waveArray[2], waveArray[1], Time.fixedDeltaTime * 3);
+
+        if (mult > 120)
+        {
+            waveArray[2] = Mathf.Lerp(waveArray[2], waveArray[1], Time.fixedDeltaTime * 30);
+        }
+        else 
+        {
+            waveArray[2] = Mathf.Lerp(waveArray[2], waveArray[1], Time.fixedDeltaTime * 3);
+        }
         return waveArray[2];
     }
 }
