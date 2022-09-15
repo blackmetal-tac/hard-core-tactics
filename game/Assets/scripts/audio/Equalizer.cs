@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.VFX;
+using System.Linq;
 
 public class Equalizer : MonoBehaviour
 {
@@ -23,12 +24,12 @@ public class Equalizer : MonoBehaviour
     void FixedUpdate()
     {
         // Audio waves low to high, need only 6 parameters 
-        // {{0-28}(bass) {29-47}(whisle)} {48-249}(hard hits) {250-}(electric)}
+        // {{0-28}(bass) {29-47}(whisle)} {48-251}(hard hits) {252-}(electric)}
 
         bassArray[0] = AnimateWave(bassArray, 0, 0.2f, 10);
         whisleArray[0] = AnimateWave(whisleArray, 29, 0.02f, 30);
         hitsArray[0] = AnimateWave(hitsArray, 79, 0.02f, 120);
-        electricArray[0] = AnimateWave(electricArray, 304, 0.004f, 140);
+        electricArray[0] = AnimateWave(electricArray, 255, 0f, 130);
 
         VFX.SetFloat("Bass", bassArray[0]);
         VFX.SetFloat("Whisle", whisleArray[0] * 100);       
@@ -50,33 +51,46 @@ public class Equalizer : MonoBehaviour
     private float AnimateWave(float[] waveArray, int startIndex, float limit, int mult)
     {        
         float[] array = new float[arraySize];
-        for (int i = 0; i < array.Length; i++)
-        {
-            array[i] = _ad.samples[i + startIndex];
-        }
-        float maxValue = Mathf.Max(array);
+        float maxValue;
 
-        if (maxValue > limit * 2 && mult > 120)
+        if (mult != 1)
         {
-            waveArray[1] = mult * maxValue;
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = _ad.samples[i + startIndex];
+            }
         }
-        else if (maxValue < limit && mult > 120)
+        else 
         {
-            waveArray[1] = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                array[i] = _ad.samples[i + startIndex];
+            }
+        }     
+
+        if (mult > 120)
+        {
+            maxValue = array.Sum();
         }
-        else if (maxValue > limit && mult < 120)
+        else 
+        {
+            maxValue = array.Max();
+        }
+
+        if (maxValue > limit)
         {
             waveArray[1] += mult * maxValue;
         }
 
-        if (waveArray[1] > 0 && mult < 120)
+        if (waveArray[1] > 0)
         {
             waveArray[1] -= Time.fixedDeltaTime + (waveArray[1] * 0.85f);
         }
 
         if (mult > 120)
         {
-            waveArray[2] = Mathf.Lerp(waveArray[2], waveArray[1], Time.fixedDeltaTime * 30);
+            //waveArray[2] = Mathf.Lerp(waveArray[2], waveArray[1], Time.fixedDeltaTime * 30);
+            waveArray[2] = waveArray[1];
         }
         else 
         {
