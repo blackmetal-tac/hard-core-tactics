@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.VFX;
-using System.Linq;
-
 public class Equalizer : MonoBehaviour
 {
     private AudioData _ad;
@@ -66,15 +64,13 @@ public class Equalizer : MonoBehaviour
             {
                 array[i] = _ad.samples[i + startIndex];
             }
-        }     
-
-        if (mult > 120)
-        {
-            maxValue = array.Sum();
         }
-        else 
+
+        maxValue = Mathf.Max(array);
+        if (mult > 120 && maxValue > 0.01f && maxValue < 0.014f)
         {
-            maxValue = array.Max();
+            Debug.Log("over " + maxValue);
+            maxValue *= 10;
         }
 
         if (maxValue > limit)
@@ -88,8 +84,7 @@ public class Equalizer : MonoBehaviour
         }
 
         if (mult > 120)
-        {
-            //waveArray[2] = Mathf.Lerp(waveArray[2], waveArray[1], Time.fixedDeltaTime * 30);
+        {            
             waveArray[2] = waveArray[1];
         }
         else 
