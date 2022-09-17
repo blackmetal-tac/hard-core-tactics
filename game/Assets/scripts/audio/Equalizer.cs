@@ -26,8 +26,8 @@ public class Equalizer : MonoBehaviour
 
         bassArray[0] = AnimateWave(bassArray, 0, 0.2f, 10);
         whisleArray[0] = AnimateWave(whisleArray, 29, 0.02f, 30);
-        hitsArray[0] = AnimateWave(hitsArray, 79, 0.02f, 120);
-        electricArray[0] = AnimateWave(electricArray, 255, 0f, 130);
+        hitsArray[0] = AnimateWave(hitsArray, 79, 0.02f, 130);
+        electricArray[0] = AnimateWave(electricArray, 255, 0.005f, 120);
 
         VFX.SetFloat("Bass", bassArray[0]);
         VFX.SetFloat("Whisle", whisleArray[0] * 100);       
@@ -51,26 +51,25 @@ public class Equalizer : MonoBehaviour
         float[] array = new float[arraySize];
         float maxValue;
 
-        if (mult != 1)
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i] = _ad.samples[i + startIndex];
-            }
-        }
-        else 
+        if (mult == 120)
         {
             for (int i = 0; i < 4; i++)
             {
                 array[i] = _ad.samples[i + startIndex];
             }
         }
+        else 
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = _ad.samples[i + startIndex];
+            }
+        }
 
         maxValue = Mathf.Max(array);
-        if (mult > 120 && maxValue > 0.01f && maxValue < 0.014f)
-        {
-            Debug.Log("over " + maxValue);
-            maxValue *= 10;
+        if (mult == 120 && maxValue > 0.01f && maxValue < 0.014f)
+        { 
+            maxValue *= 5;
         }
 
         if (maxValue > limit)
@@ -83,7 +82,7 @@ public class Equalizer : MonoBehaviour
             waveArray[1] -= Time.fixedDeltaTime + (waveArray[1] * 0.85f);
         }
 
-        if (mult > 120)
+        if (mult == 120)
         {            
             waveArray[2] = waveArray[1];
         }

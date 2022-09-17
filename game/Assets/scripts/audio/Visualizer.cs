@@ -92,11 +92,11 @@ public class Visualizer : MonoBehaviour
         {
             if (Time.time > 2)
             {
-                for (int i = 255; i < 259; i++)
+                for (int i = 0; i < samles; i++)
                 {
                     if (quad != null)
-                    {                                                                                        //* (i / 2 + 1)               
-                        quad[i - 255].transform.localScale = new Vector3(width, audioData.samples[i] * amp * i + height, 1);
+                    {                                                                                                      
+                        quad[i].transform.localScale = new Vector3(width, audioData.samples[i] * amp * (i / 2 + 1) + height, 1);
                     }
                 }
             }
