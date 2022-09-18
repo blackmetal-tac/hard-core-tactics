@@ -2,7 +2,13 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
-    public float scale;
+    [HideInInspector] public float scale;
+    [HideInInspector] public Material material;
+
+    void Start()
+    {
+        material = GetComponentInChildren<MeshRenderer>().sharedMaterial;
+    }
 
     void FixedUpdate()
     {        
