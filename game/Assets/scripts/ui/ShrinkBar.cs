@@ -50,12 +50,12 @@ public class ShrinkBar : MonoBehaviour
 
     public void UpdateShield()
     {
-        Shrink(shieldImage, shieldDmgImage, unitManager.shield);
+        Shrink(shieldImage, shieldDmgImage, unitManager.shield.HP);
 
         if (unitManager.transform.parent.name == "Player")
         {
             shieldCanvasGroup.alpha = gameManager.crosshairBars + ((1 - shieldImage.fillAmount) / 2);
-            Shrink(shieldImageInd, shieldDmgImageInd, unitManager.shield);
+            Shrink(shieldImageInd, shieldDmgImageInd, unitManager.shield.HP);
         }
     }
 

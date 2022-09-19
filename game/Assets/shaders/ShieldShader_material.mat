@@ -52,13 +52,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.3
+    - _Alpha: 0.1739996
     - _FresnelIntensity: 1.77
-    - _Intensity: 3
+    - _Intensity: 6.599363
     - _Offset: 3.5
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Speed: 0.002314135
+    - _Speed: 0
     m_Colors:
     - _EmissionColor: {r: 0.47798735, g: 0.9593584, b: 1, a: 0}
   m_BuildTextureStacks: []

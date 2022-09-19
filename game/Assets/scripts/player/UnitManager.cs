@@ -8,9 +8,10 @@ public class UnitManager : MonoBehaviour
     private ShrinkBar shrinkBar;
     private NavMeshAgent navMeshAgent;
     private GameObject target;
+    [HideInInspector] public Shield shield;
 
     // Stats    
-    [HideInInspector] public float HP, shield, heat;
+    [HideInInspector] public float HP, heat;
     [Range(0, 0.5f)] public float shieldRegen, cooling;
     [Range(0, 1)] public float heatTreshold, heatCheckTime;
     [Range(0, 10)] public int heatSafeRoll;
@@ -59,6 +60,7 @@ public class UnitManager : MonoBehaviour
         weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();
+        shield = transform.Find("Shield").GetComponentInChildren<Shield>();
 
         if (transform.parent.name == "Player")
         {
@@ -71,13 +73,13 @@ public class UnitManager : MonoBehaviour
 
         // Load HP, Shield, Heat bars
         this.Progress(gameManager.loadTime, () => {
-            if (shield < 1)
-            { 
-                shield += Time.deltaTime * 0.6f; 
+            if (shield.HP < 1)
+            {
+                shield.HP += Time.deltaTime * 0.6f; 
             }
             else
             {
-                shield = 1;
+                shield.HP = 1;
             }
 
             if (HP < 1)
@@ -105,9 +107,9 @@ public class UnitManager : MonoBehaviour
 
         // Load Heat
         this.Progress(gameManager.loadTime, () => {
-            if (shield < 1)
+            if (shield.HP < 1)
             {
-                shield += Time.deltaTime * 0.6f;
+                shield.HP += Time.deltaTime * 0.6f;
             }
 
             if (HP < 1)
@@ -132,9 +134,9 @@ public class UnitManager : MonoBehaviour
         StartShoot();
 
         // Shield regeneration
-        if (shield < 1 && !isDead)
+        if (shield.HP < 1 && !isDead)
         {
-            shield += Time.deltaTime * shieldRegen;
+            shield.HP += Time.deltaTime * shieldRegen;
             shrinkBar.UpdateShield();
         }
 
@@ -210,12 +212,7 @@ public class UnitManager : MonoBehaviour
     {
         // Reset HP bar damage animation
         shrinkTimer = 0.5f;
-
-        if (shield > 0)
-        {
-            shield -= damage;
-        }
-        else if (HP > 0)
+        if (HP > 0)
         {
             HP -= damage;            
         }

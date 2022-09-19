@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.VFX;
+
 public class Equalizer : MonoBehaviour
 {
     private AudioData _ad;
@@ -43,7 +44,7 @@ public class Equalizer : MonoBehaviour
         if (shield != null)
         {
             shield.scale = bassArray[0];
-            //shield.material.SetFloat("_Speed", whisleArray[0] / 100);
+            shield.material.SetFloat("_Intensity", 2.5f + whisleArray[0] * 20);
         }
     }
 

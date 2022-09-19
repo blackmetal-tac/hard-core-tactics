@@ -12,7 +12,7 @@ public class Projectile : MonoBehaviour
     {
         poolObject = GetComponentInParent<PoolObject>();
         projectileBody = GetComponent<Rigidbody>();
-    } 
+    }
 
     // Bullet collision
     private void OnTriggerEnter(Collider collider)
@@ -21,7 +21,12 @@ public class Projectile : MonoBehaviour
         {
             collider.GetComponent<UnitManager>().TakeDamage(damage);
         }
+        else if (collider.gameObject.layer == 17)
+        {
+            collider.GetComponent<Shield>().TakeDamage(damage);
+        }
 
+        Debug.Log(collider.name);
         projectileBody.velocity = Vector3.zero;
         poolObject.ReturnToPool();
     }
