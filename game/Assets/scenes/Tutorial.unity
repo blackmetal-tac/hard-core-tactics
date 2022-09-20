@@ -1058,8 +1058,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2ec6bbdff6de940a84b4986e395be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shield: {fileID: 0}
   HP: 0
-  shield: 0
   heat: 1
   shieldRegen: 0.05
   cooling: 0.1
@@ -2956,7 +2956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0525cd76539fa274fa85174353f33709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shield: 0
+  HP: 0
   scale: 1
   material: {fileID: 0}
 --- !u!135 &908884681
@@ -7290,8 +7290,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2ec6bbdff6de940a84b4986e395be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shield: {fileID: 0}
   HP: 0
-  shield: 0
   heat: 0
   shieldRegen: 0.05
   cooling: 0.1
@@ -8159,6 +8159,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7621868886553932494, guid: 0e900c9216f3c194f9edc241dbf2edb5,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7936188770189623963, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}
       propertyPath: m_Layer
@@ -8529,7 +8534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0525cd76539fa274fa85174353f33709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shield: 0
+  HP: 0
   scale: 1
   material: {fileID: 0}
 --- !u!114 &5188338245675463617

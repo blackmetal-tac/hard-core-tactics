@@ -12,7 +12,6 @@ public class Shield : MonoBehaviour
     {
         shieldCollider = GetComponent<Collider>();
         material = GetComponentInChildren<MeshRenderer>().sharedMaterial;
-        shrinkTimer = transform.parent.GetComponentInParent<UnitManager>().shrinkTimer;
     }
 
     void FixedUpdate()

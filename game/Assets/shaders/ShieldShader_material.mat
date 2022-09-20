@@ -24,7 +24,8 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: 3472a14a5c76fc644adc34653aa51e2f,
     type: 3}
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _SPECULARHIGHLIGHTS_OFF
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -52,9 +53,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.1739996
+    - _Alpha: 0.057403043
     - _FresnelIntensity: 1.77
-    - _Intensity: 6.599363
+    - _Intensity: 3.019899
     - _Offset: 3.5
     - _QueueControl: 0
     - _QueueOffset: 0
