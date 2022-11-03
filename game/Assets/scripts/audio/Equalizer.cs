@@ -3,7 +3,7 @@ using UnityEngine.VFX;
 
 public class Equalizer : MonoBehaviour
 {
-    private AudioData _ad;
+    private AudioData audioData;
     private VisualEffect VFX;
     private Shield shield;    
     private const int arraySize = 18;
@@ -15,7 +15,7 @@ public class Equalizer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _ad = GameObject.Find("AudioData").GetComponent<AudioData>();
+        audioData = GameObject.Find("AudioData").GetComponent<AudioData>();
         VFX = GetComponent<VisualEffect>();        
         shield = GetComponent<Shield>();
     }
@@ -57,14 +57,14 @@ public class Equalizer : MonoBehaviour
         {
             for (int i = 0; i < 4; i++)
             {
-                array[i] = _ad.samples[i + startIndex];
+                array[i] = audioData.samples[i + startIndex];
             }
         }
         else 
         {
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = _ad.samples[i + startIndex];
+                array[i] = audioData.samples[i + startIndex];
             }
         }
 

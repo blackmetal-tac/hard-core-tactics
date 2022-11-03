@@ -4,7 +4,7 @@ using UnityEngine;
 public class AudioData : MonoBehaviour
 {
     AudioSource audioSource;
-    public float[] samples;
+    [HideInInspector] public float[] samples;
 
     // Start is called before the first frame update
     void Start()
@@ -14,12 +14,14 @@ public class AudioData : MonoBehaviour
 
     void FixedUpdate()
     {
-        GetSpectrumAudio();
+        GetAudioSpectrum();
     }
 
     //Get audio data from track for visualization
-    void GetSpectrumAudio()
+    void GetAudioSpectrum()
     {
         audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
     }
 }
+
+

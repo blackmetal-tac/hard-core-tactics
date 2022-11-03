@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.1273174, g: 0.13414761, b: 0.12107885, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5119,6 +5119,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5188338245742387622, guid: dbb5178ddea004e469e0a71bfcf91b11,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5188338245909633159, guid: dbb5178ddea004e469e0a71bfcf91b11,
         type: 3}
       propertyPath: m_RootOrder
@@ -5203,6 +5208,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MenuCore
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188338245909633163, guid: dbb5178ddea004e469e0a71bfcf91b11,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbb5178ddea004e469e0a71bfcf91b11, type: 3}
@@ -5376,6 +5386,11 @@ PrefabInstance:
         type: 3}
       propertyPath: amp
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5603618073123205113, guid: d8d8300fa8aec634fb6d8b1585069934,
+        type: 3}
+      propertyPath: jobs
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5603618073123205113, guid: d8d8300fa8aec634fb6d8b1585069934,
         type: 3}

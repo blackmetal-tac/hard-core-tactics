@@ -58,6 +58,6 @@ public class AIController : MonoBehaviour
     public void EndMove()
     {
         unitManager.moveSpeed = 0.1f;
-        unitManager.UpdateTimer();
+        unitManager.UpdateOverheatTimer();
     }
 }

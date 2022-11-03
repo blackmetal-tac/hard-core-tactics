@@ -8,7 +8,6 @@ public class SongName : MonoBehaviour
     private TextMeshProUGUI textmeshPro;
     private float scrollPos;
 
-
     // Start is called before the first frame update
     void Start()
     {

@@ -109,6 +109,6 @@ public class PlayerController : MonoBehaviour
     public void EndMove()
     {
         playerManager.moveSpeed = 0.1f;
-        playerManager.UpdateTimer();
+        playerManager.UpdateOverheatTimer();
     }
 }

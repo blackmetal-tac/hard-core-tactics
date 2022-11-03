@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using Unity.Jobs;
+using Unity.Burst;
 
 public class MainMenu : MonoBehaviour
 {

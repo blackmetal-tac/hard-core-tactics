@@ -255,7 +255,7 @@ public class UnitManager : MonoBehaviour
     }
 
     // Update timers for overheated weapon
-    public void UpdateTimer()
+    public void UpdateOverheatTimer()
     {
         for (int i = 0; i < weaponList.Count; i++)
         {
