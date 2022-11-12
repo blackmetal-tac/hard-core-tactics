@@ -2,53 +2,54 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class AIController : MonoBehaviour
-{
-    private NavMeshAgent unitAgent;
-    private UnitManager unitManager;
-    public GameObject target;
+{	
+    private NavMeshAgent _unitAgent;
+    private UnitManager _unitManager;
 
     // Move parameters
-    private readonly int moveOffset = 15;
+    private readonly int _moveOffset = 15;
 
     // Start is called before the first frame update
     void Start()
     {
-        unitAgent = GetComponent<NavMeshAgent>();
-        unitManager = GetComponentInChildren<UnitManager>();
+        _unitAgent = GetComponent<NavMeshAgent>();
+        _unitManager = GetComponentInChildren<UnitManager>();
+		// ??? set target to shoot
+		_unitManager.Target = GameObject.Find("PlayerSquad").transform.Find("Player").gameObject; 
     }
 
-    public void SetPath(NavMeshAgent target)
+    public void SetPath(NavMeshAgent Target)
     {
-        unitAgent.stoppingDistance = 0f;
-        unitAgent.SetDestination(new Vector3(
-         target.transform.position.x + Random.Range(-moveOffset, moveOffset),
-         target.transform.position.y + Random.Range(-moveOffset, moveOffset),
-         target.transform.position.z));
+        _unitAgent.stoppingDistance = 0f;
+        _unitAgent.SetDestination(new Vector3(
+         Target.transform.position.x + Random.Range(-_moveOffset, _moveOffset),
+         Target.transform.position.y + Random.Range(-_moveOffset, _moveOffset),
+         Target.transform.position.z));
 
-        // Get distance between target to avoid collision
-        float targetDistance = Vector3.Distance(unitAgent.destination, target.transform.position);
-        float targetDestDist = Vector3.Distance(unitAgent.destination, target.destination);
+        // Get distance between Target to avoid collision
+        float targetDistance = Vector3.Distance(_unitAgent.destination, Target.transform.position);
+        float targetDestDist = Vector3.Distance(_unitAgent.destination, Target.destination);
 
-        if (unitAgent.destination == target.transform.position || targetDistance < 1f 
+        if (_unitAgent.destination == Target.transform.position || targetDistance < 1f 
             || targetDestDist < 1f)
         {
-            unitAgent.stoppingDistance = 1f;
+            _unitAgent.stoppingDistance = 1f;
         }
-        unitManager.SetDestination(unitAgent.destination, unitAgent);
+        _unitManager.SetDestination(_unitAgent.destination, _unitAgent);
     }
 
     public void Move()
     {
-        unitAgent.speed = unitManager.moveSpeed + 0.5f;
+        _unitAgent.speed = _unitManager.moveSpeed + 0.5f;
         // Change fire modes depending on heat or enable weapon after overheat
-        foreach (WPNManager weapon in unitManager.weaponList)
+        foreach (WPNManager weapon in _unitManager.weaponList)
         {
-            if (weapon != null && weapon.downTimer <= 0 && unitManager.heat < unitManager.heatTreshold)
+            if (weapon != null && weapon.downTimer <= 0 && _unitManager.heat < _unitManager.heatTreshold)
             {
                 int changeMode = Random.Range(1, weapon.weaponModes.Count);
                 weapon.burstSize = weapon.weaponModes[changeMode].fireMode;
             }
-            else if (weapon != null && weapon.downTimer <= 0 && unitManager.heat >= unitManager.heatTreshold)
+            else if (weapon != null && weapon.downTimer <= 0 && _unitManager.heat >= _unitManager.heatTreshold)
             {
                 int changeMode = Random.Range(0, weapon.weaponModes.Count - 1);
                 weapon.burstSize = weapon.weaponModes[changeMode].fireMode;
@@ -57,7 +58,7 @@ public class AIController : MonoBehaviour
     }
     public void EndMove()
     {
-        unitManager.moveSpeed = 0.1f;
-        unitManager.UpdateOverheatTimer();
+        _unitManager.moveSpeed = 0.1f;
+        _unitManager.UpdateOverheatTimer();
     }
 }

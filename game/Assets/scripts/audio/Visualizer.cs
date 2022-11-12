@@ -27,7 +27,7 @@ public class Visualizer : MonoBehaviour
             {				
                 GameObject instanceQuad = (GameObject)Instantiate(quadPrefab);
                 instanceQuad.transform.position = this.transform.position;
-                instanceQuad.transform.parent = this.transform;
+                instanceQuad.transform.SetParent(this.transform);
                 instanceQuad.name = "Quad" + i;
                 instanceQuad.transform.position = new Vector3(transform.position.x + distance * i, transform.position.y,
                     transform.position.z);
@@ -39,7 +39,7 @@ public class Visualizer : MonoBehaviour
             {
                 GameObject instanceQuad = (GameObject)Instantiate(quadPrefab);
                 instanceQuad.transform.position = this.transform.position;
-                instanceQuad.transform.parent = this.transform;
+                instanceQuad.transform.SetParent(this.transform);
                 instanceQuad.name = "mQuad" + i;
                 instanceQuad.transform.position = new Vector3(transform.position.x - distance * i, transform.position.y,
                     transform.position.z);
@@ -56,9 +56,8 @@ public class Visualizer : MonoBehaviour
                 for (int i = 0; i < samles; i++)
                 {
                     GameObject instanceQuad = (GameObject)Instantiate(quadPrefab);
-                    instanceQuad.transform.parent = this.transform;
+                    instanceQuad.transform.SetParent(this.transform);
                     instanceQuad.name = "Quad" + i;
-
                     transform.rotation = Quaternion.Euler(0, 0, 1 * ((i + 1) * angle));
                     instanceQuad.transform.position = new Vector3(transform.position.x + distance * i, transform.position.y,
                        transform.position.z);

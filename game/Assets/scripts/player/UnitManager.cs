@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
 {
+	public GameObject Target;
+    [HideInInspector] public Shield shield;
+	
     private GameManager gameManager;
     private ShrinkBar shrinkBar;
     private NavMeshAgent navMeshAgent;
-    private GameObject target;
-    [HideInInspector] public Shield shield;
-
+	
     // Stats    
     [HideInInspector] public float HP, heat;
     [Range(0, 0.5f)] public float shieldRegen, cooling;
@@ -61,15 +62,6 @@ public class UnitManager : MonoBehaviour
         navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         shrinkBar = GetComponentInChildren<ShrinkBar>();
         shield = transform.Find("Shield").GetComponentInChildren<Shield>();
-
-        if (transform.parent.name == "Player")
-        {
-            target = transform.GetComponentInParent<PlayerController>().target;
-        }
-        else
-        {
-            target = transform.GetComponentInParent<AIController>().target;
-        }
 
         // Load HP, Shield, Heat bars
         this.Progress(gameManager.loadTime, () => {
@@ -123,7 +115,7 @@ public class UnitManager : MonoBehaviour
         {
             if (weapon != null && !weapon.homing)
             {
-                weapon.firePoint.transform.LookAt(target.transform.position);
+                weapon.firePoint.transform.LookAt(Target.transform.position);
             }
         }
     }
@@ -166,8 +158,8 @@ public class UnitManager : MonoBehaviour
 
     private void StartShoot()
     {
-        // Rotate body to target
-        direction = target.transform.position - transform.position;
+        // Rotate body to Target
+        direction = Target.transform.position - transform.position;
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
 
@@ -175,7 +167,7 @@ public class UnitManager : MonoBehaviour
         {
             if (weapon != null)
             {
-                weapon.FireBurst(target);
+                weapon.FireBurst(Target);
             }
         }
     }

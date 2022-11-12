@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     // Objects
     private GameObject clickMarker, crosshair;
     private UnitManager playerManager;
-    public GameObject target;
 
     // NavMesh
     [HideInInspector] public NavMeshAgent playerAgent;
@@ -19,12 +18,18 @@ public class PlayerController : MonoBehaviour
     private float crosshairSize;
     private readonly float crosshairScale = 0.15f;
     public LayerMask IgnoreLayers;
+	
+	void Awake()
+	{
+		playerManager = GetComponentInChildren<UnitManager>();
+		playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").gameObject;
+	}
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        crosshair = GameObject.Find("Crosshair");
+        crosshair = GameObject.Find("Crosshair");		
 
         // Navmesh setup        
         playerAgent = GetComponent<NavMeshAgent>();        
@@ -35,9 +40,7 @@ public class PlayerController : MonoBehaviour
         clickMarker = GameObject.Find("ClickMarker");   
         walkPath.startWidth = 0.02f;
         walkPath.endWidth = 0.02f;
-        walkPath.positionCount = 0;
-
-        playerManager = GetComponentInChildren<UnitManager>();
+        walkPath.positionCount = 0;       
     }
 
     // Update is called once per frame
