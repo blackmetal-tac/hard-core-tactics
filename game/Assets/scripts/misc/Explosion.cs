@@ -3,14 +3,14 @@ using DG.Tweening;
 
 public class Explosion : MonoBehaviour
 {
-    [HideInInspector] public float damage;
+    [HideInInspector] public float Damage;
 
     // Bullet collision 
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.name == "Body")
         {
-            collider.GetComponent<UnitManager>().TakeDamage(damage);
+            collider.GetComponent<UnitManager>().TakeDamage(Damage);
         }
     }
 

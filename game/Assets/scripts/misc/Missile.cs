@@ -3,41 +3,42 @@ using OWS.ObjectPooling;
 
 public class Missile : MonoBehaviour
 {
-    [HideInInspector] public float damage;
-    [HideInInspector] public float speed;
-    [HideInInspector] public Vector3 target;
-    [HideInInspector] public Rigidbody missileBody;
-    [HideInInspector] public Collider missileCollider;
-    [HideInInspector] public bool homing;
-    [HideInInspector] public GameObject homingTarget;
-    private GameManager gameManager;
-    private PoolObject poolObject;
-    private readonly float spread = 0.5f, delay = 0.1f, baseTimer = 0.5f;
-    private float timer, lastCheck;
-    private Vector3 spreadVector;
+    [HideInInspector] public float Damage;
+    [HideInInspector] public float Speed;
+    [HideInInspector] public Vector3 Target;
+    [HideInInspector] public Rigidbody MissileBody;
+    [HideInInspector] public Collider MissileCollider;
+    [HideInInspector] public bool Homing;
+    [HideInInspector] public GameObject HomingTarget;
+    private GameManager _gameManager;
+    private PoolObject _poolObject;
+    private readonly float _spread = 0.5f, _delay = 0.1f, _baseTimer = 0.5f;
+    private float _timer, _lastCheck;
+    private Vector3 _spreadVector;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        poolObject = GetComponentInParent<PoolObject>();
-        missileBody = GetComponent<Rigidbody>();
-        missileCollider = GetComponent<Collider>();
-        timer = baseTimer;
-
-        spreadVector = new(
-            Random.Range(-spread, spread) + target.x - poolObject.transform.position.x,
-            Random.Range(-spread / 4, spread / 4) + target.y - poolObject.transform.position.y,
-            Random.Range(-spread, spread) + target.z - poolObject.transform.position.z);
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _poolObject = GetComponentInParent<PoolObject>();
+        MissileBody = GetComponent<Rigidbody>();
+        MissileCollider = GetComponent<Collider>();
+        _timer = _baseTimer;
+		
+		// Look at target
+        _spreadVector = new(
+            Random.Range(-_spread, _spread) + Target.x - _poolObject.transform.position.x,
+            Random.Range(-_spread / 4, _spread / 4) + Target.y - _poolObject.transform.position.y,
+            Random.Range(-_spread, _spread) + Target.z - _poolObject.transform.position.z);
     }
 
     void FixedUpdate() 
     {
-        if (poolObject.transform.localScale != Vector3.zero && !homing)
+        if (_poolObject.transform.localScale != Vector3.zero && !Homing)
         {
             MoveTowards();
         }
-        else if (poolObject.transform.localScale != Vector3.zero && homing)
+        else if (_poolObject.transform.localScale != Vector3.zero && Homing)
         {
             FollowTarget();
         }
@@ -48,67 +49,67 @@ public class Missile : MonoBehaviour
     {
         if (collider.name == "Body")
         {
-            collider.GetComponent<UnitManager>().TakeDamage(damage);
+            collider.GetComponent<UnitManager>().TakeDamage(Damage);
         }
 
         if (collider.name != "ColliderAMS")
         {
-            timer = baseTimer;            
-            missileBody.velocity = Vector3.zero;
-            missileCollider.enabled = false;
-            gameManager.explosionPool.PullGameObject(transform.position, 1f, damage / 2);
-            poolObject.ReturnToPool();
+            _timer = _baseTimer;            
+            MissileBody.velocity = Vector3.zero;
+            MissileCollider.enabled = false;
+            _gameManager.explosionPool.PullGameObject(transform.position, 1f, Damage / 2);
+            _poolObject.ReturnToPool();
         }        
     }
 
     public void MoveTowards()
     {        
-        if (Time.time > lastCheck + delay && timer > 0)
+        if (Time.time > _lastCheck + _delay && _timer > 0)
         {
             CalculateSpread();
-            lastCheck = Time.time;            
+            _lastCheck = Time.time;            
         }
 
-        if (timer > 0)
+        if (_timer > 0)
         {
-            Vector3 direction = target - poolObject.transform.position;
-            poolObject.transform.rotation = Quaternion.RotateTowards(poolObject.transform.rotation,
-                Quaternion.LookRotation(direction + spreadVector), Time.time * 0.1f);
+            Vector3 direction = Target - _poolObject.transform.position;
+            _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
+                Quaternion.LookRotation(direction + _spreadVector), Time.time * 0.1f);
         }
  
-        poolObject.transform.position += speed * Time.fixedDeltaTime * poolObject.transform.forward;
-        timer -= Time.fixedDeltaTime;
+        _poolObject.transform.position += Speed * Time.fixedDeltaTime * _poolObject.transform.forward;
+        _timer -= Time.fixedDeltaTime;
     }
 
     public void FollowTarget()
     {
-        if (Time.time > lastCheck + delay)
+        if (Time.time > _lastCheck + _delay)
         {
             CalculateSpread();
-            lastCheck = Time.time;            
+            _lastCheck = Time.time;            
         }
 
-        if (timer > 0 && timer < baseTimer)
+        if (_timer > 0 && _timer < _baseTimer)
         {
-            poolObject.transform.rotation = Quaternion.RotateTowards(poolObject.transform.rotation,
-                Quaternion.LookRotation(poolObject.transform.forward + spreadVector), Time.time * 0.1f);
+            _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
+                Quaternion.LookRotation(_poolObject.transform.forward + _spreadVector), Time.time * 0.1f);
         }
-        else if (timer > -baseTimer)
+        else if (_timer > -_baseTimer)
         {
-            Vector3 direction = homingTarget.transform.position - poolObject.transform.position;
-            poolObject.transform.rotation = Quaternion.RotateTowards(poolObject.transform.rotation,
-                Quaternion.LookRotation(direction + spreadVector), Time.time * 1f);
+            Vector3 direction = HomingTarget.transform.position - _poolObject.transform.position;
+            _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
+                Quaternion.LookRotation(direction + _spreadVector), Time.time * 1f);
         }
 
-        poolObject.transform.position += speed * Time.fixedDeltaTime * poolObject.transform.forward;
-        timer -= Time.fixedDeltaTime;
+        _poolObject.transform.position += Speed * Time.fixedDeltaTime * _poolObject.transform.forward;
+        _timer -= Time.fixedDeltaTime;
     }
 
     public void CalculateSpread()
     {
-        spreadVector = new(
-            Random.Range(-spread, spread),
-            Random.Range(-spread / 4, spread / 4),
-            Random.Range(-spread, spread));
+        _spreadVector = new(
+            Random.Range(-_spread, _spread),
+            Random.Range(-_spread / 4, _spread / 4),
+            Random.Range(-_spread, _spread));
     }
 }

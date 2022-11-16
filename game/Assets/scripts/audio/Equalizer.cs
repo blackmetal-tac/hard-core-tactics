@@ -3,21 +3,21 @@ using UnityEngine.VFX;
 
 public class Equalizer : MonoBehaviour
 {
-    private AudioData audioData;
-    private VisualEffect VFX;
-    private Shield shield;    
+    private AudioData _audioData;
+    private VisualEffect _VFX;
+    private Shield _shield;    
     private const int arraySize = 18;
-    private readonly float[] bassArray = new float[3];
-    private readonly float[] whisleArray = new float[3];
-    private readonly float[] hitsArray = new float[3];
-    private readonly float[] electricArray = new float[3];    
+    private readonly float[] _bassArray = new float[3];
+    private readonly float[] _whisleArray = new float[3];
+    private readonly float[] _hitsArray = new float[3];
+    private readonly float[] _electricArray = new float[3];    
 
     // Start is called before the first frame update
     void Start()
     {
-        audioData = GameObject.Find("AudioData").GetComponent<AudioData>();
-        VFX = GetComponent<VisualEffect>();        
-        shield = GetComponent<Shield>();
+        _audioData = GameObject.Find("AudioData").GetComponent<AudioData>();
+        _VFX = GetComponent<VisualEffect>();        
+        _shield = GetComponent<Shield>();
     }
 
     void FixedUpdate()
@@ -25,26 +25,26 @@ public class Equalizer : MonoBehaviour
         // Audio waves low to high, need only 6 parameters 
         // {{0-28}(bass) {29-47}(whisle)} {48-251}(hard hits) {252-}(electric)}
 
-        bassArray[0] = AnimateWave(bassArray, 0, 0.2f, 10);
-        whisleArray[0] = AnimateWave(whisleArray, 29, 0.02f, 30);
-        hitsArray[0] = AnimateWave(hitsArray, 79, 0.02f, 130);
-        electricArray[0] = AnimateWave(electricArray, 255, 0.005f, 120);
+        _bassArray[0] = AnimateWave(_bassArray, 0, 0.2f, 10);
+        _whisleArray[0] = AnimateWave(_whisleArray, 29, 0.02f, 30);
+        _hitsArray[0] = AnimateWave(_hitsArray, 79, 0.02f, 130);
+        _electricArray[0] = AnimateWave(_electricArray, 255, 0.005f, 120);
 
-        VFX.SetFloat("Bass", bassArray[0]);
-        VFX.SetFloat("Whisle", whisleArray[0] * 100);       
-        VFX.SetFloat("Hits", hitsArray[0] * 100);
-        VFX.SetFloat("Sparks", electricArray[0] * 50);
+        _VFX.SetFloat("Bass", _bassArray[0]);
+        _VFX.SetFloat("Whisle", _whisleArray[0] * 100);       
+        _VFX.SetFloat("Hits", _hitsArray[0] * 100);
+        _VFX.SetFloat("Sparks", _electricArray[0] * 50);
 
         if (transform.parent.name == "MenuCore")
         {
-            transform.parent.localScale = (2f + bassArray[0]) * Vector3.one;
+            transform.parent.localScale = (2f + _bassArray[0]) * Vector3.one;
         }
 
-        // Set shield scale
-        if (shield != null)
+        // Set _shield scale
+        if (_shield != null)
         {
-            shield.scale = bassArray[0];
-            shield.material.SetFloat("_Intensity", 2.5f + whisleArray[0] * 20);
+            _shield.scale = _bassArray[0];
+            _shield.material.SetFloat("_Intensity", 2.5f + _whisleArray[0] * 20);
         }
     }
 
@@ -57,14 +57,14 @@ public class Equalizer : MonoBehaviour
         {
             for (int i = 0; i < 4; i++)
             {
-                array[i] = audioData.samples[i + startIndex];
+                array[i] = _audioData.Samples[i + startIndex];
             }
         }
         else 
         {
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = audioData.samples[i + startIndex];
+                array[i] = _audioData.Samples[i + startIndex];
             }
         }
 

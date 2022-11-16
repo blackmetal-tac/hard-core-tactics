@@ -3,32 +3,32 @@ using TMPro;
 
 public class SongName : MonoBehaviour
 {
-    public int textSpeed;
-    private AudioClip song;
-    private TextMeshProUGUI textmeshPro;
-    private float scrollPos;
+    [SerializeField] private int _textSpeed;
+    private AudioClip _song;
+    private TextMeshProUGUI _textmeshPro;
+    private float _scrollPos;
 
     // Start is called before the first frame update
     void Start()
     {
-        song = GameObject.Find("AudioManager").GetComponent<AudioSource>().clip;      
-        textmeshPro = GetComponent<TextMeshProUGUI>();  
-        scrollPos = transform.localPosition.x;
+        _song = GameObject.Find("AudioManager").GetComponent<AudioSource>().clip;      
+        _textmeshPro = GetComponent<TextMeshProUGUI>();  
+        _scrollPos = transform.localPosition.x;
     }
 
     void FixedUpdate()
     {
         //Double strings and spaces
-        textmeshPro.text = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString() +
-            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + song.name.ToString();
+        _textmeshPro.text = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + _song.name.ToString() +
+            "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + _song.name.ToString();
 
-        transform.localPosition = new Vector3(-scrollPos,
+        transform.localPosition = new Vector3(-_scrollPos,
             transform.localPosition.y, transform.localPosition.z);
-        scrollPos += Time.fixedDeltaTime * textSpeed;
+        _scrollPos += Time.fixedDeltaTime * _textSpeed;
 
-        if (-textmeshPro.preferredWidth / 2 >= transform.localPosition.x)
+        if (-_textmeshPro.preferredWidth / 2 >= transform.localPosition.x)
         {
-            scrollPos = 0;
+            _scrollPos = 0;
         }
     }
 }

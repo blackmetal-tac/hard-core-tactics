@@ -3,24 +3,24 @@ using OWS.ObjectPooling;
 
 public class Projectile : MonoBehaviour
 {
-    [HideInInspector] public float damage;
-    private Rigidbody projectileBody;
-    private PoolObject poolObject;
-    private Collider projectileCollider;
+    [HideInInspector] public float Damage;
+    private Rigidbody _projectileBody;
+    private PoolObject _poolObject;
+    private Collider _projectileCollider;
 
     // Start is called before the first frame update
     void Start()
     {
-        poolObject = GetComponentInParent<PoolObject>();
-        projectileBody = GetComponent<Rigidbody>();
-        projectileCollider = GetComponent<Collider>();
+        _poolObject = GetComponentInParent<PoolObject>();
+        _projectileBody = GetComponent<Rigidbody>();
+        _projectileCollider = GetComponent<Collider>();
     }
 
     void FixedUpdate()
     {
-        if (projectileBody.velocity != Vector3.zero)
+        if (_projectileBody.velocity != Vector3.zero)
         {
-            projectileCollider.enabled = true;
+            _projectileCollider.enabled = true;
         }        
     }
 
@@ -29,29 +29,29 @@ public class Projectile : MonoBehaviour
     {
         if (collider.name == "Body")
         {
-            collider.GetComponent<UnitManager>().TakeDamage(damage);
+            collider.GetComponent<UnitManager>().TakeDamage(Damage);
         }
         else if (collider.gameObject.layer == 17)
         {
-            collider.GetComponent<Shield>().TakeDamage(damage);
+            collider.GetComponent<Shield>().TakeDamage(Damage);
         }
 
         if (collider.gameObject.layer != 17)
         {
-            //projectileCollider.enabled = false;
+            //_projectileCollider.enabled = false;
             //Debug.Log("disabled");
         }
 
         Debug.Log(collider.name);
-        projectileBody.velocity = Vector3.zero;
-        poolObject.ReturnToPool();
+        _projectileBody.velocity = Vector3.zero;
+        _poolObject.ReturnToPool();
     }
 
     private void OnTriggerStay(Collider collider)
     {
         if (collider.gameObject.layer == 17)
         {
-            projectileCollider.enabled = false;
+            _projectileCollider.enabled = false;
             Debug.Log("enabled");
         }
     }

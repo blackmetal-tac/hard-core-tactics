@@ -3,24 +3,20 @@ using UnityEngine;
 [RequireComponent (typeof(AudioSource))]
 public class AudioData : MonoBehaviour
 {
-    AudioSource audioSource;
-    [HideInInspector] public float[] samples;
+    private AudioSource _audioSource;
+    [HideInInspector] public float[] Samples;
 
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+		Samples = new float[512];
+        _audioSource = GetComponent<AudioSource>();		
     }
 
     void FixedUpdate()
     {
-        GetAudioSpectrum();
-    }
-
-    //Get audio data from track for visualization
-    void GetAudioSpectrum()
-    {
-        audioSource.GetSpectrumData(samples, 0, FFTWindow.Blackman);
+		//Get audio data from track for visualization
+        _audioSource.GetSpectrumData(Samples, 0, FFTWindow.Blackman);
     }
 }
 

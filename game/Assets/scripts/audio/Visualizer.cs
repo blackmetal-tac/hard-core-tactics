@@ -6,45 +6,44 @@ using Unity.Collections;
 
 public class Visualizer : MonoBehaviour
 {
-    public GameObject quadPrefab;
-    private const int samles = 32;
-    GameObject[] rightQuads = new GameObject[samles];
-    GameObject[] leftQuads = new GameObject[samles];
-    private AudioData audioData;
-    public float width = 0.1f, height = 0.5f, distance = 0.2f, amp = 0.5f;
-    public bool mainMenu = true;
-	public bool jobs;
+    [SerializeField] private GameObject _quadPrefab;
+	[SerializeField] private float _width = 0.1f, _height = 0.5f, _distance = 0.2f, _amp = 0.5f;
+    [SerializeField] private bool _mainMenu = true, _jobs;
+	private AudioData _audioData;
+    private const int _samles = 32;
+    private GameObject[] _rightQuads = new GameObject[_samles];
+    private GameObject[] _leftQuads = new GameObject[_samles];
 
     // Start is called before the first frame update
     void Start()
     {
-        audioData = GameObject.Find("AudioData").GetComponent<AudioData>();
+        _audioData = GameObject.Find("AudioData").GetComponent<AudioData>();
 
         //Spawn waves visual
-        if (mainMenu)
+        if (_mainMenu)
         {	
-            for (int i = 0; i < samles; i++)
+            for (int i = 0; i < _samles; i++)
             {				
-                GameObject instanceQuad = (GameObject)Instantiate(quadPrefab);
+                GameObject instanceQuad = (GameObject)Instantiate(_quadPrefab);
                 instanceQuad.transform.position = this.transform.position;
                 instanceQuad.transform.SetParent(this.transform);
                 instanceQuad.name = "Quad" + i;
-                instanceQuad.transform.position = new Vector3(transform.position.x + distance * i, transform.position.y,
+                instanceQuad.transform.position = new Vector3(transform.position.x + _distance * i, transform.position.y,
                     transform.position.z);
                 instanceQuad.transform.rotation = transform.rotation;
-                rightQuads[i] = instanceQuad;				
+                _rightQuads[i] = instanceQuad;				
             }
 
-            for (int i = 0; i < samles; i++)
+            for (int i = 0; i < _samles; i++)
             {
-                GameObject instanceQuad = (GameObject)Instantiate(quadPrefab);
+                GameObject instanceQuad = (GameObject)Instantiate(_quadPrefab);
                 instanceQuad.transform.position = this.transform.position;
                 instanceQuad.transform.SetParent(this.transform);
                 instanceQuad.name = "mQuad" + i;
-                instanceQuad.transform.position = new Vector3(transform.position.x - distance * i, transform.position.y,
+                instanceQuad.transform.position = new Vector3(transform.position.x - _distance * i, transform.position.y,
                     transform.position.z);
                 instanceQuad.transform.rotation = transform.rotation;
-                leftQuads[i] = instanceQuad;
+                _leftQuads[i] = instanceQuad;
             }
             transform.localScale = Vector3.zero;
         }
@@ -52,19 +51,19 @@ public class Visualizer : MonoBehaviour
         {
             this.Wait(2, () => 
             {
-                float angle = 36f / (float)samles;
-                for (int i = 0; i < samles; i++)
+                float angle = 36f / (float)_samles;
+                for (int i = 0; i < _samles; i++)
                 {
-                    GameObject instanceQuad = (GameObject)Instantiate(quadPrefab);
+                    GameObject instanceQuad = (GameObject)Instantiate(_quadPrefab);
                     instanceQuad.transform.SetParent(this.transform);
                     instanceQuad.name = "Quad" + i;
                     transform.rotation = Quaternion.Euler(0, 0, 1 * ((i + 1) * angle));
-                    instanceQuad.transform.position = new Vector3(transform.position.x + distance * i, transform.position.y,
+                    instanceQuad.transform.position = new Vector3(transform.position.x + _distance * i, transform.position.y,
                        transform.position.z);
                     instanceQuad.transform.rotation = Quaternion.Euler(transform.rotation.x,
                         transform.rotation.y, -1 * ((i + 1) * angle));
 
-                    rightQuads[i] = instanceQuad;                    
+                    _rightQuads[i] = instanceQuad;                    
                 }
             });
         }
@@ -74,58 +73,58 @@ public class Visualizer : MonoBehaviour
     void FixedUpdate()
     {
         //Animate audio waves
-        if (mainMenu)
+        if (_mainMenu)
         {
-			if (jobs)
+			if (_jobs)
 			{
-				NativeArray<float3> localScaleArrayRight = new NativeArray<float3>(samles, Allocator.TempJob);
-				NativeArray<float3> localScaleArrayLeft = new NativeArray<float3>(samles, Allocator.TempJob);
-				NativeArray<float> samplesArray = new NativeArray<float>(samles, Allocator.TempJob);
+				NativeArray<float3> LocalScaleArrayRight = new NativeArray<float3>(_samles, Allocator.TempJob);
+				NativeArray<float3> LocalScaleArrayLeft = new NativeArray<float3>(_samles, Allocator.TempJob);
+				NativeArray<float> SamplesArray = new NativeArray<float>(_samles, Allocator.TempJob);
 				
-				for (int i = 0; i < samles; i++)
+				for (int i = 0; i < _samles; i++)
 				{
-					localScaleArrayRight[i] = rightQuads[i].transform.localScale;
-					localScaleArrayLeft[i] = leftQuads[i].transform.localScale;
-					samplesArray[i] = audioData.samples[i];
+					LocalScaleArrayRight[i] = _rightQuads[i].transform.localScale;
+					LocalScaleArrayLeft[i] = _leftQuads[i].transform.localScale;
+					SamplesArray[i] = _audioData.Samples[i];
 				}
 				
 				VisualizerJob visualizerJob = new VisualizerJob
 				{
-					localScaleArrayRight = localScaleArrayRight,
-					localScaleArrayLeft = localScaleArrayLeft,
-					samplesArray = samplesArray,
-					width = width,
-					height = height,
-					amp = amp,
+					LocalScaleArrayRight = LocalScaleArrayRight,
+					LocalScaleArrayLeft = LocalScaleArrayLeft,
+					SamplesArray = SamplesArray,
+					Width = _width,
+					Height = _height,
+					Amp = _amp,
 				};
 				
-				JobHandle jobHandle = visualizerJob.Schedule(samles, 8);
+				JobHandle jobHandle = visualizerJob.Schedule(_samles, 8);
 				jobHandle.Complete();
 				
-				for (int i = 0; i < samles; i++)
+				for (int i = 0; i < _samles; i++)
 				{
-					rightQuads[i].transform.localScale = localScaleArrayRight[i];
-					leftQuads[i].transform.localScale = localScaleArrayLeft[i];
-					audioData.samples[i] = samplesArray[i];
+					_rightQuads[i].transform.localScale = LocalScaleArrayRight[i];
+					_leftQuads[i].transform.localScale = LocalScaleArrayLeft[i];
+					_audioData.Samples[i] = SamplesArray[i];
 				}
 				
-				localScaleArrayRight.Dispose();
-				localScaleArrayLeft.Dispose();
-				samplesArray.Dispose();				
+				LocalScaleArrayRight.Dispose();
+				LocalScaleArrayLeft.Dispose();
+				SamplesArray.Dispose();				
 			}
 			else
 			{
-				AnimateQuad(rightQuads);
-				AnimateQuad(leftQuads);		
+				AnimateQuad(_rightQuads);
+				AnimateQuad(_leftQuads);		
 			}
         }
         else
         {
             if (Time.time > 2)
             {
-                for (int i = 0; i < samles; i++)
+                for (int i = 0; i < _samles; i++)
                 {                                                                                                   
-                    rightQuads[i].transform.localScale = new Vector3(width, audioData.samples[i] * amp * (i / 2 + 1) + height, 1);
+                    _rightQuads[i].transform.localScale = new Vector3(_width, _audioData.Samples[i] * _amp * (i / 2 + 1) + _height, 1);
                 }
             }
         }
@@ -133,9 +132,9 @@ public class Visualizer : MonoBehaviour
 	
 	private void AnimateQuad(GameObject[] animQuads)
 	{
-		for (int i = 0; i < samles; i++)
+		for (int i = 0; i < _samles; i++)
         {                                                                                                    
-            animQuads[i].transform.localScale = new Vector3(width, audioData.samples[i] * amp + height, 1);
+            animQuads[i].transform.localScale = new Vector3(_width, _audioData.Samples[i] * _amp + _height, 1);
         }
 	}
 }
@@ -143,13 +142,13 @@ public class Visualizer : MonoBehaviour
 [BurstCompile]
 public struct VisualizerJob : IJobParallelFor
 {
-	public NativeArray<float3> localScaleArrayRight;
-	public NativeArray<float3> localScaleArrayLeft;
-	public NativeArray<float> samplesArray;
-	public float width, height, amp;
+	public NativeArray<float3> LocalScaleArrayRight;
+	public NativeArray<float3> LocalScaleArrayLeft;
+	public NativeArray<float> SamplesArray;
+	public float Width, Height, Amp;
 	public void Execute(int i)
 	{
-		localScaleArrayRight[i]= new float3(width, samplesArray[i] * amp + height, 1);
-		localScaleArrayLeft[i]= new float3(width, samplesArray[i] * amp + height, 1);
+		LocalScaleArrayRight[i]= new float3(Width, SamplesArray[i] * Amp + Height, 1);
+		LocalScaleArrayLeft[i]= new float3(Width, SamplesArray[i] * Amp + Height, 1);
 	}
 }
