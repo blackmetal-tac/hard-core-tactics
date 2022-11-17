@@ -2,23 +2,23 @@ using UnityEngine;
 
 public class CollisionAMS : MonoBehaviour
 {
-    private WPNManager wpnManager;
+    private WPNManager _wpnManager;
 
     void Start()
     {
-        wpnManager = GetComponentInParent<WPNManager>();
+        _wpnManager = GetComponentInParent<WPNManager>();
     }
 
     private void OnTriggerStay(Collider collider)
     {
-        if (wpnManager.targetAMS == null)
+        if (_wpnManager.targetAMS == null)
         {            
-            wpnManager.targetAMS = collider.gameObject;
+            _wpnManager.targetAMS = collider.gameObject;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        wpnManager.targetAMS = null;
+        _wpnManager.targetAMS = null;
     }
 }

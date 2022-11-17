@@ -90,10 +90,10 @@ public class GameManager : MonoBehaviour
         // Disable buttons
         actionMask.transform.localScale = Vector3.one;
 
-        // Enemy actions
+        // Enemy actions ???
         if (!enemyManager.isDead)
         {
-            AIController.SetPath(playerController.playerAgent);
+            AIController.SetPath(playerController.PlayerAgent);
             AIController.Move();
         }
 

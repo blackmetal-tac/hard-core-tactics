@@ -4,43 +4,43 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
-{
-    private GameManager gameManager;
+{ 
+	public LayerMask IgnoreLayers;
+	
+	// NavMesh
+    [HideInInspector] public NavMeshAgent PlayerAgent;
+    private LineRenderer _walkPath;
 
     // Objects
-    private GameObject clickMarker, crosshair;
-    private UnitManager playerManager;
+	private GameManager _gameManager;
+    private GameObject _clickMarker, _crosshair;
+    private UnitManager _playerManager;
 
-    // NavMesh
-    [HideInInspector] public NavMeshAgent playerAgent;
-    private LineRenderer walkPath;
-
-    private float crosshairSize;
-    private readonly float crosshairScale = 0.15f;
-    public LayerMask IgnoreLayers;
+    private float _crosshairSize;
+    private readonly float _crosshairScale = 0.15f;    
 	
 	void Awake()
 	{
-		playerManager = GetComponentInChildren<UnitManager>();
-		playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").gameObject;
+		_playerManager = GetComponentInChildren<UnitManager>();
+		_playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").gameObject;
 	}
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        crosshair = GameObject.Find("Crosshair");		
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _crosshair = GameObject.Find("Crosshair");		
 
         // Navmesh setup        
-        playerAgent = GetComponent<NavMeshAgent>();        
-        walkPath = GetComponent<LineRenderer>();
+        PlayerAgent = GetComponent<NavMeshAgent>();
         NavMesh.avoidancePredictionTime = 5;
+		_walkPath = GetComponent<LineRenderer>();
 
         // Path
-        clickMarker = GameObject.Find("ClickMarker");   
-        walkPath.startWidth = 0.02f;
-        walkPath.endWidth = 0.02f;
-        walkPath.positionCount = 0;       
+        _clickMarker = GameObject.Find("ClickMarker");   
+        _walkPath.startWidth = 0.02f;
+        _walkPath.endWidth = 0.02f;
+        _walkPath.positionCount = 0;       
     }
 
     // Update is called once per frame
@@ -52,21 +52,21 @@ public class PlayerController : MonoBehaviour
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            if (!gameManager.inAction)
+            if (!_gameManager.inAction)
             {
                 MoveToClick();
             }
         }
 
         // Draw player path
-        if (playerAgent.hasPath)
+        if (PlayerAgent.hasPath)
         {
             DrawPath();
         }
 
-        // Dynamic crosshair
-        crosshairSize = Mathf.Lerp(crosshairSize, crosshairScale + playerManager.spread / 2 + playerManager.moveSpeed / 10, Time.fixedDeltaTime * 3);
-        crosshair.transform.localScale = crosshairSize * Vector3.one;
+        // Dynamic _crosshair
+        _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.spread / 2 + _playerManager.moveSpeed / 10, Time.fixedDeltaTime * 3);
+        _crosshair.transform.localScale = _crosshairSize * Vector3.one;
     }
 
     private void MoveToClick()
@@ -76,42 +76,42 @@ public class PlayerController : MonoBehaviour
 
         if (isHit)
         {
-            playerManager.SetDestination(hit.point, playerAgent);
+            _playerManager.SetDestination(hit.point, PlayerAgent);
         }       
     }
 
     // Draw player path
     public void DrawPath()
     {
-        walkPath.positionCount = playerAgent.path.corners.Length;
-        walkPath.SetPosition(0, transform.position);
+        _walkPath.positionCount = PlayerAgent.path.corners.Length;
+        _walkPath.SetPosition(0, transform.position);
 
-        if (playerAgent.path.corners.Length < 2)
+        if (PlayerAgent.path.corners.Length < 2)
         {
             return;
         }
 
-        for (int i = 1; i < playerAgent.path.corners.Length; i++)
+        for (int i = 1; i < PlayerAgent.path.corners.Length; i++)
         {
-            Vector3 pointPosition = new(playerAgent.path.corners[i].x, playerAgent.path.corners[i].y,
-                    playerAgent.path.corners[i].z);
-            walkPath.SetPosition(i, pointPosition);
-            clickMarker.transform.position = new Vector3(pointPosition.x, 0.05f, pointPosition.z);
-            clickMarker.transform.localScale = Vector3.zero;
-            clickMarker.transform.DOScale(0.2f * Vector3.one , 0.2f);
+            Vector3 pointPosition = new(PlayerAgent.path.corners[i].x, PlayerAgent.path.corners[i].y,
+                    PlayerAgent.path.corners[i].z);
+            _walkPath.SetPosition(i, pointPosition);
+            _clickMarker.transform.position = new Vector3(pointPosition.x, 0.05f, pointPosition.z);
+            _clickMarker.transform.localScale = Vector3.zero;
+            _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.2f);
         }
 
-        clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
+        _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
     }
 
     public void Move()
     {
-        playerAgent.speed = playerManager.moveSpeed + 0.5f;
+        PlayerAgent.speed = _playerManager.moveSpeed + 0.5f;
     }
 
     public void EndMove()
     {
-        playerManager.moveSpeed = 0.1f;
-        playerManager.UpdateOverheatTimer();
+        _playerManager.moveSpeed = 0.1f;
+        _playerManager.UpdateOverheatTimer();
     }
 }

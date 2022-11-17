@@ -3,32 +3,32 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     public float HP;
-    private float shrinkTimer;
-    private Collider shieldCollider;
-    [HideInInspector] public float scale;
-    [HideInInspector] public Material material;
-
+	[HideInInspector] public float Scale;
+    [HideInInspector] public Material Material;
+    private float _shrinkTimer;
+    private Collider _shieldCollider;
+	
     void Start()
     {
-        shieldCollider = GetComponent<Collider>();
-        material = GetComponentInChildren<MeshRenderer>().sharedMaterial;
+        _shieldCollider = GetComponent<Collider>();
+        Material = GetComponentInChildren<MeshRenderer>().sharedMaterial;
     }
 
     void FixedUpdate()
     {        
-        transform.localScale = (0.9f + scale) * Vector3.one;
-        material.SetFloat("_Alpha", 0.3f * HP);
+        transform.localScale = (0.9f + Scale) * Vector3.one;
+        Material.SetFloat("_Alpha", 0.3f * HP);
 
         if (HP > 0)
         {
-            shieldCollider.enabled = true;
+            _shieldCollider.enabled = true;
         }
     }
 
     public void TakeDamage(float damage)
     {
         // Reset HP bar damage animation
-        shrinkTimer = 0.5f;
+        _shrinkTimer = 0.5f;
         if (HP > 0)
         {
             HP -= damage;
@@ -37,7 +37,7 @@ public class Shield : MonoBehaviour
         // Shield down
         if (HP <= 0)
         {
-            shieldCollider.enabled = false;
+            _shieldCollider.enabled = false;
         }
     }
 }
