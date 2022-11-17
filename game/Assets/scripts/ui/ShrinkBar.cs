@@ -50,12 +50,12 @@ public class ShrinkBar : MonoBehaviour
 
     public void UpdateShield()
     {
-        Shrink(shieldImage, shieldDmgImage, unitManager.shield.HP);
+        Shrink(shieldImage, shieldDmgImage, unitManager.UnitShield.HP);
 
         if (unitManager.transform.parent.name == "Player")
         {
             shieldCanvasGroup.alpha = gameManager.crosshairBars + ((1 - shieldImage.fillAmount) / 2);
-            Shrink(shieldImageInd, shieldDmgImageInd, unitManager.shield.HP);
+            Shrink(shieldImageInd, shieldDmgImageInd, unitManager.UnitShield.HP);
         }
     }
 
@@ -72,12 +72,12 @@ public class ShrinkBar : MonoBehaviour
 
     public void UpdateHeat()
     {
-        heatImage.fillAmount = unitManager.heat;        
+        heatImage.fillAmount = unitManager.Heat;        
 
         if (unitManager.transform.parent.name == "Player")
         {           
-            heatCanvasGroup.alpha = gameManager.crosshairBars + (unitManager.heat * 0.8f);
-            heatImageInd.fillAmount = unitManager.heat;
+            heatCanvasGroup.alpha = gameManager.crosshairBars + (unitManager.Heat * 0.8f);
+            heatImageInd.fillAmount = unitManager.Heat;
         }
     }
 
@@ -86,8 +86,8 @@ public class ShrinkBar : MonoBehaviour
         healthImage.fillAmount = healthValue;
 
         // Health bar damage animation
-        unitManager.shrinkTimer -= Time.deltaTime;
-        if (unitManager.shrinkTimer < 0)
+        unitManager.ShrinkTimer -= Time.deltaTime;
+        if (unitManager.ShrinkTimer < 0)
         {
             float shrinkSpeed = 1f;
             if (healthImage.fillAmount < damageImage.fillAmount)

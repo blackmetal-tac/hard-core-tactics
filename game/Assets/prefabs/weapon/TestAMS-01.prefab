@@ -77,13 +77,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f518b814caee24b99627b6c5f14c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileType: 3
-  homing: 0
-  radiusAMS: 10
-  projectileSpeed: 15
-  projectileSize: 0.03
-  heat: 0.01
-  recoil: 0.01
+  _projectileType: 3
+  Homing: 0
+  _radiusAMS: 5
+  _projectileSpeed: 15
+  _projectileSize: 0.1
+  _heat: 0.01
+  _recoil: 0.1
   damage: 0
   fireDelay: 0.4
   fireRate: 3000

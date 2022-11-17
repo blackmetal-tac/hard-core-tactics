@@ -45,12 +45,12 @@ public class WeaponUI : MonoBehaviour
     {
         playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
 
-        for (int i = 0; i < playerManager.weaponList.Count; i++ ) 
+        for (int i = 0; i < playerManager.WeaponList.Count; i++ ) 
         {
-            if (playerManager.weaponList[i] != null)
+            if (playerManager.WeaponList[i] != null)
             {
-                weaponButtons[i].weaponName.text = playerManager.weaponList[i].name;
-                weaponButtons[i].slider.weapon = playerManager.weaponList[i];
+                weaponButtons[i].weaponName.text = playerManager.WeaponList[i].name;
+                weaponButtons[i].slider.weapon = playerManager.WeaponList[i];
                 weaponButtons[i].slider.ChangeWPNmode();
                 weaponButtons[i].actionMask.transform.localScale = Vector3.zero;
             }
@@ -74,16 +74,16 @@ public class WeaponUI : MonoBehaviour
     // Enable weapon (update UI text)
     public void WeaponUp(int wpnIndex)
     {
-        weaponButtons[wpnIndex].slider.modeName.text = playerManager.weaponList[wpnIndex]
+        weaponButtons[wpnIndex].slider.modeName.text = playerManager.WeaponList[wpnIndex]
             .weaponModes[(int)weaponButtons[wpnIndex].slider.slider.value].modeName;
     }
 
     // Update player weapon counters
     public void DecreaseCounter()
     {
-        for (int i = 0; i < playerManager.weaponList.Count; i++)
+        for (int i = 0; i < playerManager.WeaponList.Count; i++)
         {
-            if (playerManager.weaponList[i] != null && playerManager.weaponList[i].downTimer <= 0)
+            if (playerManager.WeaponList[i] != null && playerManager.WeaponList[i].DownTimer <= 0)
             {
                 weaponButtons[i].actionMask.transform.localScale = Vector3.zero;
             }

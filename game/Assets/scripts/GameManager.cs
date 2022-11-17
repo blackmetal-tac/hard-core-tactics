@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
         actionMask.transform.localScale = Vector3.one;
 
         // Enemy actions ???
-        if (!enemyManager.isDead)
+        if (!enemyManager.IsDead)
         {
             AIController.SetPath(playerController.PlayerAgent);
             AIController.Move();
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
             timeValue -= Time.deltaTime;
 
             // Enemy actions ???
-            if (!enemyManager.isDead)
+            if (!enemyManager.IsDead)
             {
                 enemyManager.StartAction();
             }
@@ -128,12 +128,12 @@ public class GameManager : MonoBehaviour
             inAction = false;
 
             // Units actions
-            if (!enemyManager.isDead)
+            if (!enemyManager.IsDead)
             {
                 AIController.EndMove();
             }
 
-            if (!playerManager.isDead)
+            if (!playerManager.IsDead)
             {
                 playerController.EndMove();
             }

@@ -22,7 +22,7 @@ public class SliderScr : MonoBehaviour
 
     public void ChangeWPNmode()
     {
-        weapon.burstSize = weapon.weaponModes[(int)slider.value].fireMode;
+        weapon.BurstSize = weapon.weaponModes[(int)slider.value].fireMode;
         modeName.text = weapon.weaponModes[(int)slider.value].modeName;
         weapon.ChangeShotsCount();
 

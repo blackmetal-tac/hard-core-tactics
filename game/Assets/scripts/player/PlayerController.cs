@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Dynamic _crosshair
-        _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.spread / 2 + _playerManager.moveSpeed / 10, Time.fixedDeltaTime * 3);
+        _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 2 + _playerManager.MoveSpeed / 10, Time.fixedDeltaTime * 3);
         _crosshair.transform.localScale = _crosshairSize * Vector3.one;
     }
 
@@ -106,12 +106,12 @@ public class PlayerController : MonoBehaviour
 
     public void Move()
     {
-        PlayerAgent.speed = _playerManager.moveSpeed + 0.5f;
+        PlayerAgent.speed = _playerManager.MoveSpeed + 0.5f;
     }
 
     public void EndMove()
     {
-        _playerManager.moveSpeed = 0.1f;
+        _playerManager.MoveSpeed = 0.1f;
         _playerManager.UpdateOverheatTimer();
     }
 }

@@ -4,52 +4,52 @@ using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
 {
-	public GameObject Target;
-    [HideInInspector] public Shield shield;
-	
-    private GameManager gameManager;
-    private ShrinkBar shrinkBar;
-    private NavMeshAgent navMeshAgent;
+	[HideInInspector] public GameObject Target;
+    [HideInInspector] public Shield UnitShield;
 	
     // Stats    
-    [HideInInspector] public float HP, heat;
-    [Range(0, 0.5f)] public float shieldRegen, cooling;
-    [Range(0, 1)] public float heatTreshold, heatCheckTime;
-    [Range(0, 10)] public int heatSafeRoll;
-    public int walkDistance;
+    [HideInInspector] public float HP, Heat;
+	[Range(0, 1)] public float HeatTreshold;
+    [SerializeField][Range(0, 0.5f)] private float _shieldRegen, _cooling;
+    [SerializeField][Range(0, 1)] private float _heatCheckTime;
+    [SerializeField][Range(0, 10)] private int _heatSafeRoll;
+    [SerializeField][Range(0, 10)] private int _walkDistance;
 
-    private Vector3 direction; // Rotate body to the enemy
-    private readonly float rotSpeed = 0.5f;
+	private GameManager _gameManager;
+    private ShrinkBar _shrinkBar;
+    private NavMeshAgent _navMeshAgent;
+    private Vector3 _direction; // Rotate body to the enemy
+    private readonly float _rotSpeed = 0.5f;
 
-    public List<WPNManager> weaponList;
-    [HideInInspector] public int weaponCount = 0;
-    private WeaponUI weaponUI;
+    public List<WPNManager> WeaponList;
+    [HideInInspector] public int WeaponCount = 0;
+    private WeaponUI _weaponUI;
 
-    [HideInInspector] public float moveSpeed = 0.1f;
-    [HideInInspector] public float spread;
-    [HideInInspector] public float shrinkTimer;
-    public bool isDead = false; // Death trigger
-    private float lastCheck;
+    [HideInInspector] public float MoveSpeed = 0.1f;
+    [HideInInspector] public float Spread;
+    [HideInInspector] public float ShrinkTimer;
+    public bool IsDead = false; // Death trigger
+    private float _lastCheck;
 
     // ??? Set UnitManager for all weapons before Start
     void Awake()
     {
         /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
             left top, rigth shoulder, left shoulder) */
-        weaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
-        weaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
-        weaponList.Add(transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        weaponList.Add(transform.Find("Torso").Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        weaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
-        weaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(transform.Find("Torso").Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
 
         // ??? assign unit manager for each weapon
-        foreach (WPNManager weapon in weaponList)
+        foreach (WPNManager weapon in WeaponList)
         {
             if (weapon != null)
             {
                 weapon.unitManager = this;
-                weaponCount += 1;
+                WeaponCount += 1;
             }
         }
     }
@@ -57,21 +57,21 @@ public class UnitManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     { 
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
-        navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
-        shrinkBar = GetComponentInChildren<ShrinkBar>();
-        shield = transform.Find("Shield").GetComponentInChildren<Shield>();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
+        _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
+        _shrinkBar = GetComponentInChildren<ShrinkBar>();
+        UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();
 
         // Load HP, Shield, Heat bars
-        this.Progress(gameManager.loadTime, () => {
-            if (shield.HP < 1)
+        this.Progress(_gameManager.loadTime, () => {
+            if (UnitShield.HP < 1)
             {
-                shield.HP += Time.deltaTime * 0.6f; 
+                UnitShield.HP += Time.deltaTime * 0.6f; 
             }
             else
             {
-                shield.HP = 1;
+                UnitShield.HP = 1;
             }
 
             if (HP < 1)
@@ -83,25 +83,25 @@ public class UnitManager : MonoBehaviour
                 HP = 1;
             }
 
-            if (heat > 0)
+            if (Heat > 0)
             { 
-                heat -= Time.deltaTime * 0.6f;
+                Heat -= Time.deltaTime * 0.6f;
             }
             else
             {
-                heat = 0;
+                Heat = 0;
             }
 
-            shrinkBar.UpdateShield();
-            shrinkBar.UpdateHealth();
-            shrinkBar.UpdateHeat();
+            _shrinkBar.UpdateShield();
+            _shrinkBar.UpdateHealth();
+            _shrinkBar.UpdateHeat();
         });
 
         // Load Heat
-        this.Progress(gameManager.loadTime, () => {
-            if (shield.HP < 1)
+        this.Progress(_gameManager.loadTime, () => {
+            if (UnitShield.HP < 1)
             {
-                shield.HP += Time.deltaTime * 0.6f;
+                UnitShield.HP += Time.deltaTime * 0.6f;
             }
 
             if (HP < 1)
@@ -111,9 +111,9 @@ public class UnitManager : MonoBehaviour
         });
 
         // Aim at the enemy ???
-        foreach (WPNManager weapon in weaponList)
+        foreach (WPNManager weapon in WeaponList)
         {
-            if (weapon != null && !weapon.homing)
+            if (weapon != null && !weapon.Homing)
             {
                 weapon.firePoint.transform.LookAt(Target.transform.position);
             }
@@ -126,44 +126,44 @@ public class UnitManager : MonoBehaviour
         StartShoot();
 
         // Shield regeneration
-        if (shield.HP < 1 && !isDead)
+        if (UnitShield.HP < 1 && !IsDead)
         {
-            shield.HP += Time.deltaTime * shieldRegen;
-            shrinkBar.UpdateShield();
+            UnitShield.HP += Time.deltaTime * _shieldRegen;
+            _shrinkBar.UpdateShield();
         }
 
         // Heat dissipation
-        if (heat > 0 && !isDead)
+        if (Heat > 0 && !IsDead)
         {
-            heat -= Time.deltaTime * cooling;
-            shrinkBar.UpdateHeat();
+            Heat -= Time.deltaTime * _cooling;
+            _shrinkBar.UpdateHeat();
 
-            if (heat > heatTreshold && Time.time > lastCheck + heatCheckTime) // Roll heat penalty
+            if (Heat > HeatTreshold && Time.time > _lastCheck + _heatCheckTime) // Roll Heat penalty
             {
                 OverheatRoll();
-                lastCheck = Time.time;
+                _lastCheck = Time.time;
             }
-            else if (heat >= 1f && Time.time > lastCheck + 0.3f)
+            else if (Heat >= 1f && Time.time > _lastCheck + 0.3f)
             {
                 Overheat();
-                lastCheck = Time.time;
+                _lastCheck = Time.time;
             }
         }
 
-        if (!isDead)
+        if (!IsDead)
         {
-            shrinkBar.UpdateHealth();
+            _shrinkBar.UpdateHealth();
         }
     }
 
     private void StartShoot()
     {
         // Rotate body to Target
-        direction = Target.transform.position - transform.position;
+        _direction = Target.transform.position - transform.position;
         transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, Quaternion.LookRotation(direction), Time.time * rotSpeed);
+            transform.rotation, Quaternion.LookRotation(_direction), Time.time * _rotSpeed);
 
-        foreach (WPNManager weapon in weaponList)
+        foreach (WPNManager weapon in WeaponList)
         {
             if (weapon != null)
             {
@@ -182,18 +182,18 @@ public class UnitManager : MonoBehaviour
         for (int i = 0; i < path.corners.Length - 1; i++)
         {
             float segmentDistance = (path.corners[i + 1] - path.corners[i]).magnitude;
-            if (segmentDistance <= walkDistance)
+            if (segmentDistance <= _walkDistance)
             {
                 navAgent.SetDestination(movePoint);
-                moveSpeed = segmentDistance / gameManager.turnTime;
-                moveSpeed = Mathf.Round(100 * moveSpeed) / 100;
+                MoveSpeed = segmentDistance / _gameManager.turnTime;
+                MoveSpeed = Mathf.Round(100 * MoveSpeed) / 100;
             }
             else
             {
-                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * walkDistance);
+                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * _walkDistance);
                 NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
                 navAgent.SetPath(path);
-                moveSpeed = walkDistance / gameManager.turnTime;
+                MoveSpeed = _walkDistance / _gameManager.turnTime;
                 break;
             }
         }
@@ -203,7 +203,7 @@ public class UnitManager : MonoBehaviour
     public void TakeDamage(float damage)
     {
         // Reset HP bar damage animation
-        shrinkTimer = 0.5f;
+        ShrinkTimer = 0.5f;
         if (HP > 0)
         {
             HP -= damage;            
@@ -212,8 +212,8 @@ public class UnitManager : MonoBehaviour
         // Death
         if (HP <= 0)
         {
-            isDead = true;
-            navMeshAgent.enabled = false;
+            IsDead = true;
+            _navMeshAgent.enabled = false;
             GetComponent<Collider>().enabled = false;
             transform.localScale = Vector3.zero;
         }
@@ -223,7 +223,7 @@ public class UnitManager : MonoBehaviour
     private void OverheatRoll()
     {
         int rollHeat = Random.Range(1,10);
-        if (heatSafeRoll < rollHeat)
+        if (_heatSafeRoll < rollHeat)
         {
             Overheat();
         }
@@ -232,16 +232,16 @@ public class UnitManager : MonoBehaviour
     // Roll a weapon to overheat
     private void Overheat()
     {
-        int wpnIndex = Random.Range(0, weaponCount);
-        if (weaponList[wpnIndex] != null && weaponList[wpnIndex].downTimer <= 0)
+        int wpnIndex = Random.Range(0, WeaponCount);
+        if (WeaponList[wpnIndex] != null && WeaponList[wpnIndex].DownTimer <= 0)
         {
-            weaponList[wpnIndex].downTimer = 3;
-            weaponList[wpnIndex].burstSize = weaponList[wpnIndex].weaponModes[0].fireMode;
-            weaponList[wpnIndex].ChangeShotsCount();
+            WeaponList[wpnIndex].DownTimer = 3;
+            WeaponList[wpnIndex].BurstSize = WeaponList[wpnIndex].weaponModes[0].fireMode;
+            WeaponList[wpnIndex].ChangeShotsCount();
 
             if (transform.parent.name == "Player")
             {
-                weaponUI.WeaponDown(wpnIndex, weaponList[wpnIndex].downTimer);
+                _weaponUI.WeaponDown(wpnIndex, WeaponList[wpnIndex].DownTimer);
             }
         }
     }
@@ -249,19 +249,19 @@ public class UnitManager : MonoBehaviour
     // Update timers for overheated weapon
     public void UpdateOverheatTimer()
     {
-        for (int i = 0; i < weaponList.Count; i++)
+        for (int i = 0; i < WeaponList.Count; i++)
         {
-            if (weaponList[i] != null)
+            if (WeaponList[i] != null)
             {
-                weaponList[i].downTimer -= 1;
+                WeaponList[i].DownTimer -= 1;
 
-                if (transform.parent.name == "Player" && weaponList[i].downTimer > 0)
+                if (transform.parent.name == "Player" && WeaponList[i].DownTimer > 0)
                 {
-                    weaponUI.UpdateStatus(i, weaponList[i].downTimer); // ???
+                    _weaponUI.UpdateStatus(i, WeaponList[i].DownTimer); // ???
                 }
-                else if (transform.parent.name == "Player" && weaponList[i].downTimer <= 0)
+                else if (transform.parent.name == "Player" && WeaponList[i].DownTimer <= 0)
                 {
-                    weaponUI.WeaponUp(i);
+                    _weaponUI.WeaponUp(i);
                 }
             }
         }

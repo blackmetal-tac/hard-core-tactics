@@ -1059,21 +1059,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  shield: {fileID: 0}
+  UnitShield: {fileID: 0}
   HP: 0
-  heat: 1
-  shieldRegen: 0.05
-  cooling: 0.1
-  heatTreshold: 0.7
-  heatCheckTime: 1
-  heatSafeRoll: 5
-  walkDistance: 3
-  weaponList: []
-  weaponCount: 0
-  moveSpeed: 0.1
-  spread: 0
-  shrinkTimer: 0
-  isDead: 0
+  Heat: 0
+  HeatTreshold: 0.7
+  _shieldRegen: 0.1
+  _cooling: 0.1
+  _heatCheckTime: 1
+  _heatSafeRoll: 5
+  _walkDistance: 3
+  WeaponList: []
+  WeaponCount: 0
+  MoveSpeed: 0.1
+  Spread: 0
+  ShrinkTimer: 0
+  IsDead: 0
 --- !u!1 &362386522
 GameObject:
   m_ObjectHideFlags: 0
@@ -2347,10 +2347,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af96a245eaf239646a24c5ff29a5e7b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAgent: {fileID: 0}
   IgnoreLayers:
     serializedVersion: 2
     m_Bits: 194564
+  PlayerAgent: {fileID: 0}
 --- !u!1 &652705616
 GameObject:
   m_ObjectHideFlags: 0
@@ -3036,8 +3036,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 0
-  scale: 1
-  material: {fileID: 0}
+  Scale: 0
+  Material: {fileID: 0}
 --- !u!135 &908884681
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7375,21 +7375,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  shield: {fileID: 0}
+  UnitShield: {fileID: 0}
   HP: 0
-  heat: 0
-  shieldRegen: 0.05
-  cooling: 0.1
-  heatTreshold: 0.7
-  heatCheckTime: 1
-  heatSafeRoll: 5
-  walkDistance: 3
-  weaponList: []
-  weaponCount: 0
-  moveSpeed: 0.1
-  spread: 0
-  shrinkTimer: 0
-  isDead: 0
+  Heat: 0
+  HeatTreshold: 0.7
+  _shieldRegen: 0.1
+  _cooling: 0.1
+  _heatCheckTime: 1
+  _heatSafeRoll: 5
+  _walkDistance: 3
+  WeaponList: []
+  WeaponCount: 0
+  MoveSpeed: 0.1
+  Spread: 0
+  ShrinkTimer: 0
+  IsDead: 0
 --- !u!1001 &2013747566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8344,6 +8344,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
+        type: 3}
+      propertyPath: _radiusAMS
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
+        type: 3}
+      propertyPath: _projectileType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
+        type: 3}
+      propertyPath: _projectileSpeed
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec, type: 3}
 --- !u!4 &1506348349605184349 stripped
@@ -8563,6 +8578,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2479452605947280995, guid: db35e3038ac0eca419f2617b6d4819d3,
+        type: 3}
+      propertyPath: Homing
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2479452605947280997, guid: db35e3038ac0eca419f2617b6d4819d3,
         type: 3}
       propertyPath: m_Name
@@ -8620,8 +8640,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 0
-  scale: 1
-  material: {fileID: 0}
+  Scale: 0
+  Material: {fileID: 0}
 --- !u!114 &5188338245675463617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9381,6 +9401,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4266089538177853289, guid: 94384da20836d724ea5f521b70943c15,
+        type: 3}
+      propertyPath: Homing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4266089538177853289, guid: 94384da20836d724ea5f521b70943c15,
+        type: 3}
+      propertyPath: _projectileType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4266089538177853295, guid: 94384da20836d724ea5f521b70943c15,
         type: 3}
