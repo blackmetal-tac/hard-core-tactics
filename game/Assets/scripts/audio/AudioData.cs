@@ -10,7 +10,7 @@ public class AudioData : MonoBehaviour
     void Start()
     {
 		Samples = new float[512];
-        _audioSource = GetComponent<AudioSource>();		
+        _audioSource = GetComponent<AudioSource>();	
     }
 
     void FixedUpdate()

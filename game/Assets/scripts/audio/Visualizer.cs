@@ -11,8 +11,7 @@ public class Visualizer : MonoBehaviour
     [SerializeField] private bool _mainMenu = true, _jobs;
 	private AudioData _audioData;
     private const int _samles = 32;
-    private GameObject[] _rightQuads = new GameObject[_samles];
-    private GameObject[] _leftQuads = new GameObject[_samles];
+    private GameObject[] _rightQuads = new GameObject[_samles], _leftQuads = new GameObject[_samles];
 
     // Start is called before the first frame update
     void Start()
@@ -114,8 +113,11 @@ public class Visualizer : MonoBehaviour
 			}
 			else
 			{
-				AnimateQuad(_rightQuads);
-				AnimateQuad(_leftQuads);		
+                for (int i = 0; i < _samles; i++)
+                {  
+                    _rightQuads[i].transform.localScale = new Vector3(_width, _audioData.Samples[i] * _amp  + _height, 1);
+                    _leftQuads[i].transform.localScale = new Vector3(_width, _audioData.Samples[i] * _amp + _height, 1);
+                }   
 			}
         }
         else
@@ -129,16 +131,9 @@ public class Visualizer : MonoBehaviour
             }
         }
     }
-	
-	private void AnimateQuad(GameObject[] animQuads)
-	{
-		for (int i = 0; i < _samles; i++)
-        {                                                                                                    
-            animQuads[i].transform.localScale = new Vector3(_width, _audioData.Samples[i] * _amp + _height, 1);
-        }
-	}
 }
 
+// Jobs test
 [BurstCompile]
 public struct VisualizerJob : IJobParallelFor
 {
