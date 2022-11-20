@@ -115,7 +115,7 @@ public class UnitManager : MonoBehaviour
         {
             if (weapon != null && !weapon.Homing)
             {
-                weapon.firePoint.transform.LookAt(Target.transform.position);
+                weapon.FirePoint.transform.LookAt(Target.transform.position);
             }
         }
     }
@@ -236,7 +236,7 @@ public class UnitManager : MonoBehaviour
         if (WeaponList[wpnIndex] != null && WeaponList[wpnIndex].DownTimer <= 0)
         {
             WeaponList[wpnIndex].DownTimer = 3;
-            WeaponList[wpnIndex].BurstSize = WeaponList[wpnIndex].weaponModes[0].fireMode;
+            WeaponList[wpnIndex].BurstSize = WeaponList[wpnIndex].weaponModes[0].FireMode;
             WeaponList[wpnIndex].ChangeShotsCount();
 
             if (transform.parent.name == "Player")

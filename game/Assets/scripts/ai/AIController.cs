@@ -47,12 +47,12 @@ public class AIController : MonoBehaviour
             if (weapon != null && weapon.DownTimer <= 0 && _unitManager.Heat < _unitManager.HeatTreshold)
             {
                 int changeMode = Random.Range(1, weapon.weaponModes.Count);
-                weapon.BurstSize = weapon.weaponModes[changeMode].fireMode;
+                weapon.BurstSize = weapon.weaponModes[changeMode].FireMode;
             }
             else if (weapon != null && weapon.DownTimer <= 0 && _unitManager.Heat >= _unitManager.HeatTreshold)
             {
                 int changeMode = Random.Range(0, weapon.weaponModes.Count - 1);
-                weapon.BurstSize = weapon.weaponModes[changeMode].fireMode;
+                weapon.BurstSize = weapon.weaponModes[changeMode].FireMode;
             }
         }        
     }

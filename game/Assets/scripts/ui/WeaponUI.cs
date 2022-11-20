@@ -75,7 +75,7 @@ public class WeaponUI : MonoBehaviour
     public void WeaponUp(int wpnIndex)
     {
         weaponButtons[wpnIndex].slider.modeName.text = playerManager.WeaponList[wpnIndex]
-            .weaponModes[(int)weaponButtons[wpnIndex].slider.slider.value].modeName;
+            .weaponModes[(int)weaponButtons[wpnIndex].slider.slider.value].ModeName;
     }
 
     // Update player weapon counters
