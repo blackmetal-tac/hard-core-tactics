@@ -8347,7 +8347,7 @@ PrefabInstance:
     - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
         type: 3}
       propertyPath: _radiusAMS
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
         type: 3}
@@ -8357,7 +8357,7 @@ PrefabInstance:
     - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
         type: 3}
       propertyPath: _projectileSpeed
-      value: 3
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec, type: 3}

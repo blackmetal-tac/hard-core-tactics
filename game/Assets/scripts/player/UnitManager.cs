@@ -48,7 +48,7 @@ public class UnitManager : MonoBehaviour
         {
             if (weapon != null)
             {
-                weapon.unitManager = this;
+                weapon.UnitManager = this;
                 WeaponCount += 1;
             }
         }

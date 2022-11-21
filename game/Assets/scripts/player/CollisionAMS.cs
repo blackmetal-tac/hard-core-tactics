@@ -11,14 +11,14 @@ public class CollisionAMS : MonoBehaviour
 
     private void OnTriggerStay(Collider collider)
     {
-        if (_wpnManager.targetAMS == null)
+        if (_wpnManager.TargetAMS == null)
         {            
-            _wpnManager.targetAMS = collider.gameObject;
+            _wpnManager.TargetAMS = collider.gameObject;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        _wpnManager.targetAMS = null;
+        _wpnManager.TargetAMS = null;
     }
 }

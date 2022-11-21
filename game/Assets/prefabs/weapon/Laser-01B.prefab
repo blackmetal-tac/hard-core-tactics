@@ -84,26 +84,23 @@ MonoBehaviour:
   _projectileSize: 0
   _heat: 0.1
   _recoil: 0
-  damage: 0.005
-  fireDelay: 1
-  fireRate: 400
-  laserRange: 1000
-  burstSize: 5
-  downTimer: 0
-  lastBurst: 0
+  _damage: 0.03
+  _fireDelay: 1
+  _fireRate: 0
+  _laserRange: 100
+  BurstSize: 0
+  DownTimer: 0
+  LastBurst: 0
   weaponModes:
-  - modeName: off
-    fireMode: 0
-  - modeName: one
-    fireMode: 1
-  - modeName: 3 brst
-    fireMode: 3
-  tubes: []
-  firePoint: {fileID: 0}
-  projectileOBJ: {fileID: 0}
-  targetAMS: {fileID: 0}
-  unitManager: {fileID: 0}
-  isFriend: 0
+  - ModeName: off
+    FireMode: 0
+  - ModeName: 
+    FireMode: 0
+  - ModeName: 
+    FireMode: 0
+  FirePoint: {fileID: 0}
+  TargetAMS: {fileID: 0}
+  UnitManager: {fileID: 0}
 --- !u!120 &4987383190760336454
 LineRenderer:
   m_ObjectHideFlags: 0
