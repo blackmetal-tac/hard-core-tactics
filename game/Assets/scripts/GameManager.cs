@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         actionMask = executeButton.transform.parent.Find("ActionMask").gameObject;
         audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         buttonBorder = executeButton.transform.Find("ButtonBorder").gameObject;
-        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
+        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
        
         // Turn timer
         timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         audioUI.PlayOneShot(buttonClick);
         buttonBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
 
-        this.Wait(MainMenu.buttonDelay, () => 
+        this.Wait(MainMenu.ButtonDelay, () => 
         {
             buttonBorder.transform.DOScaleX(1f, 0.1f);
         });

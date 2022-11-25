@@ -27,7 +27,7 @@ public class MainOptions : MonoBehaviour
 
         closeOptions = GameObject.Find("CloseOptions");
         applyButton = GameObject.Find("ApplyButton");
-        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
+        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
         closeBorder = closeOptions.transform.Find("ButtonBorder").gameObject;
         applyBorder = applyButton.transform.Find("ButtonBorder").gameObject;        
 
@@ -118,7 +118,7 @@ public class MainOptions : MonoBehaviour
         MainMenu.BorderAnim(closeBorder, 1.2f, 3);
 
         //Delay for animations and sounds
-        this.Wait(MainMenu.buttonDelay, () => {
+        this.Wait(MainMenu.ButtonDelay, () => {
             MainMenu.BorderAnim(closeBorder, 1f, 1);
             MainMenu.BorderAnim(applyBorder, 1f, 1);
             MainMenu.ScaleDown(gameObject);
@@ -145,7 +145,7 @@ public class MainOptions : MonoBehaviour
         }       
 
         //Delay for animations and sounds
-        this.Wait(MainMenu.buttonDelay, () => {
+        this.Wait(MainMenu.ButtonDelay, () => {
             MainMenu.BorderAnim(closeBorder, 1f, 1);
             MainMenu.BorderAnim(applyBorder, 1f, 1);
             MainMenu.ScaleDown(gameObject);

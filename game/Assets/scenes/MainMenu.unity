@@ -4476,7 +4476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4fbec7898a9c74ca0e1cef1ef24e4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: Tutorial
+  _level: Tutorial
 --- !u!82 &2032394849
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5238,6 +5238,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5226917327009510873, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
+        type: 3}
+      propertyPath: _mainMixer
+      value: 
+      objectReference: {fileID: 24100000, guid: 7ccfe6078e57a83469dca4ffe98c0acd,
+        type: 2}
     - target: {fileID: 5226917327009510874, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
       propertyPath: m_RootOrder

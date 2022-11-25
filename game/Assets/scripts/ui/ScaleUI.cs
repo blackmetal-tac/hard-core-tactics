@@ -14,7 +14,7 @@ public class ScaleUI : MonoBehaviour
     void Start()
     {       
         buttonAudio = GameObject.Find("MainUI").GetComponent<AudioSource>();
-        initSound = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().initButton;
+        initSound = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().InitButton;
 
         this.Wait(delay * 0.2f, () => {
             transform.DOScale(scale * Vector3.one, time).SetEase(Ease.OutBack);

@@ -4,33 +4,33 @@ using DG.Tweening;
 
 public class LoadUI : MonoBehaviour
 {
-    private Image loadingBar;
-    private CanvasGroup canvasGroup;
-    private GameObject initText;
-    private GameManager gameManager;
-    public float alpha;
+    private Image _loadingBar;
+    private CanvasGroup _canvasGroup;
+    private GameObject _initText;
+    private GameManager _gameManager;
+    [SerializeField] private float _alpha;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        loadingBar = GetComponent<Image>();
-        canvasGroup = GetComponent<CanvasGroup>();
-        initText = GameObject.Find("Initializing");
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _loadingBar = GetComponent<Image>();
+        _canvasGroup = GetComponent<CanvasGroup>();
+        _initText = GameObject.Find("Initializing");
 
-        this.Progress(gameManager.loadTime, () => {
-            if (loadingBar.fillAmount < 1f)
+        this.Progress(_gameManager.loadTime, () => {
+            if (_loadingBar.fillAmount < 1f)
             {
-                loadingBar.fillAmount += Time.deltaTime * 0.6f;                
+                _loadingBar.fillAmount += Time.deltaTime * 0.6f;                
             }
             else
             {
-                initText.transform.DOScale(Vector3.zero, 1f);
+                _initText.transform.DOScale(Vector3.zero, 1f);
             }
 
-            if (canvasGroup.alpha > alpha)
+            if (_canvasGroup.alpha > _alpha)
             {
-                canvasGroup.alpha -= Time.deltaTime * 0.5f;
+                _canvasGroup.alpha -= Time.deltaTime * 0.5f;
             }
         });
     }

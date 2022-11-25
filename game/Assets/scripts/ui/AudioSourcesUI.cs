@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AudioSourcesUI : MonoBehaviour
 {
-    public AudioClip initButton;
-    public AudioClip hoverButton;
-    public AudioClip clickButton;
+    public AudioClip InitButton;
+    public AudioClip HoverButton;
+    public AudioClip ClickButton;
 }

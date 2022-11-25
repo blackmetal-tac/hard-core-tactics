@@ -1,69 +1,67 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-using Unity.Jobs;
-using Unity.Burst;
 
 public class MainMenu : MonoBehaviour
 {
-    public string Level;
-    private AudioSource audioUI;
-    private AudioClip buttonClick;
+    [SerializeField] private string _level;
+    private AudioSource _audioUI;
+    private AudioClip _buttonClick;
 
-    public static GameObject optionsScreen;
-    private GameObject startButton, openOptions, exitButton, startBorder, optionsBorder, exitBorder;
+    private static GameObject _optionsScreen;
+    private GameObject _startButton, _openOptions, _exitButton, _startBorder, _optionsBorder, _exitBorder;
 
-    public static float buttonDelay = 0.4f;
+    public static float ButtonDelay = 0.4f;
 
     // Start is called before the first frame update
     void Start()
     {
-        optionsScreen = GameObject.Find("MainOptions");
-        startButton = GameObject.Find("StartButton");
-        openOptions = GameObject.Find("OptionsButton");        
-        exitButton = GameObject.Find("CloseButton");
+        _optionsScreen = GameObject.Find("MainOptions");
+        _startButton = GameObject.Find("StartButton");
+        _openOptions = GameObject.Find("OptionsButton");        
+        _exitButton = GameObject.Find("CloseButton");
 
-        startBorder = startButton.transform.Find("ButtonBorder").gameObject;
-        optionsBorder = openOptions.transform.Find("ButtonBorder").gameObject;
-        exitBorder = exitButton.transform.Find("ButtonBorder").gameObject;
+        _startBorder = _startButton.transform.Find("ButtonBorder").gameObject;
+        _optionsBorder = _openOptions.transform.Find("ButtonBorder").gameObject;
+        _exitBorder = _exitButton.transform.Find("ButtonBorder").gameObject;
 
-        audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
-        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().clickButton;
+        _audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
+        _buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
     }
 
     //Buttons
     public void StartGame()
     {
-        audioUI.PlayOneShot(buttonClick);
-        BorderAnim(startBorder, 1.2f, 3);
+        _audioUI.PlayOneShot(_buttonClick);
+        BorderAnim(_startBorder, 1.2f, 3);
 
         //Delay for animation
-        this.Wait(buttonDelay, ()=> {
-            BorderAnim(startBorder, 1f, 1);
-            SceneManager.LoadScene(Level);
+        this.Wait(ButtonDelay, ()=> {
+            BorderAnim(_startBorder, 1f, 1);
+            SceneManager.LoadScene(_level);
         });        
     }
 
     public void OpenMainOptions()
     {
-        audioUI.PlayOneShot(buttonClick);
-        BorderAnim(optionsBorder, 1.2f, 3);
+        _audioUI.PlayOneShot(_buttonClick);
+        BorderAnim(_optionsBorder, 1.2f, 3);
 
         //Delay for animation
-        this.Wait(buttonDelay, () => {
-            BorderAnim(optionsBorder, 1f, 1);
+        this.Wait(ButtonDelay, () => {
+            BorderAnim(_optionsBorder, 1f, 1);
         });
-        optionsScreen.transform.DOScale(Vector3.one, buttonDelay).SetEase(Ease.OutBack);
+        _optionsScreen.transform.DOScale(Vector3.one, ButtonDelay).SetEase(Ease.OutBack);
     }
 
     public void CloseGame()
     {
-        audioUI.PlayOneShot(buttonClick);
-        BorderAnim(exitBorder, 1.2f, 3);
+        _audioUI.PlayOneShot(_buttonClick);
+        BorderAnim(_exitBorder, 1.2f, 3);
 
         //Delay for animation
-        this.Wait(buttonDelay, () => {
-            BorderAnim(exitBorder, 1f, 1);
+        this.Wait(ButtonDelay, () => {
+            BorderAnim(_exitBorder, 1f, 1);
             Application.Quit();            
         });        
     }

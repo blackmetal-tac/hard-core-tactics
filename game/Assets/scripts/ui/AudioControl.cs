@@ -3,16 +3,16 @@ using UnityEngine.Audio;
 
 public class AudioControl : MonoBehaviour
 {
-    public static AudioControl instance;
-    public AudioMixer mainMixer;
+    private static AudioControl _instance;
+    [SerializeField] private AudioMixer _mainMixer;
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
 
-        if (instance == null)
+        if (_instance == null)
         {
-            instance = this;
+            _instance = this;
         }
         else 
         {
@@ -22,11 +22,11 @@ public class AudioControl : MonoBehaviour
         //Player audio settings
         if (PlayerPrefs.HasKey("MasterVolume"))
         {
-            mainMixer.SetFloat("MasterVolume", PlayerPrefs.GetFloat("MasterVolume"));
+            _mainMixer.SetFloat("MasterVolume", PlayerPrefs.GetFloat("MasterVolume"));
         }
         else 
         {
-            mainMixer.SetFloat("MasterVolume", 10);
+            _mainMixer.SetFloat("MasterVolume", 10);
         }
     }
 }

@@ -3404,7 +3404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 784257a7660f1a2418cd62834c79659a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alpha: 0.1
+  _alpha: 0.1
 --- !u!1 &1033503832
 GameObject:
   m_ObjectHideFlags: 0
@@ -5086,7 +5086,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1407975658
 Transform:
   m_ObjectHideFlags: 0
@@ -8346,8 +8346,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
         type: 3}
+      propertyPath: _recoil
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
+        type: 3}
       propertyPath: _radiusAMS
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
         type: 3}
@@ -8675,7 +8680,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5188338245675463603}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -9154,6 +9159,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4987383190760336449, guid: a6556bcb56d998f4e90f12dd915861ef,
+        type: 3}
+      propertyPath: _damage
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987383190760336449, guid: a6556bcb56d998f4e90f12dd915861ef,
+        type: 3}
+      propertyPath: _recoil
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987383190760336449, guid: a6556bcb56d998f4e90f12dd915861ef,
+        type: 3}
+      propertyPath: _laserWidth
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4987383190760336455, guid: a6556bcb56d998f4e90f12dd915861ef,
         type: 3}
       propertyPath: m_Name
@@ -9546,7 +9566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9433a07df82fb84da74cb6a085e2ce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textSpeed: 0
+  _textSpeed: 30
 --- !u!224 &6201401811647745686
 RectTransform:
   m_ObjectHideFlags: 0

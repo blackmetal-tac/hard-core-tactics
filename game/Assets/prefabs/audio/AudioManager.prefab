@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0493f37108556f44a90a02170213231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMixer: {fileID: 24100000, guid: 7ccfe6078e57a83469dca4ffe98c0acd, type: 2}
+  _mainMixer: {fileID: 24100000, guid: 7ccfe6078e57a83469dca4ffe98c0acd, type: 2}
 --- !u!114 &5226917327009510879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,9 +157,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76fd38970fa38c049a9268056c19202c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initButton: {fileID: 8300000, guid: 09b665f09984d06488b8cd8ad7b88224, type: 3}
-  hoverButton: {fileID: 8300000, guid: a4bd04976d711024c92f6be7d053271d, type: 3}
-  clickButton: {fileID: 8300000, guid: c99e70eb5cfa635419856f37af7bada0, type: 3}
+  InitButton: {fileID: 8300000, guid: 09b665f09984d06488b8cd8ad7b88224, type: 3}
+  HoverButton: {fileID: 8300000, guid: a4bd04976d711024c92f6be7d053271d, type: 3}
+  ClickButton: {fileID: 8300000, guid: c99e70eb5cfa635419856f37af7bada0, type: 3}
 --- !u!1 &5933370060684588618
 GameObject:
   m_ObjectHideFlags: 0
