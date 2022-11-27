@@ -7,6 +7,7 @@ public class ScaleUI : MonoBehaviour
     private AudioSource _buttonAudio;
 
     [SerializeField] private float _scale, _time, _delay;
+    [SerializeField] private bool _playSound = true;
 
     // Start is called before the first frame update
     void Start()
@@ -16,7 +17,10 @@ public class ScaleUI : MonoBehaviour
 
         this.Wait(_delay * 0.2f, () => {
             transform.DOScale(_scale * Vector3.one, _time).SetEase(Ease.OutBack);
-            _buttonAudio.PlayOneShot(_initSound);
+            if (_playSound)
+            {
+                _buttonAudio.PlayOneShot(_initSound);
+            }              
         });        
     }
 }

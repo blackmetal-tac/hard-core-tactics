@@ -569,9 +569,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.6
-  time: 1
-  delay: 3
+  _scale: 0.6
+  _time: 1
+  _delay: 3
+  _playSound: 1
 --- !u!1 &109633626
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,9 +658,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.8
-  time: 1
-  delay: 0
+  _scale: 0.8
+  _time: 1
+  _delay: 0
+  _playSound: 1
 --- !u!4 &179608953 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2479452605947280994, guid: db35e3038ac0eca419f2617b6d4819d3,
@@ -904,7 +906,7 @@ PrefabInstance:
     - target: {fileID: 5226917327009510875, guid: 4df8b2002728a7d4fbcafc7a40ccd277,
         type: 3}
       propertyPath: m_Volume
-      value: 0.05
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4df8b2002728a7d4fbcafc7a40ccd277, type: 3}
@@ -2487,9 +2489,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.8
-  time: 1
-  delay: 2
+  _scale: 0.8
+  _time: 1
+  _delay: 2
+  _playSound: 1
 --- !u!1 &751363116
 GameObject:
   m_ObjectHideFlags: 0
@@ -4085,8 +4088,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
+      propertyPath: _time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
       propertyPath: delay
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _delay
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _scale
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _playSound
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008654, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
@@ -4834,8 +4857,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
+      propertyPath: _time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
       propertyPath: delay
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _delay
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _scale
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008654, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
@@ -6030,8 +6068,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
+      propertyPath: _time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
       propertyPath: delay
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _delay
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _scale
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008654, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
@@ -6501,8 +6554,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
+      propertyPath: _time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
       propertyPath: delay
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _delay
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _scale
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _playSound
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008654, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
@@ -6779,8 +6852,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 7647560481278836400, guid: 7ccfe6078e57a83469dca4ffe98c0acd,
     type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -7473,6 +7546,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _delay
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _scale
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _playSound
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008654, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
@@ -8393,6 +8486,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _delay
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3290949746651008649, guid: 6e6849887bd67114687ad15e48689820,
+        type: 3}
+      propertyPath: _scale
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008654, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
@@ -9451,9 +9559,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 1
-  time: 1
-  delay: 0
+  _scale: 1
+  _time: 1
+  _delay: 1
+  _playSound: 1
 --- !u!114 &6201401810111353250
 MonoBehaviour:
   m_ObjectHideFlags: 0
