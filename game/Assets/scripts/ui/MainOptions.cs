@@ -6,58 +6,58 @@ using TMPro;
 
 public class MainOptions : MonoBehaviour
 {
-    private Toggle fullscreenTog, vsyncTog;
-    private GameObject closeOptions, applyButton, closeBorder, applyBorder;
+    private Toggle _fullscreenTog, _vsyncTog;
+    private GameObject _closeOptions, _applyButton, _closeBorder, _applyBorder;
 
-    private AudioClip buttonClick;
-    private AudioSource audioUI;
+    private AudioClip _buttonClick;
+    private AudioSource _audioUI;
 
-    public List<ResItem> resolutions = new List<ResItem>();
-    private int selectedRes;
-    private TextMeshProUGUI resLabel;
+    [SerializeField] private List<ResItem> _resolutions = new List<ResItem>();
+    private int _selectedRes;
+    private TextMeshProUGUI _resLabel;
 
-    public AudioMixer mainMixer;
-    private Slider masterVol, musicVol, effectsVol;
+    [SerializeField] private AudioMixer _mainMixer;
+    private Slider _masterVol, _musicVol, _effectsVol;
 
     // Start is called before the first frame update
     void Start()
     {
-        fullscreenTog = GameObject.Find("FullScreenToggle").GetComponent<Toggle>();
-        vsyncTog = GameObject.Find("VsyncToggle").GetComponent<Toggle>();
+        _fullscreenTog = GameObject.Find("FullScreenToggle").GetComponent<Toggle>();
+        _vsyncTog = GameObject.Find("VsyncToggle").GetComponent<Toggle>();
 
-        closeOptions = GameObject.Find("CloseOptions");
-        applyButton = GameObject.Find("ApplyButton");
-        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
-        closeBorder = closeOptions.transform.Find("ButtonBorder").gameObject;
-        applyBorder = applyButton.transform.Find("ButtonBorder").gameObject;        
+        _closeOptions = GameObject.Find("CloseOptions");
+        _applyButton = GameObject.Find("ApplyButton");
+        _buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
+        _closeBorder = _closeOptions.transform.Find("ButtonBorder").gameObject;
+        _applyBorder = _applyButton.transform.Find("ButtonBorder").gameObject;        
 
-        resLabel = GameObject.Find("ResolutionText").GetComponent<TextMeshProUGUI>();
-        masterVol = GameObject.Find("MasterSlider").GetComponent<Slider>();
-        musicVol = GameObject.Find("MusicSlider").GetComponent<Slider>();
-        effectsVol = GameObject.Find("SFXSlider").GetComponent<Slider>();
+        _resLabel = GameObject.Find("ResolutionText").GetComponent<TextMeshProUGUI>();
+        _masterVol = GameObject.Find("MasterSlider").GetComponent<Slider>();
+        _musicVol = GameObject.Find("MusicSlider").GetComponent<Slider>();
+        _effectsVol = GameObject.Find("SFXSlider").GetComponent<Slider>();
 
-        audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
+        _audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
 
         //Set graphical options
-        fullscreenTog.isOn = Screen.fullScreen;
+        _fullscreenTog.isOn = Screen.fullScreen;
 
         if (QualitySettings.vSyncCount == 0)
         {
-            vsyncTog.isOn = false;
+            _vsyncTog.isOn = false;
         }
         else
         {
-            vsyncTog.isOn = true;
+            _vsyncTog.isOn = true;
         }
 
         //Get current resolution and update options label
         bool foundRes = false;
-        for (int i = 0; i < resolutions.Count; i++)
+        for (int i = 0; i < _resolutions.Count; i++)
         {
-            if (Screen.width == resolutions[i].horizontal && Screen.height == resolutions[i].vertical)
+            if (Screen.width == _resolutions[i].horizontal && Screen.height == _resolutions[i].vertical)
             {
                 foundRes = true;
-                selectedRes = i;
+                _selectedRes = i;
                 UpdateResLabel();
             }
         }
@@ -68,39 +68,39 @@ public class MainOptions : MonoBehaviour
             ResItem newRes = new ResItem();
             newRes.horizontal = Screen.width;
             newRes.vertical = Screen.height;
-            resolutions.Add(newRes);
-            selectedRes = resolutions.Count - 1;
+            _resolutions.Add(newRes);
+            _selectedRes = _resolutions.Count - 1;
             UpdateResLabel();
         }
 
         //Set volume sliders
-        mainMixer.GetFloat("MasterVolume", out float vol);
-        masterVol.value = vol;
+        _mainMixer.GetFloat("MasterVolume", out float vol);
+        _masterVol.value = vol;
 
-        mainMixer.GetFloat("MusicVolume", out vol);
-        masterVol.value = vol;
+        _mainMixer.GetFloat("MusicVolume", out vol);
+        _masterVol.value = vol;
 
-        mainMixer.GetFloat("EffectsVolume", out vol);
-        masterVol.value = vol;
+        _mainMixer.GetFloat("EffectsVolume", out vol);
+        _masterVol.value = vol;
     }
 
     //Resolution buttons
     public void ResLeft()
     {
-        selectedRes--;
-        if (selectedRes < 0)
+        _selectedRes--;
+        if (_selectedRes < 0)
         {
-            selectedRes = 0;
+            _selectedRes = 0;
         }
         UpdateResLabel();
     }
 
     public void ResRight()
     {
-        selectedRes++;
-        if (selectedRes > resolutions.Count - 1)
+        _selectedRes++;
+        if (_selectedRes > _resolutions.Count - 1)
         {
-            selectedRes = resolutions.Count - 1;
+            _selectedRes = _resolutions.Count - 1;
         }
         UpdateResLabel();
     }
@@ -108,19 +108,19 @@ public class MainOptions : MonoBehaviour
     //Update label resolution in options
     public void UpdateResLabel()
     {
-        resLabel.text = resolutions[selectedRes].horizontal.ToString() + " x " + resolutions[selectedRes].vertical.ToString();
+        _resLabel.text = _resolutions[_selectedRes].horizontal.ToString() + " x " + _resolutions[_selectedRes].vertical.ToString();
     } 
 
     //Close options button
     public void CloseMainOptions()
     {
-        audioUI.PlayOneShot(buttonClick);
-        MainMenu.BorderAnim(closeBorder, 1.2f, 3);
+        _audioUI.PlayOneShot(_buttonClick);
+        MainMenu.BorderAnim(_closeBorder, 1.2f, 3);
 
         //Delay for animations and sounds
         this.Wait(MainMenu.ButtonDelay, () => {
-            MainMenu.BorderAnim(closeBorder, 1f, 1);
-            MainMenu.BorderAnim(applyBorder, 1f, 1);
+            MainMenu.BorderAnim(_closeBorder, 1f, 1);
+            MainMenu.BorderAnim(_applyBorder, 1f, 1);
             MainMenu.ScaleDown(gameObject);
         });
     }
@@ -128,14 +128,14 @@ public class MainOptions : MonoBehaviour
     //Apply options button
     public void ApplyOptions()
     {
-        audioUI.PlayOneShot(buttonClick);
-        MainMenu.BorderAnim(applyBorder, 1.2f, 3);
+        _audioUI.PlayOneShot(_buttonClick);
+        MainMenu.BorderAnim(_applyBorder, 1.2f, 3);
 
         //Resoluton
-        Screen.SetResolution(resolutions[selectedRes].horizontal, resolutions[selectedRes].vertical, fullscreenTog.isOn);
+        Screen.SetResolution(_resolutions[_selectedRes].horizontal, _resolutions[_selectedRes].vertical, _fullscreenTog.isOn);
 
         //VSYNC
-        if (vsyncTog.isOn)
+        if (_vsyncTog.isOn)
         {
             QualitySettings.vSyncCount = 1;
         }
@@ -146,8 +146,8 @@ public class MainOptions : MonoBehaviour
 
         //Delay for animations and sounds
         this.Wait(MainMenu.ButtonDelay, () => {
-            MainMenu.BorderAnim(closeBorder, 1f, 1);
-            MainMenu.BorderAnim(applyBorder, 1f, 1);
+            MainMenu.BorderAnim(_closeBorder, 1f, 1);
+            MainMenu.BorderAnim(_applyBorder, 1f, 1);
             MainMenu.ScaleDown(gameObject);
         });        
     }
@@ -155,20 +155,20 @@ public class MainOptions : MonoBehaviour
     //Audio settings
     public void SetMasterVolume()
     {
-        mainMixer.SetFloat("MasterVolume", masterVol.value);
-        PlayerPrefs.SetFloat("MasterVolume", masterVol.value);
+        _mainMixer.SetFloat("MasterVolume", _masterVol.value);
+        PlayerPrefs.SetFloat("MasterVolume", _masterVol.value);
     }
 
     public void SetMusicVolume()
     {
-        mainMixer.SetFloat("MusicVolume", musicVol.value);
-        PlayerPrefs.SetFloat("MusicVolume", musicVol.value);
+        _mainMixer.SetFloat("MusicVolume", _musicVol.value);
+        PlayerPrefs.SetFloat("MusicVolume", _musicVol.value);
     }
 
     public void SetSFXVolume()
     {
-        mainMixer.SetFloat("EffectsVolume", effectsVol.value);
-        PlayerPrefs.SetFloat("EffectsVolume", effectsVol.value);
+        _mainMixer.SetFloat("EffectsVolume", _effectsVol.value);
+        PlayerPrefs.SetFloat("EffectsVolume", _effectsVol.value);
     }
 }
 

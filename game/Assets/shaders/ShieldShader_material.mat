@@ -55,7 +55,7 @@ Material:
     m_Floats:
     - _Alpha: 0.3
     - _FresnelIntensity: 1.77
-    - _Intensity: 3.457552
+    - _Intensity: 2.5
     - _Offset: 3.5
     - _QueueControl: 0
     - _QueueOffset: 0

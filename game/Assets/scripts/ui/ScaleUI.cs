@@ -3,22 +3,20 @@ using DG.Tweening;
 
 public class ScaleUI : MonoBehaviour
 {
-    private AudioClip initSound;
-    private AudioSource buttonAudio;
+    private AudioClip _initSound;
+    private AudioSource _buttonAudio;
 
-    public float scale;
-    public float time;
-    public float delay;
+    [SerializeField] private float _scale, _time, _delay;
 
     // Start is called before the first frame update
     void Start()
     {       
-        buttonAudio = GameObject.Find("MainUI").GetComponent<AudioSource>();
-        initSound = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().InitButton;
+        _buttonAudio = GameObject.Find("MainUI").GetComponent<AudioSource>();
+        _initSound = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().InitButton;
 
-        this.Wait(delay * 0.2f, () => {
-            transform.DOScale(scale * Vector3.one, time).SetEase(Ease.OutBack);
-            buttonAudio.PlayOneShot(initSound);
+        this.Wait(_delay * 0.2f, () => {
+            transform.DOScale(_scale * Vector3.one, _time).SetEase(Ease.OutBack);
+            _buttonAudio.PlayOneShot(_initSound);
         });        
     }
 }

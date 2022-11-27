@@ -2801,9 +2801,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ea04964fe708d409095a719bba6063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 1
-  time: 1
-  delay: 0
+  _scale: 1
+  _time: 1
+  _delay: 0
 --- !u!1 &886158799
 GameObject:
   m_ObjectHideFlags: 0
@@ -6916,9 +6916,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ea04964fe708d409095a719bba6063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 1
-  time: 1
-  delay: 2
+  _scale: 1
+  _time: 1
+  _delay: 2
 --- !u!225 &1898892183
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7806,9 +7806,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ea04964fe708d409095a719bba6063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 1
-  time: 1
-  delay: 1
+  _scale: 1
+  _time: 1
+  _delay: 1
 --- !u!225 &2060457596
 CanvasGroup:
   m_ObjectHideFlags: 0
