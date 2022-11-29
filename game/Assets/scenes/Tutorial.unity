@@ -8279,6 +8279,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 645734298742888793, guid: 0e900c9216f3c194f9edc241dbf2edb5,
         type: 3}
+      propertyPath: SongTitleSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 645734298742888793, guid: 0e900c9216f3c194f9edc241dbf2edb5,
+        type: 3}
       propertyPath: songTitleSpeed
       value: 30
       objectReference: {fileID: 0}

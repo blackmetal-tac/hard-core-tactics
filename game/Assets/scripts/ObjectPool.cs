@@ -40,7 +40,7 @@ namespace OWS.ObjectPooling
             else
                 t = GameObject.Instantiate(prefab).GetComponent<T>();
 
-                                 //ensure the object is on
+            //ensure the object is on
             t.Initialize(Push);
 
             //allow default behavior and turning object back on

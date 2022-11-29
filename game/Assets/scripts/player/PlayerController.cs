@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            if (!_gameManager.inAction)
+            if (!_gameManager.InAction)
             {
                 MoveToClick();
             }

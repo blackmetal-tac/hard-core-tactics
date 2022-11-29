@@ -18,7 +18,7 @@ public class LoadUI : MonoBehaviour
         _canvasGroup = GetComponent<CanvasGroup>();
         _initText = GameObject.Find("Initializing");
 
-        this.Progress(_gameManager.loadTime, () => {
+        this.Progress(_gameManager.LoadTime, () => {
             if (_loadingBar.fillAmount < 1f)
             {
                 _loadingBar.fillAmount += Time.deltaTime * 0.6f;                

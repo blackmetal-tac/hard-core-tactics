@@ -8,9 +8,9 @@ public class ActionMask : MonoBehaviour
     void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        this.Wait(_gameManager.loadTime, () =>
+        this.Wait(_gameManager.LoadTime, () =>
         {
-            transform.localScale = Vector3.zero;            
+            transform.localScale = Vector3.zero;         
         });
     }
 }

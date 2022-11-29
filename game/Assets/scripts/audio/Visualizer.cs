@@ -1,25 +1,28 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
 
 public class Visualizer : MonoBehaviour
-{
+{    
     [SerializeField] private GameObject _quadPrefab;
 	[SerializeField] private float _width = 0.1f, _height = 0.5f, _distance = 0.2f, _amp = 0.5f;
-    [SerializeField] private bool _mainMenu = true, _jobs;
+    [SerializeField] private bool _jobs;
 	private AudioData _audioData;
     private const int _samles = 32;
     private GameObject[] _rightQuads = new GameObject[_samles], _leftQuads = new GameObject[_samles];
+    private string _sceneName;
 
     // Start is called before the first frame update
     void Start()
     {
+        _sceneName = SceneManager.GetActiveScene().name;
         _audioData = GameObject.Find("AudioData").GetComponent<AudioData>();
 
         //Spawn waves visual
-        if (_mainMenu)
+        if (_sceneName == "MainMenu")
         {	
             for (int i = 0; i < _samles; i++)
             {				
@@ -72,7 +75,7 @@ public class Visualizer : MonoBehaviour
     void FixedUpdate()
     {
         //Animate audio waves
-        if (_mainMenu)
+        if (_sceneName == "MainMenu")
         {
 			if (_jobs)
 			{

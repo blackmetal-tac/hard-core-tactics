@@ -4,38 +4,37 @@ using TMPro;
 
 public class WeaponUI : MonoBehaviour
 {
-    //private GameManager gameManager;
-    private UnitManager playerManager;
+    private UnitManager _playerManager;
 
     [System.Serializable]
     private class WeaponButton
     {
-        public TextMeshProUGUI weaponName;
-        public SliderScr slider;
-        public GameObject actionMask;
+        public TextMeshProUGUI WeaponName;
+        public SliderScr Slider;
+        public ActionMask ActionMask;
 
-        public WeaponButton(TextMeshProUGUI newWeapon, SliderScr newSlider, GameObject newMask)
+        public WeaponButton(TextMeshProUGUI newWeapon, SliderScr newSlider, ActionMask newMask)
         {
-            weaponName = newWeapon;
-            slider = newSlider;
-            actionMask = newMask;            
+            WeaponName = newWeapon;
+            Slider = newSlider;
+            ActionMask = newMask;            
         }
     }
 
-    private List<WeaponButton> weaponButtons;
+    private List<WeaponButton> _weaponButtons;
 
     // Start is called before the first frame update
     void Start()
     {
         /* Fill the list of all weapon slots (ORDER: rigth arm, left arm, rigth top,
               left top, rigth shoulder, left shoulder) */
-        weaponButtons = new List<WeaponButton>();
-        weaponButtons.Add(new WeaponButton(GameObject.Find("RightArmUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightArmUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightArmUI").transform.parent.Find("ActionMask").gameObject));
-        weaponButtons.Add(new WeaponButton(GameObject.Find("LeftArmUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftArmUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftArmUI").transform.parent.Find("ActionMask").gameObject));
-        weaponButtons.Add(new WeaponButton(GameObject.Find("RightTopUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightTopUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightTopUI").transform.parent.Find("ActionMask").gameObject));
-        weaponButtons.Add(new WeaponButton(GameObject.Find("LeftTopUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftTopUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftTopUI").transform.parent.Find("ActionMask").gameObject));
-        weaponButtons.Add(new WeaponButton(GameObject.Find("RightShoulderUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightShoulderUI").transform.parent.Find("ActionMask").gameObject));
-        weaponButtons.Add(new WeaponButton(GameObject.Find("LeftShoulderUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftShoulderUI").transform.parent.Find("ActionMask").gameObject));
+        _weaponButtons = new List<WeaponButton>();
+        _weaponButtons.Add(new WeaponButton(GameObject.Find("RightArmUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightArmUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightArmUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
+        _weaponButtons.Add(new WeaponButton(GameObject.Find("LeftArmUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftArmUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftArmUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
+        _weaponButtons.Add(new WeaponButton(GameObject.Find("RightTopUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightTopUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightTopUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
+        _weaponButtons.Add(new WeaponButton(GameObject.Find("LeftTopUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftTopUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftTopUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
+        _weaponButtons.Add(new WeaponButton(GameObject.Find("RightShoulderUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightShoulderUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
+        _weaponButtons.Add(new WeaponButton(GameObject.Find("LeftShoulderUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftShoulderUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
 
         UpdateUI();
     }
@@ -43,21 +42,20 @@ public class WeaponUI : MonoBehaviour
     // Update weapon UI when changing active unit
     public void UpdateUI()
     {
-        playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
+        _playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
 
-        for (int i = 0; i < playerManager.WeaponList.Count; i++ ) 
+        for (int i = 0; i < _playerManager.WeaponList.Count; i++ ) 
         {
-            if (playerManager.WeaponList[i] != null)
+            if (_playerManager.WeaponList[i] != null)
             {
-                weaponButtons[i].weaponName.text = playerManager.WeaponList[i].name;
-                weaponButtons[i].slider.weapon = playerManager.WeaponList[i];
-                weaponButtons[i].slider.ChangeWPNmode();
-                weaponButtons[i].actionMask.transform.localScale = Vector3.zero;
+                _weaponButtons[i].WeaponName.text = _playerManager.WeaponList[i].name;
+                _weaponButtons[i].Slider.Weapon = _playerManager.WeaponList[i];
+                _weaponButtons[i].Slider.ChangeWPNmode();             
             }
             else 
             {
-                weaponButtons[i].weaponName.transform.parent.localScale = Vector3.zero;
-                weaponButtons[i].actionMask.transform.localScale = Vector3.one;
+                _weaponButtons[i].WeaponName.transform.parent.localScale = Vector3.zero;
+                _weaponButtons[i].ActionMask.transform.localScale = Vector3.one;
             }
         }
     }
@@ -65,8 +63,8 @@ public class WeaponUI : MonoBehaviour
     // Disable weapon
     public void WeaponDown(int wpnIndex, int downTimer)
     {
-        weaponButtons[wpnIndex].actionMask.transform.localScale = Vector3.one;
-        weaponButtons[wpnIndex].slider.slider.value = 0;        
+        _weaponButtons[wpnIndex].ActionMask.transform.localScale = Vector3.one;
+        _weaponButtons[wpnIndex].Slider.SliderObject.value = 0;        
 
         UpdateStatus(wpnIndex, downTimer);
     }
@@ -74,18 +72,18 @@ public class WeaponUI : MonoBehaviour
     // Enable weapon (update UI text)
     public void WeaponUp(int wpnIndex)
     {
-        weaponButtons[wpnIndex].slider.modeName.text = playerManager.WeaponList[wpnIndex]
-            .weaponModes[(int)weaponButtons[wpnIndex].slider.slider.value].ModeName;
+        _weaponButtons[wpnIndex].Slider.ModeName.text = _playerManager.WeaponList[wpnIndex]
+            .weaponModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
     }
 
     // Update player weapon counters
     public void DecreaseCounter()
     {
-        for (int i = 0; i < playerManager.WeaponList.Count; i++)
+        for (int i = 0; i < _playerManager.WeaponList.Count; i++)
         {
-            if (playerManager.WeaponList[i] != null && playerManager.WeaponList[i].DownTimer <= 0)
+            if (_playerManager.WeaponList[i] != null && _playerManager.WeaponList[i].DownTimer <= 0)
             {
-                weaponButtons[i].actionMask.transform.localScale = Vector3.zero;
+                _weaponButtons[i].ActionMask.transform.localScale = Vector3.zero;
             }
         }
     }
@@ -95,11 +93,11 @@ public class WeaponUI : MonoBehaviour
     {
         if (downTimer == 1)
         {
-            weaponButtons[wpnIndex].slider.modeName.text = "Off: " + downTimer + " trn";
+            _weaponButtons[wpnIndex].Slider.ModeName.text = "Off: " + downTimer + " trn";
         }
         else 
         {
-            weaponButtons[wpnIndex].slider.modeName.text = "Off: " + downTimer + " trns";
+            _weaponButtons[wpnIndex].Slider.ModeName.text = "Off: " + downTimer + " trns";
         }     
     }
 }

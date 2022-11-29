@@ -64,7 +64,7 @@ public class UnitManager : MonoBehaviour
         UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();
 
         // Load HP, Shield, Heat bars
-        this.Progress(_gameManager.loadTime, () => {
+        this.Progress(_gameManager.LoadTime, () => {
             if (UnitShield.HP < 1)
             {
                 UnitShield.HP += Time.deltaTime * 0.6f; 
@@ -98,7 +98,7 @@ public class UnitManager : MonoBehaviour
         });
 
         // Load Heat
-        this.Progress(_gameManager.loadTime, () => {
+        this.Progress(_gameManager.LoadTime, () => {
             if (UnitShield.HP < 1)
             {
                 UnitShield.HP += Time.deltaTime * 0.6f;
@@ -185,7 +185,7 @@ public class UnitManager : MonoBehaviour
             if (segmentDistance <= _walkDistance)
             {
                 navAgent.SetDestination(movePoint);
-                MoveSpeed = segmentDistance / _gameManager.turnTime;
+                MoveSpeed = segmentDistance / _gameManager.TurnTime;
                 MoveSpeed = Mathf.Round(100 * MoveSpeed) / 100;
             }
             else
@@ -193,7 +193,7 @@ public class UnitManager : MonoBehaviour
                 Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * _walkDistance);
                 NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
                 navAgent.SetPath(path);
-                MoveSpeed = _walkDistance / _gameManager.turnTime;
+                MoveSpeed = _walkDistance / _gameManager.TurnTime;
                 break;
             }
         }

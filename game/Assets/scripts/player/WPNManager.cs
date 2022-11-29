@@ -109,7 +109,7 @@ public class WPNManager : MonoBehaviour
         {
             // Bullet spread 
             if (UnitManager.transform.parent.name == "Player" && UnitManager.Spread < 2
-                && _gameManager.inAction && _projectileType != ProjectileType.AMS)
+                && _gameManager.InAction && _projectileType != ProjectileType.AMS)
             {
                 UnitManager.Spread += _spread / 50;
             }
@@ -144,13 +144,13 @@ public class WPNManager : MonoBehaviour
             if (!_oneTime)
             {
                 ChangeShotsCount();
-                this.Progress(_gameManager.turnTime * 2, () =>
+                this.Progress(_gameManager.TurnTime * 2, () =>
                 {
                     FireLaser(target);
                 });
                             
                 _oneTime = true;
-                this.Wait(_gameManager.turnTime, () =>
+                this.Wait(_gameManager.TurnTime, () =>
                 {
                     _oneTime = false;
                 });
@@ -177,22 +177,22 @@ public class WPNManager : MonoBehaviour
         {
             if (_projectileType == ProjectileType.Bullet)
             {
-                StartCoroutine(FireBurstCoroutine(FirePoint, _gameManager.bulletsPool));
+                StartCoroutine(FireBurstCoroutine(FirePoint, _gameManager.BulletsPool));
                 LastBurst = Time.time;
             }
             else if (_projectileType == ProjectileType.Missile && !Homing)
             {
-                StartCoroutine(FireMissilesCoroutine(FirePoint, _gameManager.missilesPool, target.transform.position));
-                LastBurst = Time.time + _gameManager.turnTime - _fireDelay; // fire burst once (increase delay)
+                StartCoroutine(FireMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target.transform.position));
+                LastBurst = Time.time + _gameManager.TurnTime - _fireDelay; // fire burst once (increase delay)
             }
             else if (_projectileType == ProjectileType.Missile && Homing)
             {
-                StartCoroutine(FireHMissilesCoroutine(FirePoint, _gameManager.missilesPool, target));
-                LastBurst = Time.time + _gameManager.turnTime - _fireDelay; // fire burst once (increase delay)
+                StartCoroutine(FireHMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target));
+                LastBurst = Time.time + _gameManager.TurnTime - _fireDelay; // fire burst once (increase delay)
             }
             else if (_projectileType == ProjectileType.AMS && TargetAMS != null)
             {
-                StartCoroutine(FireBurstCoroutine(FirePoint, _gameManager.amsPool));
+                StartCoroutine(FireBurstCoroutine(FirePoint, _gameManager.AmsPool));
                 LastBurst = Time.time;
             }
         }
@@ -231,7 +231,7 @@ public class WPNManager : MonoBehaviour
         }
 
         // Stop laser at the end of turn
-        if (!_gameManager.inAction)
+        if (!_gameManager.InAction)
         {
             _shotsCount = 0;
         }

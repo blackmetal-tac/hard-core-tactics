@@ -57,7 +57,7 @@ public class Missile : MonoBehaviour
             _timer = _baseTimer;            
             MissileBody.velocity = Vector3.zero;
             MissileCollider.enabled = false;
-            _gameManager.explosionPool.PullGameObject(transform.position, 1f, Damage / 2);
+            _gameManager.ExplosionPool.PullGameObject(transform.position, 1f, Damage / 2);
             _poolObject.ReturnToPool();
         }        
     }

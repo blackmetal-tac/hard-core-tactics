@@ -732,9 +732,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.7
-  time: 1
-  delay: 5
+  _scale: 0
+  _time: 0
+  _delay: 0
+  _playSound: 1
 --- !u!1 &3290949746720840407
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,6 +1172,7 @@ GameObject:
   - component: {fileID: 3290949747504785489}
   - component: {fileID: 3290949747504785490}
   - component: {fileID: 3290949747504785491}
+  - component: {fileID: 552492629691241875}
   m_Layer: 5
   m_Name: ActionMask
   m_TagString: Untagged
@@ -1236,3 +1238,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 0.5
+--- !u!114 &552492629691241875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3290949747504785494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe1011f7a1074e842bc4ec25e674d5dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

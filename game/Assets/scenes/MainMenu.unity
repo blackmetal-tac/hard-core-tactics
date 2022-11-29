@@ -3227,6 +3227,7 @@ MonoBehaviour:
   _scale: 1
   _time: 1
   _delay: 0
+  _playSound: 1
 --- !u!1001 &1389851787
 PrefabInstance:
   m_ObjectHideFlags: 0

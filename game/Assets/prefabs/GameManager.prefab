@@ -45,10 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 904005ae408d83e48a30a50da6f748fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairBars: 0
-  loadTime: 0
-  songTitleSpeed: 0
-  turnTime: 0
+  CrosshairBars: 0.1
+  LoadTime: 2
+  TurnTime: 3
   inAction: 0
 --- !u!1 &648605811298458055
 GameObject:
@@ -178,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3beb35392a0f3634985286d9d70d244c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
+  Damage: 0
 --- !u!1 &3951382612890237716
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3beb35392a0f3634985286d9d70d244c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
+  Damage: 0
 --- !u!1 &4570569426349886145
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,13 +605,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43600575d770a0a4c8594176f4b4a877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
-  speed: 0
-  target: {x: 0, y: 0, z: 0}
-  missileBody: {fileID: 0}
-  missileCollider: {fileID: 0}
-  homing: 0
-  homingTarget: {fileID: 0}
+  Damage: 0
+  Speed: 0
+  Target: {x: 0, y: 0, z: 0}
+  MissileBody: {fileID: 0}
+  MissileCollider: {fileID: 0}
+  Homing: 0
+  HomingTarget: {fileID: 0}
 --- !u!1 &8706358219382034970
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,7 +739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48bb437e6543dad40b0486ce245214f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
+  Damage: 0
 --- !u!1 &8838368060168043720
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,140 +6,139 @@ using OWS.ObjectPooling;
 
 public class GameManager : MonoBehaviour
 {
-    private Camera camMain;
-    private GameObject executeButton, buttonBorder, crosshair, enemy, actionMask, 
-        clickMarker;
-    private PlayerController playerController;
-    private AIController AIController;
-    private UnitManager playerManager, enemyManager;
-    private WeaponUI weaponUI;
+    private Camera _camMain;
+    private GameObject _executeButton, _buttonBorder, _crosshair, _enemy, _actionMask, 
+        _clickMarker, _projectileOBJ;
+    private PlayerController _playerController;
+    private AIController _AIController;
+    private UnitManager _playerManager, _enemyManager;
+    private WeaponUI _weaponUI;
 
-    public ObjectPool<PoolObject> bulletsPool, missilesPool, amsPool, explosionPool;
-    private GameObject projectileOBJ;
+    public ObjectPool<PoolObject> BulletsPool, MissilesPool, AmsPool, ExplosionPool;
 
     // UI settings
-    public float crosshairBars, loadTime, songTitleSpeed;
+    public float CrosshairBars, LoadTime;
 
     // Audio
-    private AudioSource audioUI;
-    private AudioClip buttonClick;
+    private AudioSource _audioUI;
+    private AudioClip _buttonClick;
 
     // Turn timer
-    private static TextMeshProUGUI timer;    
-    private float timeValue;
-    public float turnTime;
-    public bool inAction = false;
+    private static TextMeshProUGUI _timer;    
+    private float _timeValue;
+    public float TurnTime;
+    [HideInInspector] public bool InAction = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        camMain = Camera.main;
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
-        AIController = GameObject.Find("Enemy").GetComponent<AIController>();
-        playerManager = playerController.GetComponentInChildren<UnitManager>();
-        enemyManager = AIController.GetComponentInChildren<UnitManager>();
+        _camMain = Camera.main;
+        _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        _AIController = GameObject.Find("Enemy").GetComponent<AIController>();
+        _playerManager = _playerController.GetComponentInChildren<UnitManager>();
+        _enemyManager = _AIController.GetComponentInChildren<UnitManager>();
 
         // Find projectiles and create pools
-        projectileOBJ = transform.Find("Projectiles").Find("Bullet").gameObject;
-        bulletsPool = new ObjectPool<PoolObject>(projectileOBJ);
-        projectileOBJ = transform.Find("Projectiles").Find("Missile").gameObject;
-        missilesPool = new ObjectPool<PoolObject>(projectileOBJ);
-        projectileOBJ = transform.Find("Projectiles").Find("AMS").gameObject;
-        amsPool = new ObjectPool<PoolObject>(projectileOBJ);
-        projectileOBJ = transform.Find("Projectiles").Find("Explosion").gameObject;
-        explosionPool = new ObjectPool<PoolObject>(projectileOBJ);
+        _projectileOBJ = transform.Find("Projectiles").Find("Bullet").gameObject;
+        BulletsPool = new ObjectPool<PoolObject>(_projectileOBJ);
+        _projectileOBJ = transform.Find("Projectiles").Find("Missile").gameObject;
+        MissilesPool = new ObjectPool<PoolObject>(_projectileOBJ);
+        _projectileOBJ = transform.Find("Projectiles").Find("AMS").gameObject;
+        AmsPool = new ObjectPool<PoolObject>(_projectileOBJ);
+        _projectileOBJ = transform.Find("Projectiles").Find("Explosion").gameObject;
+        ExplosionPool = new ObjectPool<PoolObject>(_projectileOBJ);
 
         // UI
-        weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
-        clickMarker = GameObject.Find("ClickMarker");
-        executeButton = GameObject.Find("ExecuteButton");
-        actionMask = executeButton.transform.parent.Find("ActionMask").gameObject;
-        audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
-        buttonBorder = executeButton.transform.Find("ButtonBorder").gameObject;
-        buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
+        _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
+        _clickMarker = GameObject.Find("ClickMarker");
+        _executeButton = GameObject.Find("ExecuteButton");
+        _actionMask = _executeButton.transform.parent.Find("ActionMask").gameObject;
+        _audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
+        _buttonBorder = _executeButton.transform.Find("ButtonBorder").gameObject;
+        _buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
        
         // Turn timer
-        timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
-        timeValue = turnTime;
-        timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
+        _timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
+        _timeValue = TurnTime;
+        _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
 
         // Set target
-        crosshair = GameObject.Find("Crosshair");
-        enemy = GameObject.Find("Enemy");
+        _crosshair = GameObject.Find("Crosshair");
+        _enemy = GameObject.Find("Enemy");
     }
 
     void FixedUpdate()
     {
         // Crosshair position
-        crosshair.transform.position = camMain.WorldToScreenPoint(enemy.transform.position);
+        _crosshair.transform.position = _camMain.WorldToScreenPoint(_enemy.transform.position);
     }
 
     // Start turn
     public void ExecuteOrder()
     {
-        audioUI.PlayOneShot(buttonClick);
-        buttonBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
+        _audioUI.PlayOneShot(_buttonClick);
+        _buttonBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
 
         this.Wait(MainMenu.ButtonDelay, () => 
         {
-            buttonBorder.transform.DOScaleX(1f, 0.1f);
+            _buttonBorder.transform.DOScaleX(1f, 0.1f);
         });
 
-        inAction = true;
+        InAction = true;
 
         // Disable buttons
-        actionMask.transform.localScale = Vector3.one;
+        _actionMask.transform.localScale = Vector3.one;
 
         // Enemy actions ???
-        if (!enemyManager.IsDead)
+        if (!_enemyManager.IsDead)
         {
-            AIController.SetPath(playerController.PlayerAgent);
-            AIController.Move();
+            _AIController.SetPath(_playerController.PlayerAgent);
+            _AIController.Move();
         }
 
         // Player actions
-        playerController.Move();
+        _playerController.Move();
 
         // Action phase
-        this.Progress(turnTime, () => {
+        this.Progress(TurnTime, () => {
             
-            timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
-            timeValue -= Time.deltaTime;
+            _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
+            _timeValue -= Time.deltaTime;
 
             // Enemy actions ???
-            if (!enemyManager.IsDead)
+            if (!_enemyManager.IsDead)
             {
-                enemyManager.StartAction();
+                _enemyManager.StartAction();
             }
 
             // Player actions ???
-            playerManager.StartAction();
+            _playerManager.StartAction();
         });
 
         // At the end of turn
-        this.Wait(turnTime, () =>
+        this.Wait(TurnTime, () =>
         { 
-            clickMarker.transform.localScale = Vector3.zero;
+            _clickMarker.transform.localScale = Vector3.zero;
 
             // Enable buttons
-            actionMask.transform.localScale = Vector3.zero;
-            timeValue = turnTime;
-            timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(timeValue).ToString("ss\\'ff");
-            inAction = false;
+            _actionMask.transform.localScale = Vector3.zero;
+            _timeValue = TurnTime;
+            _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
+            InAction = false;
 
             // Units actions
-            if (!enemyManager.IsDead)
+            if (!_enemyManager.IsDead)
             {
-                AIController.EndMove();
+                _AIController.EndMove();
             }
 
-            if (!playerManager.IsDead)
+            if (!_playerManager.IsDead)
             {
-                playerController.EndMove();
+                _playerController.EndMove();
             }
 
             // Update player weapon counters
-            weaponUI.DecreaseCounter();
+            _weaponUI.DecreaseCounter();
         });
     }
 }
