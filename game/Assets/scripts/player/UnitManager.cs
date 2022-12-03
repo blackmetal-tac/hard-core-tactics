@@ -49,6 +49,7 @@ public class UnitManager : MonoBehaviour
             if (weapon != null)
             {
                 weapon.UnitManager = this;
+                weapon.UnitID = transform.parent.name;
                 WeaponCount += 1;
             }
         }
@@ -62,6 +63,7 @@ public class UnitManager : MonoBehaviour
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         _shrinkBar = GetComponentInChildren<ShrinkBar>();
         UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();
+        UnitShield.ShieldID = transform.parent.name;
 
         // Load HP, Shield, Heat bars
         this.Progress(_gameManager.LoadTime, () => {

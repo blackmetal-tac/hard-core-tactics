@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
-    public float HP;
+    [HideInInspector] public float HP;
 	[HideInInspector] public float Scale;
     [HideInInspector] public Material Material;
+    [HideInInspector] public string ShieldID;
     private float _shrinkTimer;
     private Collider _shieldCollider;
 	

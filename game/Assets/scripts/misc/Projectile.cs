@@ -4,6 +4,7 @@ using OWS.ObjectPooling;
 public class Projectile : MonoBehaviour
 {
     [HideInInspector] public float Damage;
+    [HideInInspector] public string BulletID;
     private Rigidbody _projectileBody;
     private PoolObject _poolObject;
     private Collider _projectileCollider;
@@ -26,33 +27,18 @@ public class Projectile : MonoBehaviour
 
     // Bullet collision
     private void OnTriggerEnter(Collider collider)
-    {
+    {        
         if (collider.name == "Body")
         {
             collider.GetComponent<UnitManager>().TakeDamage(Damage);
         }
-        else if (collider.gameObject.layer == 17)
+        else if (collider.gameObject.layer == 17 && BulletID != collider.GetComponent<Shield>().ShieldID)
         {
+            Debug.Log(collider.transform.parent.transform.parent.name);
             collider.GetComponent<Shield>().TakeDamage(Damage);
         }
 
-        if (collider.gameObject.layer != 17)
-        {
-            //_projectileCollider.enabled = false;
-            //Debug.Log("disabled");
-        }
-
-        Debug.Log(collider.name);
         _projectileBody.velocity = Vector3.zero;
         _poolObject.ReturnToPool();
-    }
-
-    private void OnTriggerStay(Collider collider)
-    {
-        if (collider.gameObject.layer == 17)
-        {
-            _projectileCollider.enabled = false;
-            Debug.Log("enabled");
-        }
     }
 }

@@ -42,6 +42,7 @@ public class WPNManager : MonoBehaviour
     private LineRenderer _lineRenderer;
     private bool _laserOn, _oneTime;
     private int _shotsCount;
+    [HideInInspector] public string UnitID;
 
     void Awake()
     {
@@ -177,7 +178,7 @@ public class WPNManager : MonoBehaviour
         {
             if (_projectileType == ProjectileType.Bullet)
             {
-                StartCoroutine(FireBurstCoroutine(FirePoint, _gameManager.BulletsPool));
+                StartCoroutine(FireBulletCoroutine(FirePoint, _gameManager.BulletsPool, UnitID));
                 LastBurst = Time.time;
             }
             else if (_projectileType == ProjectileType.Missile && !Homing)
@@ -192,7 +193,7 @@ public class WPNManager : MonoBehaviour
             }
             else if (_projectileType == ProjectileType.AMS && TargetAMS != null)
             {
-                StartCoroutine(FireBurstCoroutine(FirePoint, _gameManager.AmsPool));
+                StartCoroutine(FireAMSCoroutine(FirePoint, _gameManager.AmsPool));
                 LastBurst = Time.time;
             }
         }
@@ -254,9 +255,21 @@ public class WPNManager : MonoBehaviour
             LastBurst = Time.time;
         }        
     }
+    
+    // Coroutine for separate bursts of bullets
+    private IEnumerator FireBulletCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, string unitID)
+    {
+        float shotDelay = 60 / _fireRate;
+        for (int i = 0; i < BurstSize; i++)
+        {
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, _projectileSpeed, unitID);
+            HeatRecoil();
+            yield return new WaitForSeconds(shotDelay);
+        }
+    }
 
-    // Coroutine for separate bursts
-    private IEnumerator FireBurstCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool)
+    // Coroutine for separate bursts of AMS
+    private IEnumerator FireAMSCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool)
     {
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
