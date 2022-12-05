@@ -1065,7 +1065,7 @@ MonoBehaviour:
   HP: 0
   Heat: 0
   HeatTreshold: 0.7
-  _shieldRegen: 0.1
+  _shieldRegen: 0.03
   _cooling: 0.1
   _heatCheckTime: 1
   _heatSafeRoll: 5
@@ -3041,6 +3041,7 @@ MonoBehaviour:
   HP: 0
   Scale: 0
   Material: {fileID: 0}
+  ShieldID: 
 --- !u!135 &908884681
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -7452,7 +7453,7 @@ MonoBehaviour:
   HP: 0
   Heat: 0
   HeatTreshold: 0.7
-  _shieldRegen: 0.1
+  _shieldRegen: 0.03
   _cooling: 0.1
   _heatCheckTime: 1
   _heatSafeRoll: 5
@@ -8760,6 +8761,7 @@ MonoBehaviour:
   HP: 0
   Scale: 0
   Material: {fileID: 0}
+  ShieldID: 
 --- !u!114 &5188338245675463617
 MonoBehaviour:
   m_ObjectHideFlags: 0

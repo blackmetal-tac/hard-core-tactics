@@ -27,17 +27,25 @@ public class Projectile : MonoBehaviour
 
     // Bullet collision
     private void OnTriggerEnter(Collider collider)
-    {        
-        if (collider.name == "Body")
+    {     
+        if (collider.gameObject.layer == 17 && BulletID != collider.GetComponent<Shield>().ShieldID)
+        {
+            collider.GetComponent<Shield>().TakeDamage(Damage);
+            PullBack();
+        }
+        else if (collider.name == "Body")
         {
             collider.GetComponent<UnitManager>().TakeDamage(Damage);
+            PullBack();
         }
-        else if (collider.gameObject.layer == 17 && BulletID != collider.GetComponent<Shield>().ShieldID)
+        else if (collider.gameObject.layer != 17)
         {
-            Debug.Log(collider.transform.parent.transform.parent.name);
-            collider.GetComponent<Shield>().TakeDamage(Damage);
+            PullBack();            
         }
+    }
 
+    private void PullBack()
+    {
         _projectileBody.velocity = Vector3.zero;
         _poolObject.ReturnToPool();
     }

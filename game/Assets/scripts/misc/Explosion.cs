@@ -12,6 +12,11 @@ public class Explosion : MonoBehaviour
         {
             collider.GetComponent<UnitManager>().TakeDamage(Damage);
         }
+
+        if (collider.gameObject.layer == 17)
+        {
+            collider.GetComponent<Shield>().TakeDamage(Damage);
+        }
     }
 
     public void Spawn(float size)

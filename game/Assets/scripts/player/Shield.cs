@@ -33,6 +33,7 @@ public class Shield : MonoBehaviour
         if (HP > 0)
         {
             HP -= damage;
+            Debug.Log("Took damage");
         }
 
         // Shield down

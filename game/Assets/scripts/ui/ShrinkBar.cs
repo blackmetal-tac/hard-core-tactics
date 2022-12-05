@@ -85,6 +85,11 @@ public class ShrinkBar : MonoBehaviour
     {
         healthImage.fillAmount = healthValue;
 
+        if (damageImage.fillAmount < healthImage.fillAmount)
+        {
+            damageImage.fillAmount = healthImage.fillAmount;
+        }        
+
         // Health bar damage animation
         _unitManager.ShrinkTimer -= Time.deltaTime;
         if (_unitManager.ShrinkTimer < 0)
