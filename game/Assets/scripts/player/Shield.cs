@@ -6,7 +6,7 @@ public class Shield : MonoBehaviour
 	[HideInInspector] public float Scale;
     [HideInInspector] public Material Material;
     [HideInInspector] public string ShieldID;
-    private float _shrinkTimer;
+    [HideInInspector] public float ShrinkTimer;
     private Collider _shieldCollider;
 	
     void Start()
@@ -29,11 +29,10 @@ public class Shield : MonoBehaviour
     public void TakeDamage(float damage)
     {
         // Reset HP bar damage animation
-        _shrinkTimer = 0.5f;
+        ShrinkTimer = 0.5f;
         if (HP > 0)
         {
-            HP -= damage;
-            Debug.Log("Took damage");
+            HP -= damage;            
         }
 
         // Shield down

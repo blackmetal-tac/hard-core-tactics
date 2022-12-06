@@ -10,12 +10,12 @@ public class Explosion : MonoBehaviour
     {
         if (collider.name == "Body")
         {
-            collider.GetComponent<UnitManager>().TakeDamage(Damage);
+            collider.GetComponent<UnitManager>().TakeDamage(Damage / 2);
         }
 
         if (collider.gameObject.layer == 17)
         {
-            collider.GetComponent<Shield>().TakeDamage(Damage);
+            collider.GetComponent<Shield>().TakeDamage(Damage * 2);
         }
     }
 

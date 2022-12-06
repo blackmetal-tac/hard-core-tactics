@@ -44,12 +44,12 @@ public class Missile : MonoBehaviour
         }
     }
 
-    // Bullet collision
+    // Missile collision
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.name == "Body")
         {
-            collider.GetComponent<UnitManager>().TakeDamage(Damage);
+            collider.GetComponent<UnitManager>().TakeDamage(Damage * 2);
         }
 
         if (collider.name != "ColliderAMS")

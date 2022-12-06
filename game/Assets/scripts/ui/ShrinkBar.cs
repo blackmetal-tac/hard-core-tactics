@@ -50,23 +50,23 @@ public class ShrinkBar : MonoBehaviour
 
     public void UpdateShield()
     {
-        Shrink(_shieldImage, _shieldDmgImage, _unitManager.UnitShield.HP);
+        Shrink(_shieldImage, _shieldDmgImage, _unitManager.UnitShield.HP, true);
 
         if (_unitManager.transform.parent.name == "Player")
         {
             _shieldCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _shieldImage.fillAmount) / 2);
-            Shrink(_shieldImageInd, _shieldDmgImageInd, _unitManager.UnitShield.HP);
+            Shrink(_shieldImageInd, _shieldDmgImageInd, _unitManager.UnitShield.HP, true);
         }
     }
 
     public void UpdateHealth()
     {
-        Shrink(_healthImage, _healthDmgImage, _unitManager.HP);
+        Shrink(_healthImage, _healthDmgImage, _unitManager.HP, false);
 
         if (_unitManager.transform.parent.name == "Player")
         {
             _healthCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _healthImage.fillAmount) / 2);
-            Shrink(_healthImageInd, _healthDmgImageInd, _unitManager.HP);
+            Shrink(_healthImageInd, _healthDmgImageInd, _unitManager.HP, false);
         }
     }
 
@@ -81,7 +81,7 @@ public class ShrinkBar : MonoBehaviour
         }
     }
 
-    private void Shrink(Image healthImage, Image damageImage, float healthValue)
+    private void Shrink(Image healthImage, Image damageImage, float healthValue, bool shield)
     {
         healthImage.fillAmount = healthValue;
 
@@ -90,18 +90,38 @@ public class ShrinkBar : MonoBehaviour
             damageImage.fillAmount = healthImage.fillAmount;
         }        
 
-        // Health bar damage animation
-        _unitManager.ShrinkTimer -= Time.deltaTime;
-        if (_unitManager.ShrinkTimer < 0)
+        if (shield)
         {
-            float shrinkSpeed = 1f;
-            if (healthImage.fillAmount < damageImage.fillAmount)
+            // Health bar damage animation
+            _unitManager.UnitShield.ShrinkTimer -= Time.deltaTime;
+            if (_unitManager.UnitShield.ShrinkTimer < 0)
             {
-                damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
+                float shrinkSpeed = 1f;
+                if (healthImage.fillAmount < damageImage.fillAmount)
+                {
+                    damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
+                }
+                else
+                {
+                    damageImage.fillAmount = healthImage.fillAmount;
+                }
             }
-            else
+        }
+        else
+        {
+            // Health bar damage animation
+            _unitManager.ShrinkTimer -= Time.deltaTime;
+            if (_unitManager.ShrinkTimer < 0)
             {
-                damageImage.fillAmount = healthImage.fillAmount;
+                float shrinkSpeed = 1f;
+                if (healthImage.fillAmount < damageImage.fillAmount)
+                {
+                    damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
+                }
+                else
+                {
+                    damageImage.fillAmount = healthImage.fillAmount;
+                }
             }
         }
     }

@@ -434,9 +434,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849634ad797d11a4692499ab55db9b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.7
-  time: 1
-  delay: 2
+  _scale: 1
+  _time: 1
+  _delay: 5
+  _playSound: 0
 --- !u!225 &5780337394193625430
 CanvasGroup:
   m_ObjectHideFlags: 0

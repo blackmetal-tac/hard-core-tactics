@@ -12,8 +12,8 @@ public class WPNManager : MonoBehaviour
     public bool Homing;
     [SerializeField] private bool _burstLaser;
     [SerializeField][Range(0, 15)] private int _radiusAMS, _projectileSpeed;
-    [SerializeField][Range(0, 0.5f)] private float _projectileSize, _heat, _recoil;
-    [SerializeField][Range(0, 1)] private float _damage, _fireDelay;
+    [SerializeField][Range(0, 0.5f)] private float _projectileSize, _heat, _recoil, _damage;
+    [SerializeField][Range(0, 1)] private float _fireDelay;
     [SerializeField][Range(0, 3000)] private float _fireRate, _laserRange;  
 	[HideInInspector] public int BurstSize, DownTimer;
     [HideInInspector] public float LastBurst;
@@ -221,9 +221,16 @@ public class WPNManager : MonoBehaviour
             DOTween.To(() => _laserWidth, x => _laserWidth = x, _damage * BurstSize, _fireDelay / 6);
             // Deal laser damage            
             if (Physics.Raycast(FirePoint.transform.position, FirePoint.transform.forward,
-                out RaycastHit damageHit, _laserRange) && damageHit.collider.name == "Body")
+                out RaycastHit damageHit, _laserRange))
             {
-                damageHit.collider.GetComponent<UnitManager>().TakeDamage(_damage * _laserWidth);
+                if (damageHit.collider.name == "Body")
+                {
+                    damageHit.collider.GetComponent<UnitManager>().TakeDamage(_damage * _laserWidth);
+                }
+                else if (damageHit.collider.gameObject.layer == 17)
+                {
+                    damageHit.collider.GetComponent<Shield>().TakeDamage(_damage * _laserWidth * 2);
+                }                
             }
         }
         else

@@ -94,8 +94,6 @@ public class UnitManager : MonoBehaviour
                 Heat = 0;
             }
 
-            _shrinkBar.UpdateShield();
-            _shrinkBar.UpdateHealth();
             _shrinkBar.UpdateHeat();
         });
 
@@ -122,6 +120,12 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        _shrinkBar.UpdateShield();
+        _shrinkBar.UpdateHealth();
+    }
+
     // Do actions in Update
     public void StartAction()
     {
@@ -130,8 +134,7 @@ public class UnitManager : MonoBehaviour
         // Shield regeneration
         if (UnitShield.HP < 1 && !IsDead)
         {
-            UnitShield.HP += Time.deltaTime * _shieldRegen;
-            _shrinkBar.UpdateShield();
+            UnitShield.HP += Time.deltaTime * _shieldRegen;            
         }
 
         // Heat dissipation
@@ -150,11 +153,6 @@ public class UnitManager : MonoBehaviour
                 Overheat();
                 _lastCheck = Time.time;
             }
-        }
-
-        if (!IsDead)
-        {
-            _shrinkBar.UpdateHealth();
         }
     }
 
