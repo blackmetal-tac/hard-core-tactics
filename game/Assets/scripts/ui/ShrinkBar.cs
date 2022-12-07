@@ -93,13 +93,13 @@ public class ShrinkBar : MonoBehaviour
         if (shield)
         {
             // Health bar damage animation
-            _unitManager.UnitShield.ShrinkTimer -= Time.deltaTime;
+            _unitManager.UnitShield.ShrinkTimer -= Time.fixedDeltaTime;
             if (_unitManager.UnitShield.ShrinkTimer < 0)
             {
                 float shrinkSpeed = 1f;
                 if (healthImage.fillAmount < damageImage.fillAmount)
                 {
-                    damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
+                    damageImage.fillAmount -= shrinkSpeed * Time.fixedDeltaTime;
                 }
                 else
                 {
@@ -110,13 +110,13 @@ public class ShrinkBar : MonoBehaviour
         else
         {
             // Health bar damage animation
-            _unitManager.ShrinkTimer -= Time.deltaTime;
+            _unitManager.ShrinkTimer -= Time.fixedDeltaTime;
             if (_unitManager.ShrinkTimer < 0)
             {
                 float shrinkSpeed = 1f;
                 if (healthImage.fillAmount < damageImage.fillAmount)
                 {
-                    damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
+                    damageImage.fillAmount -= shrinkSpeed * Time.fixedDeltaTime;
                 }
                 else
                 {

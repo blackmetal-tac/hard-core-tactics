@@ -108,7 +108,7 @@ public class WPNManager : MonoBehaviour
         // Timer to slow update
         if (Time.fixedTime >= _updateTimer)
         {
-            // Bullet spread 
+            // Bullet spread for UI crosshair 
             if (UnitManager.transform.parent.name == "Player" && UnitManager.Spread < 2
                 && _gameManager.InAction && _projectileType != ProjectileType.AMS)
             {
@@ -158,8 +158,8 @@ public class WPNManager : MonoBehaviour
             }
         }
 
-        if (_projectileType != ProjectileType.Laser && _projectileType != ProjectileType.AMS
-            && !Homing)
+        if (_projectileType != ProjectileType.Laser || _projectileType != ProjectileType.AMS
+            || !Homing)
         {
             FirePoint.transform.LookAt(target.transform.position + _spreadVector);
         }
@@ -203,8 +203,10 @@ public class WPNManager : MonoBehaviour
     {
         // Rotate laser when firing
         Vector3 direction = target.transform.position - FirePoint.transform.position;
-        FirePoint.transform.rotation = Quaternion.RotateTowards(FirePoint.transform.rotation,
-            Quaternion.LookRotation(direction + _spreadVector), Time.time * 0.01f);
+        FirePoint.transform.rotation = Quaternion.Slerp(FirePoint.transform.rotation,
+            Quaternion.LookRotation(direction + _spreadVector), 1);
+
+        //FirePoint.transform.LookAt(target.transform.position + _spreadVector);
 
         // Draw line
         _lineRenderer.SetPosition(0, FirePoint.transform.position);
@@ -229,8 +231,13 @@ public class WPNManager : MonoBehaviour
                 }
                 else if (damageHit.collider.gameObject.layer == 17)
                 {
-                    damageHit.collider.GetComponent<Shield>().TakeDamage(_damage * _laserWidth * 2);
+                    damageHit.collider.GetComponent<Shield>().TakeDamage(_damage * _laserWidth * 2);                    
                 }                
+            }
+
+            if (UnitManager.Heat < 1)
+            {
+                UnitManager.Heat += _heat * _laserWidth;
             }
         }
         else
@@ -251,13 +258,12 @@ public class WPNManager : MonoBehaviour
                   Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
                   Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
                   Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread));
-
+            
             _laserOn = true;
             this.Wait(_fireDelay / 2, () =>
             {
                 _laserOn = false;
-            });
-            HeatRecoil();
+            });            
             _shotsCount -= 1;       
             LastBurst = Time.time;
         }        

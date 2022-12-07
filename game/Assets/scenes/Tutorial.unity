@@ -3042,6 +3042,7 @@ MonoBehaviour:
   Scale: 0
   Material: {fileID: 0}
   ShieldID: 
+  ShrinkTimer: 0
 --- !u!135 &908884681
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8762,6 +8763,7 @@ MonoBehaviour:
   Scale: 0
   Material: {fileID: 0}
   ShieldID: 
+  ShrinkTimer: 0
 --- !u!114 &5188338245675463617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9282,7 +9284,7 @@ PrefabInstance:
     - target: {fileID: 4987383190760336449, guid: a6556bcb56d998f4e90f12dd915861ef,
         type: 3}
       propertyPath: _recoil
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4987383190760336449, guid: a6556bcb56d998f4e90f12dd915861ef,
         type: 3}
