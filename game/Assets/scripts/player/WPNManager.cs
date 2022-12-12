@@ -18,7 +18,7 @@ public class WPNManager : MonoBehaviour
 	[HideInInspector] public int BurstSize, DownTimer;
     [HideInInspector] public float LastBurst;
     private readonly float _spreadMult = 0.5f;
-    private Vector3 _spreadVector;
+    private Vector3 _spreadVector, _laserPoint;
     private float _spread, _updateTimer, _laserWidth;
     private readonly float _delay = 0.1f;
 
@@ -88,7 +88,7 @@ public class WPNManager : MonoBehaviour
         }
 
         // Friend/Foe system for AMS to intercept
-        if (_projectileType == ProjectileType.Missile && UnitManager.transform.parent.parent.name == "PlayerSquad")
+        if (UnitManager.transform.parent.parent.name == "PlayerSquad")
         {
             _isFriend = true;
         }
@@ -99,7 +99,7 @@ public class WPNManager : MonoBehaviour
             _lineRenderer.startWidth = 0f;
             _lineRenderer.endWidth = 0f;
             _projectileSpeed = 0;
-            _recoil = 0;
+            _recoil = 0;            
         }
     }
 
@@ -144,7 +144,7 @@ public class WPNManager : MonoBehaviour
             //FireLaser coroutine to animate beam properly
             if (!_oneTime)
             {
-                ChangeShotsCount();
+                ChangeShotsCount();                
                 this.Progress(_gameManager.TurnTime * 2, () =>
                 {
                     FireLaser(target);
@@ -164,7 +164,7 @@ public class WPNManager : MonoBehaviour
             FirePoint.transform.LookAt(target.transform.position + _spreadVector);
         }
 
-        if (TargetAMS != null)
+        if (_projectileType == ProjectileType.AMS && TargetAMS != null)
         {
             FirePoint.transform.LookAt(TargetAMS.transform.position + _spreadVector);
             if (TargetAMS.transform.parent.localScale == Vector3.zero)
@@ -200,19 +200,17 @@ public class WPNManager : MonoBehaviour
     }
 
     private void FireLaser(GameObject target)
-    {
-        // Rotate laser when firing
-        Vector3 direction = target.transform.position - FirePoint.transform.position;
-        FirePoint.transform.rotation = Quaternion.Slerp(FirePoint.transform.rotation,
-            Quaternion.LookRotation(direction + _spreadVector), 1);
-
-        //FirePoint.transform.LookAt(target.transform.position + _spreadVector);
-
-        // Draw line
+    {      
+        // Move laser when firing 
+        Vector3 direction = target.transform.position - FirePoint.transform.position;   
+        _laserPoint = Vector3.MoveTowards(_laserPoint, direction + _spreadVector, Time.deltaTime * 2);
+        FirePoint.transform.LookAt(_laserPoint); 
+        
+        // Draw line forward
         _lineRenderer.SetPosition(0, FirePoint.transform.position);
         if (Physics.Raycast(FirePoint.transform.position, FirePoint.transform.forward, out RaycastHit hit, _laserRange))
         {
-            _lineRenderer.SetPosition(1, hit.point);
+            _lineRenderer.SetPosition(1, hit.point);            
         }
         _lineRenderer.startWidth = _laserWidth;
         _lineRenderer.endWidth = _laserWidth;
@@ -221,6 +219,7 @@ public class WPNManager : MonoBehaviour
         if (_laserOn)
         {
             DOTween.To(() => _laserWidth, x => _laserWidth = x, _damage * BurstSize, _fireDelay / 6);
+
             // Deal laser damage            
             if (Physics.Raycast(FirePoint.transform.position, FirePoint.transform.forward,
                 out RaycastHit damageHit, _laserRange))
@@ -232,7 +231,12 @@ public class WPNManager : MonoBehaviour
                 else if (damageHit.collider.gameObject.layer == 17)
                 {
                     damageHit.collider.GetComponent<Shield>().TakeDamage(_damage * _laserWidth * 2);                    
-                }                
+                }
+                else if (_isFriend && damageHit.collider.gameObject.layer == 13 // Detonate foe's missiles
+                    || !_isFriend && damageHit.collider.gameObject.layer == 12)
+                {
+                    damageHit.collider.GetComponent<Missile>().Explode();                                       
+                }
             }
 
             if (UnitManager.Heat < 1)
@@ -248,17 +252,18 @@ public class WPNManager : MonoBehaviour
         // Stop laser at the end of turn
         if (!_gameManager.InAction)
         {
-            _shotsCount = 0;
+            _shotsCount = 0;            
         }
 
         // Shoot laser  
         if (_shotsCount > 0 && Time.time > LastBurst + _fireDelay)
         {
+            _laserPoint = target.transform.position;
             _spreadVector = new(
-                  Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
-                  Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
-                  Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread));
-            
+                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
+                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
+                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread));
+           
             _laserOn = true;
             this.Wait(_fireDelay / 2, () =>
             {

@@ -54,12 +54,17 @@ public class Missile : MonoBehaviour
 
         if (collider.name != "ColliderAMS")
         {
-            _timer = _baseTimer;            
-            MissileBody.velocity = Vector3.zero;
-            MissileCollider.enabled = false;
-            _gameManager.ExplosionPool.PullGameObject(transform.position, 1f, Damage / 2);
-            _poolObject.ReturnToPool();
+            Explode();
         }        
+    }
+
+    public void Explode()
+    {
+        _timer = _baseTimer;            
+        MissileBody.velocity = Vector3.zero;
+        MissileCollider.enabled = false;
+        _gameManager.ExplosionPool.PullGameObject(transform.position, 1f, Damage / 2);
+        _poolObject.ReturnToPool();
     }
 
     public void MoveTowards()

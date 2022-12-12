@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Shield : MonoBehaviour
 {
@@ -8,6 +9,14 @@ public class Shield : MonoBehaviour
     [HideInInspector] public string ShieldID;
     [HideInInspector] public float ShrinkTimer;
     private Collider _shieldCollider;
+
+    [System.Serializable]
+    public class ShieldModes
+    {
+        public string ModeName;
+        public int Regen;
+    }
+    public List<ShieldModes> weaponModes;
 	
     void Start()
     {

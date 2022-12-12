@@ -22,14 +22,25 @@ public class SliderScr : MonoBehaviour
 
     public void ChangeWPNmode()
     {
-        Weapon.BurstSize = Weapon.weaponModes[(int)SliderObject.value].FireMode;
-        ModeName.text = Weapon.weaponModes[(int)SliderObject.value].ModeName;
-        Weapon.ChangeShotsCount();
-
-        if (_gameManager.InAction)
+        if (SliderObject.transform.parent.name == "ShieldUI")
         {
-            Weapon.LastBurst = 0f;
-            _actionMask.transform.localScale = Vector3.one;
+
+        }
+        else if (SliderObject.transform.parent.name == "CoolingUI")
+        {
+
+        }
+        else
+        {
+            Weapon.BurstSize = Weapon.weaponModes[(int)SliderObject.value].FireMode;
+            ModeName.text = Weapon.weaponModes[(int)SliderObject.value].ModeName;
+            Weapon.ChangeShotsCount();
+
+            if (_gameManager.InAction)
+            {
+                Weapon.LastBurst = 0f;
+                _actionMask.transform.localScale = Vector3.one;
+            }
         }
     }
 }

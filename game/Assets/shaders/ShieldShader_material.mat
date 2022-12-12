@@ -53,9 +53,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.3
+    - _Alpha: 0.26927936
     - _FresnelIntensity: 1.77
-    - _Intensity: 2.7925284
+    - _Intensity: 3.3178942
     - _Offset: 3.5
     - _QueueControl: 0
     - _QueueOffset: 0

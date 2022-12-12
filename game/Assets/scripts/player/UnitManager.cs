@@ -19,7 +19,7 @@ public class UnitManager : MonoBehaviour
     private ShrinkBar _shrinkBar;
     private NavMeshAgent _navMeshAgent;
     private Vector3 _direction; // Rotate body to the enemy
-    private readonly float _rotSpeed = 0.5f;
+    private readonly float _rotSpeed = 1f;
 
     public List<WPNManager> WeaponList;
     [HideInInspector] public int WeaponCount = 0;
@@ -28,7 +28,7 @@ public class UnitManager : MonoBehaviour
     [HideInInspector] public float MoveSpeed = 0.1f;
     [HideInInspector] public float Spread;
     [HideInInspector] public float ShrinkTimer;
-    public bool IsDead = false; // Death trigger
+    public bool IsDead, ShieldOverdrive; // Death trigger
     private float _lastCheck;
 
     // ??? Set UnitManager for all weapons before Start
@@ -131,6 +131,11 @@ public class UnitManager : MonoBehaviour
     {
         StartShoot();
 
+        if (ShieldOverdrive)
+        {
+            ShieldOverdriveFunc();
+        }
+
         // Shield regeneration
         if (UnitShield.HP < 1 && !IsDead)
         {
@@ -161,7 +166,7 @@ public class UnitManager : MonoBehaviour
         // Rotate body to Target
         _direction = Target.transform.position - transform.position;
         transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, Quaternion.LookRotation(_direction), Time.time * _rotSpeed);
+            transform.rotation, Quaternion.LookRotation(_direction), Time.deltaTime * _rotSpeed);
 
         foreach (WPNManager weapon in WeaponList)
         {
@@ -265,5 +270,12 @@ public class UnitManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    // Shield overdrive mode
+    private void ShieldOverdriveFunc()
+    {
+        _shieldRegen = _shieldRegen * 2;
+        Heat += 0.01f;
     }
 }
