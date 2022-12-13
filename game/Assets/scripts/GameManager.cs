@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        DOTween.SetTweensCapacity(500, 50);
         _camMain = Camera.main;
         _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         _AIController = GameObject.Find("Enemy").GetComponent<AIController>();

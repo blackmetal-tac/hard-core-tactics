@@ -9,6 +9,7 @@ public class SliderScr : MonoBehaviour
     [HideInInspector] public Slider SliderObject;
     [HideInInspector] public WPNManager Weapon;
     [HideInInspector] public TextMeshProUGUI ModeName;
+    [HideInInspector] public Shield UnitShield;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,9 @@ public class SliderScr : MonoBehaviour
     {
         if (SliderObject.transform.parent.name == "ShieldUI")
         {
-
+            UnitShield.Regeneration = UnitShield.shieldModes[(int)SliderObject.value].Regen;
+            ModeName.text = UnitShield.shieldModes[(int)SliderObject.value].ModeName;
+            UnitShield.TurnOnOff();
         }
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {
@@ -34,7 +37,7 @@ public class SliderScr : MonoBehaviour
         {
             Weapon.BurstSize = Weapon.weaponModes[(int)SliderObject.value].FireMode;
             ModeName.text = Weapon.weaponModes[(int)SliderObject.value].ModeName;
-            Weapon.ChangeShotsCount();
+            Weapon.ChangeShotsCount(); // shots for burst laser
 
             if (_gameManager.InAction)
             {

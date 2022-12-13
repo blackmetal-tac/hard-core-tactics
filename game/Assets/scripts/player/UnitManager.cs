@@ -137,9 +137,9 @@ public class UnitManager : MonoBehaviour
         }
 
         // Shield regeneration
-        if (UnitShield.HP < 1 && !IsDead)
-        {
-            UnitShield.HP += Time.deltaTime * _shieldRegen;            
+        if (!IsDead)
+        {            
+            UnitShield.Regenerate();            
         }
 
         // Heat dissipation

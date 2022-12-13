@@ -37,8 +37,8 @@ public class WeaponUI : MonoBehaviour
         _weaponButtons.Add(new WeaponButton(GameObject.Find("RightShoulderUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightShoulderUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
         _weaponButtons.Add(new WeaponButton(GameObject.Find("LeftShoulderUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftShoulderUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
 
-        _shieldButton = new WeaponButton(GameObject.Find("ShieldUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftShoulderUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>());
-        _coolingButton = new WeaponButton(GameObject.Find("CoolingUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftShoulderUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>());
+        _shieldButton = new WeaponButton(GameObject.Find("ShieldUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("ShieldUI").GetComponentInChildren<SliderScr>(), GameObject.Find("ShieldUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>());
+        _coolingButton = new WeaponButton(GameObject.Find("CoolingUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("CoolingUI").GetComponentInChildren<SliderScr>(), GameObject.Find("CoolingUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>());
         UpdateUI();
     }
 
@@ -47,9 +47,12 @@ public class WeaponUI : MonoBehaviour
     {
         _playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
 
+        // Shield controls
         _shieldButton.WeaponName.text = _playerManager.UnitShield.name;
-       
+        _shieldButton.Slider.UnitShield = _playerManager.UnitShield;
+        _shieldButton.Slider.ChangeWPNmode();
 
+        // Weapons controls
         for (int i = 0; i < _playerManager.WeaponList.Count; i++ ) 
         {
             if (_playerManager.WeaponList[i] != null)
