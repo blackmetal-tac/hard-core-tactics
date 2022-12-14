@@ -28,7 +28,7 @@ public class UnitManager : MonoBehaviour
     [HideInInspector] public float MoveSpeed = 0.1f;
     [HideInInspector] public float Spread;
     [HideInInspector] public float ShrinkTimer;
-    public bool IsDead, ShieldOverdrive; // Death trigger
+    public bool IsDead; // Death trigger
     private float _lastCheck;
 
     // ??? Set UnitManager for all weapons before Start
@@ -129,36 +129,34 @@ public class UnitManager : MonoBehaviour
     // Do actions in Update
     public void StartAction()
     {
-        StartShoot();
-
-        if (ShieldOverdrive)
-        {
-            ShieldOverdriveFunc();
-        }
-
-        // Shield regeneration
         if (!IsDead)
-        {            
-            UnitShield.Regenerate();            
-        }
-
-        // Heat dissipation
-        if (Heat > 0 && !IsDead)
         {
-            Heat -= Time.deltaTime * _cooling;
-            _shrinkBar.UpdateHeat();
+            StartShoot();
 
-            if (Heat > HeatTreshold && Time.time > _lastCheck + _heatCheckTime) // Roll Heat penalty
-            {
-                OverheatRoll();
-                _lastCheck = Time.time;
+            // Shield regeneration
+            if (!IsDead)
+            {            
+                UnitShield.Regenerate();            
             }
-            else if (Heat >= 1f && Time.time > _lastCheck + 0.3f)
+
+            // Heat dissipation
+            if (Heat > 0 && !IsDead)
             {
-                Overheat();
-                _lastCheck = Time.time;
+                Heat -= Time.deltaTime * (_cooling - UnitShield.Heat);                
+                _shrinkBar.UpdateHeat();
+
+                if (Heat > HeatTreshold && Time.time > _lastCheck + _heatCheckTime) // Roll Heat penalty
+                {
+                    OverheatRoll();
+                    _lastCheck = Time.time;
+                }
+                else if (Heat >= 1f && Time.time > _lastCheck + 0.3f)
+                {
+                    Overheat();
+                    _lastCheck = Time.time;
+                }
             }
-        }
+        }        
     }
 
     private void StartShoot()
@@ -166,7 +164,7 @@ public class UnitManager : MonoBehaviour
         // Rotate body to Target
         _direction = Target.transform.position - transform.position;
         transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, Quaternion.LookRotation(_direction), Time.deltaTime * _rotSpeed);
+            transform.rotation, Quaternion.LookRotation(_direction), Time.time * _rotSpeed);
 
         foreach (WPNManager weapon in WeaponList)
         {
@@ -270,12 +268,5 @@ public class UnitManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    // Shield overdrive mode
-    private void ShieldOverdriveFunc()
-    {
-        _shieldRegen = _shieldRegen * 2;
-        Heat += 0.01f;
     }
 }

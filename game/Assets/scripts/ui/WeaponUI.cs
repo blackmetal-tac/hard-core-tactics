@@ -21,8 +21,7 @@ public class WeaponUI : MonoBehaviour
         }
     }
 
-    private List<WeaponButton> _weaponButtons;
-    private WeaponButton _shieldButton, _coolingButton;
+    private List<WeaponButton> _weaponButtons;    
 
     // Start is called before the first frame update
     void Start()
@@ -37,8 +36,10 @@ public class WeaponUI : MonoBehaviour
         _weaponButtons.Add(new WeaponButton(GameObject.Find("RightShoulderUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightShoulderUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
         _weaponButtons.Add(new WeaponButton(GameObject.Find("LeftShoulderUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftShoulderUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftShoulderUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
 
-        _shieldButton = new WeaponButton(GameObject.Find("ShieldUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("ShieldUI").GetComponentInChildren<SliderScr>(), GameObject.Find("ShieldUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>());
-        _coolingButton = new WeaponButton(GameObject.Find("CoolingUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("CoolingUI").GetComponentInChildren<SliderScr>(), GameObject.Find("CoolingUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>());
+        // Add other modules (6+ id's)
+        _weaponButtons.Add(new WeaponButton(GameObject.Find("ShieldUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("ShieldUI").GetComponentInChildren<SliderScr>(), GameObject.Find("ShieldUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
+        _weaponButtons.Add(new WeaponButton(GameObject.Find("CoolingUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("CoolingUI").GetComponentInChildren<SliderScr>(), GameObject.Find("CoolingUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
+
         UpdateUI();
     }
 
@@ -48,9 +49,9 @@ public class WeaponUI : MonoBehaviour
         _playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
 
         // Shield controls
-        _shieldButton.WeaponName.text = _playerManager.UnitShield.name;
-        _shieldButton.Slider.UnitShield = _playerManager.UnitShield;
-        _shieldButton.Slider.ChangeWPNmode();
+        _weaponButtons[6].WeaponName.text = _playerManager.UnitShield.name;
+        _weaponButtons[6].Slider.UnitShield = _playerManager.UnitShield;
+        _weaponButtons[6].Slider.ChangeWPNmode();
 
         // Weapons controls
         for (int i = 0; i < _playerManager.WeaponList.Count; i++ ) 
@@ -94,6 +95,11 @@ public class WeaponUI : MonoBehaviour
             {
                 _weaponButtons[i].ActionMask.transform.localScale = Vector3.zero;
             }
+        }
+
+        if (_playerManager.UnitShield.DownTimer <= 0) 
+        {
+            _weaponButtons[6].ActionMask.transform.localScale = Vector3.zero;
         }
     }
 

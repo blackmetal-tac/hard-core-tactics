@@ -8,8 +8,10 @@ public class ShrinkBar : MonoBehaviour
         _healthImageInd, _healthDmgImageInd, _heatImage, _heatImageInd;
     private UnitManager _unitManager;
     private GameObject _unitUI, _shieldIndicator, _healthIndicator, _heatIndicator;
-    private CanvasGroup _shieldCanvasGroup, _healthCanvasGroup, _heatCanvasGroup;
+    private CanvasGroup _shieldCanvasGroup, _healthCanvasGroup, _heatCanvasGroup, _unitShieldGroup, _unitHealthGroup, 
+        _unitHeatGroup;
     private GameManager _gameManager;
+    private int _trasparencyMult = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -21,26 +23,29 @@ public class ShrinkBar : MonoBehaviour
 
         // Health status Health
         // Shield
-        _shieldImage = _unitUI.transform.Find("Background").Find("Shield").Find("Health").GetComponent<Image>();
+        _shieldImage = _unitUI.transform.Find("HP").Find("Shield").Find("Health").GetComponent<Image>();
         _shieldDmgImage = _shieldImage.transform.parent.Find("Damage").GetComponent<Image>();      
         _shieldIndicator = GameObject.Find("ShieldIndicator");
         _shieldCanvasGroup = _shieldIndicator.GetComponent<CanvasGroup>();
         _shieldImageInd = _shieldIndicator.transform.Find("Health").GetComponent<Image>();
         _shieldDmgImageInd = _shieldIndicator.transform.Find("Damage").GetComponent<Image>();
+        _unitShieldGroup = _shieldImage.GetComponentInParent<CanvasGroup>();
 
         // Health
-        _healthImage = _unitUI.transform.Find("Background").Find("Health").Find("Health").GetComponent<Image>();
+        _healthImage = _unitUI.transform.Find("HP").Find("Health").Find("Health").GetComponent<Image>();
         _healthDmgImage = _healthImage.transform.parent.Find("Damage").GetComponent<Image>();
         _healthIndicator = GameObject.Find("HealthIndicator");
         _healthCanvasGroup = _healthIndicator.GetComponent<CanvasGroup>();
         _healthImageInd = _healthIndicator.transform.Find("Health").GetComponent<Image>();
         _healthDmgImageInd = _healthIndicator.transform.Find("Damage").GetComponent<Image>();
+        _unitHealthGroup = _healthImage.GetComponentInParent<CanvasGroup>();
 
         // Heat
         _heatImage = _unitUI.transform.Find("Heat").Find("Background").Find("Health").GetComponent<Image>();
         _heatIndicator = GameObject.Find("HeatIndicator");
         _heatCanvasGroup = _heatIndicator.GetComponent<CanvasGroup>();
         _heatImageInd = _heatIndicator.transform.Find("Health").GetComponent<Image>();
+        _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>();
     }
 
     void FixedUpdate()
@@ -51,7 +56,9 @@ public class ShrinkBar : MonoBehaviour
     public void UpdateShield()
     {
         Shrink(_shieldImage, _shieldDmgImage, _unitManager.UnitShield.HP, true);
+        _unitShieldGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _shieldImage.fillAmount) / 2);
 
+        // Player UI
         if (_unitManager.transform.parent.name == "Player")
         {
             _shieldCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _shieldImage.fillAmount) / 2);
@@ -62,7 +69,9 @@ public class ShrinkBar : MonoBehaviour
     public void UpdateHealth()
     {
         Shrink(_healthImage, _healthDmgImage, _unitManager.HP, false);
+        _unitHealthGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _healthImage.fillAmount) / 2);
 
+        // Player UI
         if (_unitManager.transform.parent.name == "Player")
         {
             _healthCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _healthImage.fillAmount) / 2);
@@ -72,7 +81,8 @@ public class ShrinkBar : MonoBehaviour
 
     public void UpdateHeat()
     {
-        _heatImage.fillAmount = _unitManager.Heat;        
+        _heatImage.fillAmount = _unitManager.Heat;    
+        _unitHeatGroup.alpha = _gameManager.CrosshairBars + (_unitManager.Heat * 0.9f);    
 
         if (_unitManager.transform.parent.name == "Player")
         {           

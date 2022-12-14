@@ -230,18 +230,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 0
   Regeneration: 0
+  Heat: 0
   Scale: 0
+  ShrinkTimer: 0
   Material: {fileID: 0}
   ShieldID: 
-  ShrinkTimer: 0
+  DownTimer: 0
   _size: 0.9
   shieldModes:
   - ModeName: off
     Regen: 0
+    Heat: 0
   - ModeName: on
-    Regen: 3
+    Regen: 0.03
+    Heat: 0.01
   - ModeName: over
-    Regen: 6
+    Regen: 0.09
+    Heat: 0.03
 --- !u!114 &6285176286650417637
 MonoBehaviour:
   m_ObjectHideFlags: 0

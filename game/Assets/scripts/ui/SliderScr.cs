@@ -26,8 +26,14 @@ public class SliderScr : MonoBehaviour
         if (SliderObject.transform.parent.name == "ShieldUI")
         {
             UnitShield.Regeneration = UnitShield.shieldModes[(int)SliderObject.value].Regen;
+            UnitShield.Heat = UnitShield.shieldModes[(int)SliderObject.value].Heat;
             ModeName.text = UnitShield.shieldModes[(int)SliderObject.value].ModeName;
             UnitShield.TurnOnOff();
+
+            if (_gameManager.InAction)
+            {                
+                _actionMask.transform.localScale = Vector3.one;
+            }
         }
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {

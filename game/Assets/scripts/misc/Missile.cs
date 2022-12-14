@@ -55,7 +55,10 @@ public class Missile : MonoBehaviour
         if (collider.name != "ColliderAMS")
         {
             Explode();
-        }        
+            if (collider.name == "BulletMesh")
+            Debug.Log(collider.name);
+        }
+  
     }
 
     public void Explode()

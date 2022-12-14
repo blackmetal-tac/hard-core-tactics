@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public class Shield : MonoBehaviour
 {
-    [HideInInspector] public float HP, Regeneration, Scale, ShrinkTimer;
+    [HideInInspector] public float HP, Regeneration, Heat, Scale, ShrinkTimer;
     [HideInInspector] public Material Material;
     [HideInInspector] public string ShieldID;
+    [HideInInspector] public int DownTimer;    
     [SerializeField] private float _size = 0.9f;
     private Collider _shieldCollider;
     private GameManager _gameManager;
@@ -16,7 +17,8 @@ public class Shield : MonoBehaviour
     public class ShieldModes
     {
         public string ModeName;
-        public int Regen;
+        public float Regen;
+        public float Heat;
     }
     public List<ShieldModes> shieldModes;
 	
@@ -24,20 +26,18 @@ public class Shield : MonoBehaviour
     {        
         _shieldCollider = GetComponent<Collider>();
         Material = GetComponentInChildren<MeshRenderer>().sharedMaterial;
-        _gameManager = _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
+        // Enable shield
         _loading = true;
-        this.Progress(_gameManager.LoadTime, () => {
-            transform.DOScale(_size, _gameManager.LoadTime).SetLoops(1, LoopType.Yoyo);            
-        });
-
+        transform.DOScale(_size, _gameManager.LoadTime).SetEase(Ease.OutBack);
         this.Wait(_gameManager.LoadTime, () => {
             _loading = false;
         });
     }
 
     void FixedUpdate()
-    {        
+    {  
         if (!_loading)
         {
             transform.localScale = (_size + Scale) * Vector3.one;
@@ -72,7 +72,14 @@ public class Shield : MonoBehaviour
         // Shield regeneration
         if (HP < 1)
         {
-            HP += Time.deltaTime * Regeneration;            
+            if (Regeneration == 0)  
+            {
+                HP += Time.deltaTime * (shieldModes[2].Regen);                
+            }      
+            else 
+            {
+                HP += Time.deltaTime * (Regeneration);
+            }  
         }
     }
 
@@ -83,9 +90,9 @@ public class Shield : MonoBehaviour
             _loading = true;
             transform.DOScale(0, _gameManager.LoadTime);
         }
-        else if (transform.lossyScale == Vector3.zero && _gameManager.InAction)
+        else if (_gameManager.InAction)
         {
-            transform.DOScale(_size, _gameManager.LoadTime).SetLoops(1, LoopType.Yoyo);
+            transform.DOScale(_size, _gameManager.LoadTime).SetEase(Ease.OutBack);
             this.Wait(_gameManager.LoadTime, () => {
                 _loading = false;
             });

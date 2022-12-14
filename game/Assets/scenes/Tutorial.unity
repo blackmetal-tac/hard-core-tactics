@@ -1059,7 +1059,7 @@ MonoBehaviour:
   HeatTreshold: 0.7
   _shieldRegen: 0.03
   _cooling: 0.1
-  _heatCheckTime: 1
+  _heatCheckTime: 0.5
   _heatSafeRoll: 5
   _walkDistance: 3
   WeaponList: []
@@ -4200,7 +4200,7 @@ PrefabInstance:
     - target: {fileID: 3290949746651008654, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -580
+      value: -577
       objectReference: {fileID: 0}
     - target: {fileID: 3290949746651008654, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
@@ -7762,7 +7762,7 @@ MonoBehaviour:
   HeatTreshold: 0.7
   _shieldRegen: 0.03
   _cooling: 0.1
-  _heatCheckTime: 1
+  _heatCheckTime: 0.5
   _heatSafeRoll: 5
   _walkDistance: 3
   WeaponList: []

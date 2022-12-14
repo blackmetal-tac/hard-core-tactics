@@ -48,7 +48,7 @@ MonoBehaviour:
   CrosshairBars: 0.1
   LoadTime: 2
   TurnTime: 3
-  inAction: 0
+  InAction: 0
 --- !u!1 &648605811298458055
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,8 +145,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 7
+  m_Height: 7
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &457119259248222204
@@ -178,6 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage: 0
+  BulletID: 
 --- !u!1 &3951382612890237716
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,6 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage: 0
+  BulletID: 
 --- !u!1 &4570569426349886145
 GameObject:
   m_ObjectHideFlags: 0
