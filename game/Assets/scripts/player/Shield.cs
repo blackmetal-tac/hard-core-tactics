@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Shield : MonoBehaviour
 {
-    [HideInInspector] public float HP, Regeneration, Heat, Scale, ShrinkTimer;
+    [HideInInspector] public float HP, Regeneration, Heat, Scale, ShrinkTimer, ShieldIntencity, IntencityBuffer;
     [HideInInspector] public Material Material;
     [HideInInspector] public string ShieldID;
     [HideInInspector] public int DownTimer;    
@@ -12,6 +12,7 @@ public class Shield : MonoBehaviour
     private Collider _shieldCollider;
     private GameManager _gameManager;
     private bool _loading;
+    [ColorUsage(true, true)] public Color ShieldColor;
 
     [System.Serializable]
     public class ShieldModes
@@ -19,13 +20,14 @@ public class Shield : MonoBehaviour
         public string ModeName;
         public float Regen;
         public float Heat;
+        public int Intencity;
     }
     public List<ShieldModes> shieldModes;
 	
     void Start()
     {        
         _shieldCollider = GetComponent<Collider>();
-        Material = GetComponentInChildren<MeshRenderer>().sharedMaterial;
+        Material = GetComponentInChildren<MeshRenderer>().material;
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         // Enable shield
@@ -33,7 +35,7 @@ public class Shield : MonoBehaviour
         transform.DOScale(_size, _gameManager.LoadTime).SetEase(Ease.OutBack);
         this.Wait(_gameManager.LoadTime, () => {
             _loading = false;
-        });
+        });        
     }
 
     void FixedUpdate()
@@ -43,7 +45,7 @@ public class Shield : MonoBehaviour
             transform.localScale = (_size + Scale) * Vector3.one;
         }
         
-        Material.SetFloat("_Alpha", 0.3f * HP);
+        Material.SetFloat("_Alpha", (0.3f + ShieldIntencity / 10) * HP);                
 
         if (HP > 0)
         {
@@ -84,18 +86,31 @@ public class Shield : MonoBehaviour
     }
 
     public void TurnOnOff()
-    {
+    { 
         if (Regeneration == 0 && _gameManager.InAction)
         {
+            ShieldIntencity = IntencityBuffer;
+            Material.SetColor("_Color", ShieldColor * ShieldIntencity);
+
             _loading = true;
             transform.DOScale(0, _gameManager.LoadTime);
         }
         else if (_gameManager.InAction)
-        {
+        {   
+            ShieldIntencity = IntencityBuffer;
+            Material.SetColor("_Color", ShieldColor * ShieldIntencity);
+
             transform.DOScale(_size, _gameManager.LoadTime).SetEase(Ease.OutBack);
             this.Wait(_gameManager.LoadTime, () => {
                 _loading = false;
             });
         }
+    }
+
+    public void ChangeMode(ShieldModes shieldMode)
+    {
+        Regeneration = shieldMode.Regen;
+        Heat = shieldMode.Heat;
+        IntencityBuffer = shieldMode.Intencity;
     }
 }

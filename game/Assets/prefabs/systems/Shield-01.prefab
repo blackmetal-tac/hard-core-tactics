@@ -233,20 +233,25 @@ MonoBehaviour:
   Heat: 0
   Scale: 0
   ShrinkTimer: 0
+  ColorIntencity: 0
   Material: {fileID: 0}
   ShieldID: 
   DownTimer: 0
   _size: 0.9
+  ShieldColor: {r: 0, g: 0.6039216, b: 1.4980392, a: 0}
   shieldModes:
   - ModeName: off
     Regen: 0
     Heat: 0
+    Intencity: 1
   - ModeName: on
     Regen: 0.03
     Heat: 0.01
+    Intencity: 2
   - ModeName: over
     Regen: 0.09
     Heat: 0.03
+    Intencity: 4
 --- !u!114 &6285176286650417637
 MonoBehaviour:
   m_ObjectHideFlags: 0

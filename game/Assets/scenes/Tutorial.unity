@@ -1068,7 +1068,13 @@ MonoBehaviour:
   Spread: 0
   ShrinkTimer: 0
   IsDead: 0
-  ShieldOverdrive: 0
+  coolingModes:
+  - ModeName: on
+    Cooling: 0.1
+  - ModeName: over
+    Cooling: 0.2
+  - ModeName: auto
+    Cooling: 0
 --- !u!1 &331748077
 GameObject:
   m_ObjectHideFlags: 0
@@ -7771,7 +7777,7 @@ MonoBehaviour:
   Spread: 0
   ShrinkTimer: 0
   IsDead: 0
-  ShieldOverdrive: 0
+  coolingModes: []
 --- !u!1001 &2013747566
 PrefabInstance:
   m_ObjectHideFlags: 0

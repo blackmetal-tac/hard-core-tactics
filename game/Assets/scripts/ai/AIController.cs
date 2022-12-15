@@ -15,7 +15,8 @@ public class AIController : MonoBehaviour
         _unitAgent = GetComponent<NavMeshAgent>();
         _unitManager = GetComponentInChildren<UnitManager>();
 		// ??? set target to shoot
-		_unitManager.Target = GameObject.Find("PlayerSquad").transform.Find("Player").gameObject; 
+		_unitManager.Target = GameObject.Find("PlayerSquad").transform.Find("Player").gameObject;
+        _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);        
     }
 
     public void SetPath(NavMeshAgent Target)
@@ -38,8 +39,9 @@ public class AIController : MonoBehaviour
         _unitManager.SetDestination(_unitAgent.destination, _unitAgent);
     }
 
+    // Action phase
     public void Move()
-    {
+    {        
         _unitAgent.speed = _unitManager.MoveSpeed + 0.5f;
         // Change fire modes depending on heat or enable weapon after overheat
         foreach (WPNManager weapon in _unitManager.WeaponList)
@@ -55,7 +57,20 @@ public class AIController : MonoBehaviour
                 weapon.BurstSize = weapon.weaponModes[changeMode].FireMode;
             }
         }        
+
+        // Heat conditions
+        if (_unitManager.UnitShield.DownTimer <= 0 && _unitManager.Heat < _unitManager.HeatTreshold)
+        {
+            int changeMode = Random.Range(1, _unitManager.UnitShield.shieldModes.Count);
+            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[changeMode]);
+        }
+        else if (_unitManager.UnitShield.DownTimer <= 0 && _unitManager.Heat >= _unitManager.HeatTreshold)
+        {
+            int changeMode = Random.Range(0, _unitManager.UnitShield.shieldModes.Count - 1);
+            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[changeMode]);
+        }        
     }
+    
     public void EndMove()
     {
         _unitManager.MoveSpeed = 0.1f;

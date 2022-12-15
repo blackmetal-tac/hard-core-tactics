@@ -44,7 +44,7 @@ public class Equalizer : MonoBehaviour
         if (_shield != null)
         {
             _shield.Scale = _bassArray[0];
-            _shield.Material.SetFloat("_Intensity", 2.5f + _whisleArray[0] * 20);
+            _shield.Material.SetFloat("_Intensity", (2.5f - _shield.ShieldIntencity / 10) + _whisleArray[0] * 20);
         }
     }
 

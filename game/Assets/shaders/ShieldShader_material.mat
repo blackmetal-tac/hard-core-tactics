@@ -55,11 +55,13 @@ Material:
     m_Floats:
     - _Alpha: 0.3
     - _FresnelIntensity: 1.77
-    - _Intensity: 3.1043608
+    - _Intensity: 8.054241
     - _Offset: 3.5
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Speed: 0
     m_Colors:
+    - _Color: {r: 0, g: 1.6125653, b: 3.9999995, a: 0}
     - _EmissionColor: {r: 0.47798735, g: 0.9593584, b: 1, a: 0}
+    - __HDR_Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

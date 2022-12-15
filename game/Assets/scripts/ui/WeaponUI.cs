@@ -82,8 +82,17 @@ public class WeaponUI : MonoBehaviour
     // Enable weapon (update UI text)
     public void WeaponUp(int wpnIndex)
     {
-        _weaponButtons[wpnIndex].Slider.ModeName.text = _playerManager.WeaponList[wpnIndex]
-            .weaponModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
+        if (wpnIndex < 6)
+        {
+            _weaponButtons[wpnIndex].Slider.ModeName.text = _playerManager.WeaponList[wpnIndex]
+                .weaponModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
+        }
+        else if (wpnIndex == 6)
+        {
+            _weaponButtons[wpnIndex].Slider.ModeName.text = 
+                _playerManager.UnitShield.shieldModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
+        }
+        
     }
 
     // Update player weapon counters

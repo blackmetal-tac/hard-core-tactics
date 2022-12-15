@@ -25,8 +25,7 @@ public class SliderScr : MonoBehaviour
     {
         if (SliderObject.transform.parent.name == "ShieldUI")
         {
-            UnitShield.Regeneration = UnitShield.shieldModes[(int)SliderObject.value].Regen;
-            UnitShield.Heat = UnitShield.shieldModes[(int)SliderObject.value].Heat;
+            UnitShield.ChangeMode(UnitShield.shieldModes[(int)SliderObject.value]);
             ModeName.text = UnitShield.shieldModes[(int)SliderObject.value].ModeName;
             UnitShield.TurnOnOff();
 

@@ -21,15 +21,23 @@ public class UnitManager : MonoBehaviour
     private Vector3 _direction; // Rotate body to the enemy
     private readonly float _rotSpeed = 1f;
 
-    public List<WPNManager> WeaponList;
+    [HideInInspector] public List<WPNManager> WeaponList;
     [HideInInspector] public int WeaponCount = 0;
     private WeaponUI _weaponUI;
 
     [HideInInspector] public float MoveSpeed = 0.1f;
     [HideInInspector] public float Spread;
     [HideInInspector] public float ShrinkTimer;
-    public bool IsDead; // Death trigger
+    [HideInInspector] public bool IsDead; // Death trigger
     private float _lastCheck;
+
+    [System.Serializable]
+    public class CoolingModes
+    {
+        public string ModeName;
+        public float Cooling;
+    }
+    public List<CoolingModes> coolingModes;
 
     // ??? Set UnitManager for all weapons before Start
     void Awake()
@@ -53,6 +61,8 @@ public class UnitManager : MonoBehaviour
                 WeaponCount += 1;
             }
         }
+
+        UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();
     }
 
     // Start is called before the first frame update
@@ -61,8 +71,7 @@ public class UnitManager : MonoBehaviour
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
-        _shrinkBar = GetComponentInChildren<ShrinkBar>();
-        UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();
+        _shrinkBar = GetComponentInChildren<ShrinkBar>();        
         UnitShield.ShieldID = transform.parent.name;
 
         // Load HP, Shield, Heat bars
@@ -235,8 +244,8 @@ public class UnitManager : MonoBehaviour
     // Roll a weapon to overheat
     private void Overheat()
     {
-        int wpnIndex = Random.Range(0, WeaponCount);
-        if (WeaponList[wpnIndex] != null && WeaponList[wpnIndex].DownTimer <= 0)
+        int wpnIndex = Random.Range(0, WeaponCount + 1);
+        if (wpnIndex < WeaponCount && WeaponList[wpnIndex] != null && WeaponList[wpnIndex].DownTimer <= 0)
         {
             WeaponList[wpnIndex].DownTimer = 3;
             WeaponList[wpnIndex].BurstSize = WeaponList[wpnIndex].weaponModes[0].FireMode;
@@ -245,6 +254,17 @@ public class UnitManager : MonoBehaviour
             if (transform.parent.name == "Player")
             {
                 _weaponUI.WeaponDown(wpnIndex, WeaponList[wpnIndex].DownTimer);
+            }
+        } 
+        else if (wpnIndex == WeaponCount && UnitShield.DownTimer <= 0)
+        {
+            UnitShield.DownTimer = 3;
+            UnitShield.ChangeMode(UnitShield.shieldModes[0]); 
+            UnitShield.TurnOnOff();
+
+            if (transform.parent.name == "Player")
+            {                
+                _weaponUI.WeaponDown(wpnIndex, UnitShield.DownTimer);
             }
         }
     }
@@ -267,6 +287,16 @@ public class UnitManager : MonoBehaviour
                     _weaponUI.WeaponUp(i);
                 }
             }
+        }
+
+        UnitShield.DownTimer -= 1;
+        if (transform.parent.name == "Player" && UnitShield.DownTimer > 0)
+        {
+            _weaponUI.UpdateStatus(6, UnitShield.DownTimer); // ???
+        }
+        else if (transform.parent.name == "Player" && UnitShield.DownTimer <= 0)
+        {
+            _weaponUI.WeaponUp(6);
         }
     }
 }
