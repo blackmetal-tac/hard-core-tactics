@@ -1056,9 +1056,9 @@ MonoBehaviour:
   UnitShield: {fileID: 0}
   HP: 0
   Heat: 0
+  Cooling: 0
   HeatTreshold: 0.7
   _shieldRegen: 0.03
-  _cooling: 0.1
   _heatCheckTime: 0.5
   _heatSafeRoll: 5
   _walkDistance: 3
@@ -3045,7 +3045,7 @@ PrefabInstance:
     - target: {fileID: 3290949745920052616, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
       propertyPath: m_text
-      value: 'L. Hand
+      value: 'Torso
 
 '
       objectReference: {fileID: 0}
@@ -4024,29 +4024,9 @@ PrefabInstance:
     - target: {fileID: 3290949745920052616, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
       propertyPath: m_text
-      value: 'L. Top
+      value: 'Torso
 
 '
-      objectReference: {fileID: 0}
-    - target: {fileID: 3290949745920052617, guid: 6e6849887bd67114687ad15e48689820,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3290949745920052617, guid: 6e6849887bd67114687ad15e48689820,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3290949745920052617, guid: 6e6849887bd67114687ad15e48689820,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3290949745920052617, guid: 6e6849887bd67114687ad15e48689820,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3290949745920052617, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
@@ -4233,25 +4213,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cooling
       objectReference: {fileID: 0}
-    - target: {fileID: 3290949747313914822, guid: 6e6849887bd67114687ad15e48689820,
-        type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 3290949747313914823, guid: 6e6849887bd67114687ad15e48689820,
         type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3290949747313914823, guid: 6e6849887bd67114687ad15e48689820,
-        type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3290949747313914823, guid: 6e6849887bd67114687ad15e48689820,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -260
+      propertyPath: m_SizeDelta.x
+      value: 300
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e6849887bd67114687ad15e48689820, type: 3}
@@ -7765,9 +7730,9 @@ MonoBehaviour:
   UnitShield: {fileID: 0}
   HP: 0
   Heat: 0
+  Cooling: 0
   HeatTreshold: 0.7
   _shieldRegen: 0.03
-  _cooling: 0.1
   _heatCheckTime: 0.5
   _heatSafeRoll: 5
   _walkDistance: 3
@@ -7777,7 +7742,13 @@ MonoBehaviour:
   Spread: 0
   ShrinkTimer: 0
   IsDead: 0
-  coolingModes: []
+  coolingModes:
+  - ModeName: on
+    Cooling: 0.1
+  - ModeName: over
+    Cooling: 0.2
+  - ModeName: auto
+    Cooling: 0
 --- !u!1001 &2013747566
 PrefabInstance:
   m_ObjectHideFlags: 0

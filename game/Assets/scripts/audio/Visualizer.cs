@@ -16,7 +16,7 @@ public class Visualizer : MonoBehaviour
     private string _sceneName;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _sceneName = SceneManager.GetActiveScene().name;
         _audioData = GameObject.Find("AudioData").GetComponent<AudioData>();

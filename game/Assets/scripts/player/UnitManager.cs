@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
@@ -8,9 +10,9 @@ public class UnitManager : MonoBehaviour
     [HideInInspector] public Shield UnitShield;
 	
     // Stats    
-    [HideInInspector] public float HP, Heat;
+    [HideInInspector] public float HP, Heat, Cooling;
 	[Range(0, 1)] public float HeatTreshold;
-    [SerializeField][Range(0, 0.5f)] private float _shieldRegen, _cooling;
+    [SerializeField][Range(0, 0.5f)] private float _shieldRegen;
     [SerializeField][Range(0, 1)] private float _heatCheckTime;
     [SerializeField][Range(0, 10)] private int _heatSafeRoll;
     [SerializeField][Range(0, 10)] private int _walkDistance;
@@ -22,12 +24,10 @@ public class UnitManager : MonoBehaviour
     private readonly float _rotSpeed = 1f;
 
     [HideInInspector] public List<WPNManager> WeaponList;
-    [HideInInspector] public int WeaponCount = 0;
+    [HideInInspector] public int WeaponCount = 0, CoolingDownTimer;
     private WeaponUI _weaponUI;
 
-    [HideInInspector] public float MoveSpeed = 0.1f;
-    [HideInInspector] public float Spread;
-    [HideInInspector] public float ShrinkTimer;
+    [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer, HeatIndicator = 0;
     [HideInInspector] public bool IsDead; // Death trigger
     private float _lastCheck;
 
@@ -38,6 +38,7 @@ public class UnitManager : MonoBehaviour
         public float Cooling;
     }
     public List<CoolingModes> coolingModes;
+    private bool _pong;
 
     // ??? Set UnitManager for all weapons before Start
     void Awake()
@@ -73,6 +74,7 @@ public class UnitManager : MonoBehaviour
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         _shrinkBar = GetComponentInChildren<ShrinkBar>();        
         UnitShield.ShieldID = transform.parent.name;
+        Cooling = coolingModes[0].Cooling;
 
         // Load HP, Shield, Heat bars
         this.Progress(_gameManager.LoadTime, () => {
@@ -133,6 +135,25 @@ public class UnitManager : MonoBehaviour
     {
         _shrinkBar.UpdateShield();
         _shrinkBar.UpdateHealth();
+
+        if (!_pong)
+        {
+            HeatIndicator += Time.deltaTime;
+        }
+        else 
+        {
+            HeatIndicator -= Time.deltaTime;
+        }
+
+        if (HeatIndicator <= 0)
+        {
+            _pong = false;
+        }
+        else if (HeatIndicator >= 1)
+        {
+            _pong = true;
+        }
+        Debug.Log(HeatIndicator);
     }
 
     // Do actions in Update
@@ -151,7 +172,7 @@ public class UnitManager : MonoBehaviour
             // Heat dissipation
             if (Heat > 0 && !IsDead)
             {
-                Heat -= Time.deltaTime * (_cooling - UnitShield.Heat);                
+                Heat -= Time.deltaTime * (Cooling - UnitShield.Heat);                
                 _shrinkBar.UpdateHeat();
 
                 if (Heat > HeatTreshold && Time.time > _lastCheck + _heatCheckTime) // Roll Heat penalty
@@ -298,5 +319,41 @@ public class UnitManager : MonoBehaviour
         {
             _weaponUI.WeaponUp(6);
         }
+
+        CoolingDownTimer -= 1;
+        if (transform.parent.name == "Player" && CoolingDownTimer > 0)
+        {
+            _weaponUI.UpdateStatus(7, CoolingDownTimer); // ???
+        }
+        else if (transform.parent.name == "Player" && CoolingDownTimer <= 0)
+        {
+            _weaponUI.WeaponUp(7);
+        }
+    }
+
+    public void CoolingOverdrive()
+    {
+        if (Cooling == coolingModes[1].Cooling && CoolingDownTimer <= 0)
+        {
+            CoolingDownTimer = 5;
+            
+            //StartCoroutine(CoolingIndicator());
+            if (transform.parent.name == "Player")
+            {                
+                _weaponUI.WeaponDown(7, CoolingDownTimer);
+            }
+        }
+    }
+
+    private IEnumerator CoolingIndicator()
+    {
+        DOTween.To(() => HeatIndicator, x => HeatIndicator = x, 1, 1).SetLoops(-1, LoopType.Yoyo);
+        Debug.Log(HeatIndicator);
+        if (Cooling == coolingModes[0].Cooling)
+        {
+            HeatIndicator = 0;
+            Debug.Log("Break");
+            yield break;
+        }        
     }
 }

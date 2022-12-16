@@ -86,7 +86,7 @@ public class ShrinkBar : MonoBehaviour
 
         if (_unitManager.transform.parent.name == "Player")
         {           
-            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_unitManager.Heat * 0.8f);
+            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_unitManager.Heat * 0.8f) + _unitManager.HeatIndicator;
             _heatImageInd.fillAmount = _unitManager.Heat;
         }
     }

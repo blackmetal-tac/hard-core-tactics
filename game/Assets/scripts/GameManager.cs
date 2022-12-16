@@ -93,16 +93,14 @@ public class GameManager : MonoBehaviour
         // Enemy actions ???
         if (!_enemyManager.IsDead)
         {
-            _AIController.SetPath(_playerController.PlayerAgent);
-            _enemyManager.UnitShield.TurnOnOff();
+            _AIController.SetPath(_playerController.PlayerAgent);            
             _AIController.Move();
         }
 
         // Player actions
         if (!_playerManager.IsDead)
         {
-            _playerController.Move();
-            _playerManager.UnitShield.TurnOnOff();
+            _playerController.Move();            
         }        
 
         // Action phase
@@ -118,7 +116,10 @@ public class GameManager : MonoBehaviour
             }
 
             // Player actions ???
-            _playerManager.StartAction();            
+            if (!_playerManager.IsDead)
+            {
+                _playerManager.StartAction(); 
+            }                       
         });
 
         // At the end of turn
@@ -132,7 +133,7 @@ public class GameManager : MonoBehaviour
             _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
             InAction = false;
 
-            // Units actions
+            // Units actions end
             if (!_enemyManager.IsDead)
             {
                 _AIController.EndMove();                

@@ -50,8 +50,13 @@ public class WeaponUI : MonoBehaviour
 
         // Shield controls
         _weaponButtons[6].WeaponName.text = _playerManager.UnitShield.name;
-        _weaponButtons[6].Slider.UnitShield = _playerManager.UnitShield;
+        _weaponButtons[6].Slider.PlayerManager = _playerManager;
         _weaponButtons[6].Slider.ChangeWPNmode();
+
+        // Cooling controls
+        _weaponButtons[7].WeaponName.text = "Cooling System";
+        _weaponButtons[7].Slider.PlayerManager = _playerManager;
+        _weaponButtons[7].Slider.ChangeWPNmode();
 
         // Weapons controls
         for (int i = 0; i < _playerManager.WeaponList.Count; i++ ) 
@@ -73,8 +78,15 @@ public class WeaponUI : MonoBehaviour
     // Disable weapon
     public void WeaponDown(int wpnIndex, int downTimer)
     {
-        _weaponButtons[wpnIndex].ActionMask.transform.localScale = Vector3.one;
-        _weaponButtons[wpnIndex].Slider.SliderObject.value = 0;        
+        if (wpnIndex == 7)
+        {
+            _weaponButtons[wpnIndex].Slider.SliderObject.value = 1;
+        }
+        else
+        {
+            _weaponButtons[wpnIndex].Slider.SliderObject.value = 0; 
+        }
+        _weaponButtons[wpnIndex].ActionMask.transform.localScale = Vector3.one;              
 
         UpdateStatus(wpnIndex, downTimer);
     }
@@ -91,8 +103,12 @@ public class WeaponUI : MonoBehaviour
         {
             _weaponButtons[wpnIndex].Slider.ModeName.text = 
                 _playerManager.UnitShield.shieldModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
-        }
-        
+        }    
+        else if (wpnIndex == 7)
+        {
+            _weaponButtons[wpnIndex].Slider.ModeName.text = 
+                _playerManager.UnitShield.shieldModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
+        }      
     }
 
     // Update player weapon counters
@@ -110,18 +126,35 @@ public class WeaponUI : MonoBehaviour
         {
             _weaponButtons[6].ActionMask.transform.localScale = Vector3.zero;
         }
+        
+        if (_playerManager.CoolingDownTimer <= 0)
+        {
+            _weaponButtons[7].ActionMask.transform.localScale = Vector3.zero;
+        }        
+        else if (_playerManager.CoolingDownTimer == 3)
+        {
+            _weaponButtons[7].Slider.SliderObject.value = 0;
+            UpdateStatus(7, 3);
+        }
     }
 
     // Update weapon counter
     public void UpdateStatus(int wpnIndex, int downTimer)
     {
-        if (downTimer == 1)
+        if (wpnIndex == 7 && downTimer > 3)
         {
-            _weaponButtons[wpnIndex].Slider.ModeName.text = "Off: " + downTimer + " trn";
+            _weaponButtons[wpnIndex].Slider.ModeName.text = "Overdrive";
         }
-        else 
+        else
         {
-            _weaponButtons[wpnIndex].Slider.ModeName.text = "Off: " + downTimer + " trns";
-        }     
+            if (downTimer == 1)
+            {
+                _weaponButtons[wpnIndex].Slider.ModeName.text = "Off: " + downTimer + " trn";
+            }
+            else 
+            {
+                _weaponButtons[wpnIndex].Slider.ModeName.text = "Off: " + downTimer + " trns";
+            }     
+        }
     }
 }

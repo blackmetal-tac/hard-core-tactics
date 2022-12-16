@@ -43,6 +43,7 @@ public class AIController : MonoBehaviour
     public void Move()
     {        
         _unitAgent.speed = _unitManager.MoveSpeed + 0.5f;
+        _unitManager.UnitShield.TurnOnOff();
         // Change fire modes depending on heat or enable weapon after overheat
         foreach (WPNManager weapon in _unitManager.WeaponList)
         {

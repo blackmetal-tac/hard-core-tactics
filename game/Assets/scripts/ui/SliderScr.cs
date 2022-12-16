@@ -8,8 +8,8 @@ public class SliderScr : MonoBehaviour
     private GameManager _gameManager;
     [HideInInspector] public Slider SliderObject;
     [HideInInspector] public WPNManager Weapon;
-    [HideInInspector] public TextMeshProUGUI ModeName;
-    [HideInInspector] public Shield UnitShield;
+    [HideInInspector] public TextMeshProUGUI ModeName;    
+    [HideInInspector] public UnitManager PlayerManager;
 
     // Start is called before the first frame update
     void Start()
@@ -19,15 +19,23 @@ public class SliderScr : MonoBehaviour
         SliderObject = GetComponent<Slider>();
         SliderObject.onValueChanged.AddListener(delegate { ChangeWPNmode(); });
         ModeName = transform.Find("Handle Slide Area").Find("Handle").GetComponentInChildren<TextMeshProUGUI>();
+
+        this.Wait(1, () =>{
+            // Reset base cooling mode
+            if (SliderObject.transform.parent.name == "CoolingUI")
+            {
+                SliderObject.value = 0;
+            }     
+        });   
     }
 
     public void ChangeWPNmode()
     {
         if (SliderObject.transform.parent.name == "ShieldUI")
         {
-            UnitShield.ChangeMode(UnitShield.shieldModes[(int)SliderObject.value]);
-            ModeName.text = UnitShield.shieldModes[(int)SliderObject.value].ModeName;
-            UnitShield.TurnOnOff();
+            PlayerManager.UnitShield.ChangeMode(PlayerManager.UnitShield.shieldModes[(int)SliderObject.value]);
+            ModeName.text = PlayerManager.UnitShield.shieldModes[(int)SliderObject.value].ModeName;
+            PlayerManager.UnitShield.TurnOnOff();
 
             if (_gameManager.InAction)
             {                
@@ -35,8 +43,21 @@ public class SliderScr : MonoBehaviour
             }
         }
         else if (SliderObject.transform.parent.name == "CoolingUI")
-        {
+        {            
+            PlayerManager.Cooling = PlayerManager.coolingModes[(int)SliderObject.value].Cooling;
+            ModeName.text = PlayerManager.coolingModes[(int)SliderObject.value].ModeName;
 
+            if (_gameManager.InAction)
+            {                
+                if (PlayerManager.Cooling == PlayerManager.coolingModes[1].Cooling)
+                {
+                    PlayerManager.CoolingOverdrive();
+                }
+                else
+                {
+                    _actionMask.transform.localScale = Vector3.one;
+                }                
+            }
         }
         else
         {
