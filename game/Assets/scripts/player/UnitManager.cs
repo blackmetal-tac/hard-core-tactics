@@ -38,7 +38,7 @@ public class UnitManager : MonoBehaviour
         public float Cooling;
     }
     public List<CoolingModes> coolingModes;
-    private bool _pong;
+    private bool _pong;    
 
     // ??? Set UnitManager for all weapons before Start
     void Awake()
@@ -72,7 +72,7 @@ public class UnitManager : MonoBehaviour
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
-        _shrinkBar = GetComponentInChildren<ShrinkBar>();        
+        _shrinkBar = GetComponentInChildren<ShrinkBar>();
         UnitShield.ShieldID = transform.parent.name;
         Cooling = coolingModes[0].Cooling;
 
@@ -135,25 +135,6 @@ public class UnitManager : MonoBehaviour
     {
         _shrinkBar.UpdateShield();
         _shrinkBar.UpdateHealth();
-
-        if (!_pong)
-        {
-            HeatIndicator += Time.deltaTime;
-        }
-        else 
-        {
-            HeatIndicator -= Time.deltaTime;
-        }
-
-        if (HeatIndicator <= 0)
-        {
-            _pong = false;
-        }
-        else if (HeatIndicator >= 1)
-        {
-            _pong = true;
-        }
-        Debug.Log(HeatIndicator);
     }
 
     // Do actions in Update
@@ -343,17 +324,5 @@ public class UnitManager : MonoBehaviour
                 _weaponUI.WeaponDown(7, CoolingDownTimer);
             }
         }
-    }
-
-    private IEnumerator CoolingIndicator()
-    {
-        DOTween.To(() => HeatIndicator, x => HeatIndicator = x, 1, 1).SetLoops(-1, LoopType.Yoyo);
-        Debug.Log(HeatIndicator);
-        if (Cooling == coolingModes[0].Cooling)
-        {
-            HeatIndicator = 0;
-            Debug.Log("Break");
-            yield break;
-        }        
-    }
+    }    
 }
