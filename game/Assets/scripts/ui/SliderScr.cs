@@ -11,10 +11,7 @@ public class SliderScr : MonoBehaviour
     [HideInInspector] public TextMeshProUGUI ModeName;    
     [HideInInspector] public UnitManager PlayerManager;
     private CanvasGroup _shieldUI, _coolingUI;
-    private bool _shieldOver, _coolingOver;
-
-    private Material _material;
-    public Color color;
+    private bool _bounce;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +23,6 @@ public class SliderScr : MonoBehaviour
         SliderObject = GetComponent<Slider>();
         SliderObject.onValueChanged.AddListener(delegate { ChangeWPNmode(); });
         ModeName = transform.Find("Handle Slide Area").Find("Handle").GetComponentInChildren<TextMeshProUGUI>();
-        _material = _coolingUI.GetComponentInChildren<MeshRenderer>().material;
 
         this.Wait(1, () =>{
             // Reset base cooling mode
@@ -49,14 +45,28 @@ public class SliderScr : MonoBehaviour
             _shieldUI.alpha = 0;
         }
         
-        if (SliderObject.transform.parent.name == "CoolingUI" && SliderObject.value == 1 )
-            //|| PlayerManager.Cooling == PlayerManager.coolingModes[1].Cooling)
+        if (SliderObject.transform.parent.name == "CoolingUI" && SliderObject.value == 1 
+            || SliderObject.transform.parent.name == "CoolingUI" && PlayerManager.Cooling == PlayerManager.coolingModes[1].Cooling)
         {
             BounceUI(_coolingUI);
         }
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {
             _coolingUI.alpha = 0;
+        }
+
+        // Auto Cooling overdrive
+        if (SliderObject.transform.parent.name == "CoolingUI" && SliderObject.value == 2 && _gameManager.InAction)
+        {
+            if (PlayerManager.CoolingDownTimer <= 0 && PlayerManager.Heat >= PlayerManager.HeatTreshold)
+            {
+                PlayerManager.Cooling = PlayerManager.coolingModes[1].Cooling; 
+                PlayerManager.CoolingDownTimer = 5;               
+            }
+            else if (PlayerManager.CoolingDownTimer <= 3)
+            {
+                PlayerManager.Cooling = PlayerManager.coolingModes[0].Cooling;
+            }
         }
     }
 
@@ -89,6 +99,15 @@ public class SliderScr : MonoBehaviour
                     _actionMask.transform.localScale = Vector3.one;
                 }                
             }
+
+            if (SliderObject.value == 2)
+            {
+                PlayerManager.AutoCooling = true;
+            }
+            else
+            {
+                PlayerManager.AutoCooling = false;
+            }
         }
         else
         {
@@ -106,22 +125,22 @@ public class SliderScr : MonoBehaviour
 
     private void BounceUI(CanvasGroup canvasGroup)
     {        
-        if (!_shieldOver)
+        if (!_bounce)
         {
             canvasGroup.alpha += Time.deltaTime;
         }
-        else if (_shieldOver)
+        else if (_bounce)
         {
             canvasGroup.alpha -= Time.deltaTime;
         }
 
         if (canvasGroup.alpha <= 0.1f)
         {
-            _shieldOver = false;
+            _bounce = false;
         }
         else if (canvasGroup.alpha >= 1)
         {
-            _shieldOver = true;            
+            _bounce = true;            
         }
     }
 }

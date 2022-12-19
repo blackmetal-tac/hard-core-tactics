@@ -130,10 +130,18 @@ public class WeaponUI : MonoBehaviour
         if (_playerManager.CoolingDownTimer <= 0)
         {
             _weaponButtons[7].ActionMask.transform.localScale = Vector3.zero;
-        }        
-        else if (_playerManager.CoolingDownTimer == 3)
+        }      
+        else if (_playerManager.CoolingDownTimer > 3 && _playerManager.AutoCooling)
+        {
+            _weaponButtons[7].ActionMask.transform.localScale = Vector3.one;
+        }  
+        else if (_playerManager.CoolingDownTimer == 3 && !_playerManager.AutoCooling)
         {
             _weaponButtons[7].Slider.SliderObject.value = 0;
+            UpdateStatus(7, 3);
+        }
+        else if (_playerManager.CoolingDownTimer == 3 && _playerManager.AutoCooling)
+        {            
             UpdateStatus(7, 3);
         }
     }

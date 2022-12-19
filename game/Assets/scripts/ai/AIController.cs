@@ -43,7 +43,8 @@ public class AIController : MonoBehaviour
     public void Move()
     {        
         _unitAgent.speed = _unitManager.MoveSpeed + 0.5f;
-        _unitManager.UnitShield.TurnOnOff();
+        _unitManager.UnitShield.TurnOnOff();        
+
         // Change fire modes depending on heat or enable weapon after overheat
         foreach (WPNManager weapon in _unitManager.WeaponList)
         {
@@ -59,7 +60,7 @@ public class AIController : MonoBehaviour
             }
         }        
 
-        // Heat conditions
+        // Shield management
         if (_unitManager.UnitShield.DownTimer <= 0 && _unitManager.Heat < _unitManager.HeatTreshold)
         {
             int changeMode = Random.Range(1, _unitManager.UnitShield.shieldModes.Count);
@@ -70,6 +71,13 @@ public class AIController : MonoBehaviour
             int changeMode = Random.Range(0, _unitManager.UnitShield.shieldModes.Count - 1);
             _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[changeMode]);
         }        
+
+        // Cooling overdrive
+        if (_unitManager.CoolingDownTimer <= 0 && _unitManager.Heat >= _unitManager.HeatTreshold)
+        {
+            _unitManager.Cooling = _unitManager.coolingModes[1].Cooling;            
+        }
+        _unitManager.CoolingOverdrive();
     }
     
     public void EndMove()

@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
@@ -27,8 +25,8 @@ public class UnitManager : MonoBehaviour
     [HideInInspector] public int WeaponCount = 0, CoolingDownTimer;
     private WeaponUI _weaponUI;
 
-    [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer, HeatIndicator = 0;
-    [HideInInspector] public bool IsDead; // Death trigger
+    [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer;
+    [HideInInspector] public bool IsDead, AutoCooling; // Death trigger
     private float _lastCheck;
 
     [System.Serializable]
@@ -38,7 +36,6 @@ public class UnitManager : MonoBehaviour
         public float Cooling;
     }
     public List<CoolingModes> coolingModes;
-    private bool _pong;    
 
     // ??? Set UnitManager for all weapons before Start
     void Awake()
@@ -74,6 +71,7 @@ public class UnitManager : MonoBehaviour
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         _shrinkBar = GetComponentInChildren<ShrinkBar>();
         UnitShield.ShieldID = transform.parent.name;
+        Heat = 1;
         Cooling = coolingModes[0].Cooling;
 
         // Load HP, Shield, Heat bars
@@ -314,11 +312,9 @@ public class UnitManager : MonoBehaviour
 
     public void CoolingOverdrive()
     {
-        if (Cooling == coolingModes[1].Cooling && CoolingDownTimer <= 0)
+        if (Cooling == coolingModes[1].Cooling && CoolingDownTimer <= 0 && !AutoCooling)
         {
-            CoolingDownTimer = 5;
-            
-            //StartCoroutine(CoolingIndicator());
+            CoolingDownTimer = 5; 
             if (transform.parent.name == "Player")
             {                
                 _weaponUI.WeaponDown(7, CoolingDownTimer);

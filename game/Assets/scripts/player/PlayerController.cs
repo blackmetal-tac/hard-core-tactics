@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Draw player path
-        if (PlayerAgent.hasPath)
+        if (PlayerAgent.hasPath && !_playerManager.IsDead)
         {
             DrawPath();
         }
