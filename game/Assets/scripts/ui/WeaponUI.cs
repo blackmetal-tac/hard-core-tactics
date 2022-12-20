@@ -78,11 +78,11 @@ public class WeaponUI : MonoBehaviour
     // Disable weapon
     public void WeaponDown(int wpnIndex, int downTimer)
     {
-        if (wpnIndex == 7)
+        if (wpnIndex == 7 && !_playerManager.AutoCooling)
         {
             _weaponButtons[wpnIndex].Slider.SliderObject.value = 1;
         }
-        else
+        else if (wpnIndex != 7)
         {
             _weaponButtons[wpnIndex].Slider.SliderObject.value = 0; 
         }
@@ -93,22 +93,8 @@ public class WeaponUI : MonoBehaviour
 
     // Enable weapon (update UI text)
     public void WeaponUp(int wpnIndex)
-    {
-        if (wpnIndex < 6)
-        {
-            _weaponButtons[wpnIndex].Slider.ModeName.text = _playerManager.WeaponList[wpnIndex]
-                .weaponModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
-        }
-        else if (wpnIndex == 6)
-        {
-            _weaponButtons[wpnIndex].Slider.ModeName.text = 
-                _playerManager.UnitShield.shieldModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
-        }    
-        else if (wpnIndex == 7)
-        {
-            _weaponButtons[wpnIndex].Slider.ModeName.text = 
-                _playerManager.UnitShield.shieldModes[(int)_weaponButtons[wpnIndex].Slider.SliderObject.value].ModeName;
-        }      
+    {        
+        _weaponButtons[wpnIndex].Slider.ChangeWPNmode();     
     }
 
     // Update player weapon counters
@@ -157,7 +143,7 @@ public class WeaponUI : MonoBehaviour
         {
             if (downTimer == 1)
             {
-                _weaponButtons[wpnIndex].Slider.ModeName.text = "Off: " + downTimer + " trn";
+                _weaponButtons[wpnIndex].Slider.ModeName.text = "Off: " + downTimer + " turn";
             }
             else 
             {

@@ -61,11 +61,7 @@ public class SliderScr : MonoBehaviour
             if (PlayerManager.CoolingDownTimer <= 0 && PlayerManager.Heat >= PlayerManager.HeatTreshold)
             {
                 PlayerManager.Cooling = PlayerManager.coolingModes[1].Cooling; 
-                PlayerManager.CoolingDownTimer = 5;               
-            }
-            else if (PlayerManager.CoolingDownTimer <= 3)
-            {
-                PlayerManager.Cooling = PlayerManager.coolingModes[0].Cooling;
+                PlayerManager.CoolingOverdrive();                    
             }
         }
     }
@@ -86,7 +82,7 @@ public class SliderScr : MonoBehaviour
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {            
             PlayerManager.Cooling = PlayerManager.coolingModes[(int)SliderObject.value].Cooling;
-            ModeName.text = PlayerManager.coolingModes[(int)SliderObject.value].ModeName;
+            ModeName.text = PlayerManager.coolingModes[(int)SliderObject.value].ModeName;            
 
             if (_gameManager.InAction)
             {                

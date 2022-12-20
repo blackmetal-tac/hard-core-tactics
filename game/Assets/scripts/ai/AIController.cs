@@ -14,6 +14,7 @@ public class AIController : MonoBehaviour
     {
         _unitAgent = GetComponent<NavMeshAgent>();
         _unitManager = GetComponentInChildren<UnitManager>();
+
 		// ??? set target to shoot
 		_unitManager.Target = GameObject.Find("PlayerSquad").transform.Find("Player").gameObject;
         _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);        
@@ -76,6 +77,10 @@ public class AIController : MonoBehaviour
         if (_unitManager.CoolingDownTimer <= 0 && _unitManager.Heat >= _unitManager.HeatTreshold)
         {
             _unitManager.Cooling = _unitManager.coolingModes[1].Cooling;            
+        }
+        else if (_unitManager.CoolingDownTimer <= 3 && _unitManager.CoolingDownTimer > 0)
+        {
+            _unitManager.Cooling = _unitManager.coolingModes[0].Cooling; 
         }
         _unitManager.CoolingOverdrive();
     }

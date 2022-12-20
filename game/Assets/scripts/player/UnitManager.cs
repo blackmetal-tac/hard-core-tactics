@@ -308,17 +308,22 @@ public class UnitManager : MonoBehaviour
         {
             _weaponUI.WeaponUp(7);
         }
+        CoolingOverdrive();
     }
 
     public void CoolingOverdrive()
     {
-        if (Cooling == coolingModes[1].Cooling && CoolingDownTimer <= 0 && !AutoCooling)
+        if (Cooling == coolingModes[1].Cooling && CoolingDownTimer <= 0 )
         {
             CoolingDownTimer = 5; 
             if (transform.parent.name == "Player")
             {                
                 _weaponUI.WeaponDown(7, CoolingDownTimer);
             }
+        }
+        else if (CoolingDownTimer <= 3)
+        {
+            Cooling = coolingModes[0].Cooling;
         }
     }    
 }
