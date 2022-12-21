@@ -66,7 +66,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 300cafe346f386b4b8662618256f9ff9, type: 3}
+  m_Sprite: {fileID: 3286163911610860551, guid: 9c6179520bb079b4c9f050f74d907ff7,
+    type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -142,7 +143,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 300cafe346f386b4b8662618256f9ff9, type: 3}
+  m_Sprite: {fileID: 3286163911610860551, guid: 9c6179520bb079b4c9f050f74d907ff7,
+    type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -218,7 +220,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 300cafe346f386b4b8662618256f9ff9, type: 3}
+  m_Sprite: {fileID: 3286163911610860551, guid: 9c6179520bb079b4c9f050f74d907ff7,
+    type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -472,7 +475,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6174276808890893066}
   m_Enabled: 1
-  m_Alpha: 0.7
+  m_Alpha: 0.8
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -733,7 +736,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 300cafe346f386b4b8662618256f9ff9, type: 3}
+  m_Sprite: {fileID: 3286163911610860551, guid: 9c6179520bb079b4c9f050f74d907ff7,
+    type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -859,7 +863,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c4502b71c4bf2944eb91e3cabe6a6a3a, type: 3}
+  m_Sprite: {fileID: 3286163911610860551, guid: 77a676fe7f5f0b24fa6090e0bd700cd3,
+    type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1

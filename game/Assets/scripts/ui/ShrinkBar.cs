@@ -56,12 +56,12 @@ public class ShrinkBar : MonoBehaviour
     public void UpdateShield()
     {
         Shrink(_shieldImage, _shieldDmgImage, _unitManager.UnitShield.HP, true);
-        _unitShieldGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _shieldImage.fillAmount) / 2);
+        _unitShieldGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _shieldImage.fillAmount) * 0.6f);
 
         // Player UI
         if (_unitManager.transform.parent.name == "Player")
         {
-            _shieldCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _shieldImage.fillAmount) / 2);
+            _shieldCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _shieldImage.fillAmount) * 0.6f);
             Shrink(_shieldImageInd, _shieldDmgImageInd, _unitManager.UnitShield.HP, true);
         }
     }
@@ -69,12 +69,12 @@ public class ShrinkBar : MonoBehaviour
     public void UpdateHealth()
     {
         Shrink(_healthImage, _healthDmgImage, _unitManager.HP, false);
-        _unitHealthGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _healthImage.fillAmount) / 2);
+        _unitHealthGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _healthImage.fillAmount) * 0.6f);
 
         // Player UI
         if (_unitManager.transform.parent.name == "Player")
         {
-            _healthCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _healthImage.fillAmount) / 2);
+            _healthCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _healthImage.fillAmount) * 0.6f);
             Shrink(_healthImageInd, _healthDmgImageInd, _unitManager.HP, false);
         }
     }

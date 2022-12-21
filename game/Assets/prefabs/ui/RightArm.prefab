@@ -230,9 +230,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c040d61dc3cac489f88b8fb5ce04dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slider: {fileID: 0}
-  weapon: {fileID: 0}
-  modeName: {fileID: 0}
+  SliderObject: {fileID: 0}
+  Weapon: {fileID: 0}
+  ModeName: {fileID: 0}
+  PlayerManager: {fileID: 0}
 --- !u!1 &3211034667369219852
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,7 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1914e946fc46a3241bef5a3fd911a015, type: 2}
   m_Color: {r: 0.31790668, g: 0.5179081, b: 0.5377358, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -379,8 +380,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 065d9e0bed96498469f668467558bb59, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 3286163911610860551, guid: 63f8ea9a4f33f4749928f47245da11b8,
+    type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
