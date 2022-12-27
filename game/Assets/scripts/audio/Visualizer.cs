@@ -125,13 +125,12 @@ public class Visualizer : MonoBehaviour
         }
         else
         {
-            if (Time.time > 2)
-            {
+            this.Wait(2, () => {
                 for (int i = 0; i < _samles; i++)
                 {                                                                                                   
                     _rightQuads[i].transform.localScale = new Vector3(_width, _audioData.Samples[i] * _amp * (i / 2 + 1) + _height, 1);
                 }
-            }
+            });
         }
     }
 }

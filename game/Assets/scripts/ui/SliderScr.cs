@@ -34,8 +34,7 @@ public class SliderScr : MonoBehaviour
     }
 
     void FixedUpdate()
-    {
-        //_material.color = color;
+    {        
         if (SliderObject.transform.parent.name == "ShieldUI" && SliderObject.value == 2)
         {
             BounceUI(_shieldUI);            

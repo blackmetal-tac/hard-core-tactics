@@ -35,7 +35,14 @@ public class UnitManager : MonoBehaviour
         public string ModeName;
         public float Cooling;
     }
-    public List<CoolingModes> coolingModes;
+    public List<CoolingModes> coolingModes; 
+    
+    [System.Serializable]
+    public class CoreParameters
+    {
+        public float MoveBoost;        
+    }
+    [SerializeField] private CoreParameters _coreParameters;
 
     // ??? Set UnitManager for all weapons before Start
     void Awake()
@@ -326,4 +333,9 @@ public class UnitManager : MonoBehaviour
             Cooling = coolingModes[0].Cooling;
         }
     }    
+
+    public void CoreOverdrive()
+    {
+        MoveSpeed = MoveSpeed + _coreParameters.MoveBoost;
+    }
 }
