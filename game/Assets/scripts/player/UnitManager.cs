@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class UnitManager : MonoBehaviour
 {
 	[HideInInspector] public GameObject Target;
+    private GameObject _clickMarker;
     [HideInInspector] public Shield UnitShield;
 	
     // Stats    
@@ -26,7 +27,7 @@ public class UnitManager : MonoBehaviour
     private WeaponUI _weaponUI;
 
     [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer;
-    [HideInInspector] public bool IsDead, AutoCooling; // Death trigger
+    [HideInInspector] public bool IsDead, AutoCooling, CoreSwitch; // Death trigger
     private float _lastCheck;
 
     [System.Serializable]
@@ -40,7 +41,7 @@ public class UnitManager : MonoBehaviour
     [System.Serializable]
     public class CoreParameters
     {
-        public float MoveBoost;        
+        public int MoveBoost;        
     }
     [SerializeField] private CoreParameters _coreParameters;
 
@@ -74,12 +75,13 @@ public class UnitManager : MonoBehaviour
     void Start()
     { 
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _clickMarker = GameObject.Find("ClickMarker"); 
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         _shrinkBar = GetComponentInChildren<ShrinkBar>();
         UnitShield.ShieldID = transform.parent.name;
         Heat = 1;
-        Cooling = coolingModes[0].Cooling;
+        Cooling = coolingModes[0].Cooling;        
 
         // Load HP, Shield, Heat bars
         this.Progress(_gameManager.LoadTime, () => {
@@ -335,7 +337,17 @@ public class UnitManager : MonoBehaviour
     }    
 
     public void CoreOverdrive()
-    {
-        MoveSpeed = MoveSpeed + _coreParameters.MoveBoost;
+    {        
+        CoreSwitch = !CoreSwitch;
+        if (CoreSwitch)
+        {
+            _walkDistance += _coreParameters.MoveBoost;
+        }
+        else
+        {
+            _walkDistance -= _coreParameters.MoveBoost;
+            //_navMeshAgent.ResetPath();  
+            SetDestination(_clickMarker.transform.position, _navMeshAgent);
+        }        
     }
 }

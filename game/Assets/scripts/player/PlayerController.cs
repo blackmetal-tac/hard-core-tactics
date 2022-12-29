@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
     private void MoveToClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool isHit = Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~IgnoreLayers);
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~IgnoreLayers);
 
         if (isHit)
         {
