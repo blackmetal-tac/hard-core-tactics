@@ -16,7 +16,7 @@ public static class ProgressExtension
         {
             action.Invoke();
             time += Time.deltaTime;
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForEndOfFrame();
         }
     }
 }

@@ -16,7 +16,7 @@ public class SongName : MonoBehaviour
         _scrollPos = transform.localPosition.x;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         //Double strings and spaces
         _textmeshPro.text = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + _song.name.ToString() +
@@ -24,7 +24,7 @@ public class SongName : MonoBehaviour
 
         transform.localPosition = new Vector3(-_scrollPos,
             transform.localPosition.y, transform.localPosition.z);
-        _scrollPos += Time.fixedDeltaTime * _textSpeed;
+        _scrollPos += Time.deltaTime * _textSpeed;
 
         if (-_textmeshPro.preferredWidth / 2 >= transform.localPosition.x)
         {

@@ -32,7 +32,7 @@ public class Missile : MonoBehaviour
             Random.Range(-_spread, _spread) + Target.z - _poolObject.transform.position.z);
     }
 
-    void FixedUpdate() 
+    void Update() 
     {
         if (_poolObject.transform.localScale != Vector3.zero && !Homing)
         {
@@ -83,8 +83,8 @@ public class Missile : MonoBehaviour
                 Quaternion.LookRotation(direction + _spreadVector), Time.time * 0.1f);
         }
  
-        _poolObject.transform.position += Speed * Time.fixedDeltaTime * _poolObject.transform.forward;
-        _timer -= Time.fixedDeltaTime;
+        _poolObject.transform.position += Speed * Time.deltaTime * _poolObject.transform.forward;
+        _timer -= Time.deltaTime;
     }
 
     public void FollowTarget()
@@ -107,8 +107,8 @@ public class Missile : MonoBehaviour
                 Quaternion.LookRotation(direction + _spreadVector), Time.time * 1f);
         }
 
-        _poolObject.transform.position += Speed * Time.fixedDeltaTime * _poolObject.transform.forward;
-        _timer -= Time.fixedDeltaTime;
+        _poolObject.transform.position += Speed * Time.deltaTime * _poolObject.transform.forward;
+        _timer -= Time.deltaTime;
     }
 
     public void CalculateSpread()

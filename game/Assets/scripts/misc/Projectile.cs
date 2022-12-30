@@ -17,7 +17,7 @@ public class Projectile : MonoBehaviour
         _projectileCollider = GetComponent<Collider>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (_projectileBody.velocity != Vector3.zero)
         {

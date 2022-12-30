@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 	void Awake()
 	{
 		_playerManager = GetComponentInChildren<UnitManager>();
-		_playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").gameObject;
+		_playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetChild(0).gameObject;
 	}
 
     // Start is called before the first frame update
@@ -44,13 +44,13 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {          
         // Mouse click
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current.IsPointerOverGameObject())
-                return;
+                return;                
 
             if (!_gameManager.InAction)
             {
@@ -66,20 +66,20 @@ public class PlayerController : MonoBehaviour
 
         // Dynamic _crosshair
         _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 2 + 
-        _playerManager.MoveSpeed / 10, Time.fixedDeltaTime * 3);
+        _playerManager.MoveSpeed / 10, Time.deltaTime * 3);
         _crosshair.transform.localScale = _crosshairSize * Vector3.one;
     }
 
     private void MoveToClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~IgnoreLayers);
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~IgnoreLayers);        
 
         if (isHit)
         {            
             _clickMarker.transform.position = hit.point;
             _clickMarker.transform.localScale = Vector3.zero;
-            _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.2f);
+            _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.5f);
             _playerManager.SetDestination(hit.point, PlayerAgent);
         }       
     }
@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
                     PlayerAgent.path.corners[i].z);
             _walkPath.SetPosition(i, pointPosition);
             _clickMarker.transform.position = Vector3.MoveTowards(_clickMarker.transform.position, PlayerAgent.destination, 
-            Time.fixedDeltaTime * Vector3.Distance(_clickMarker.transform.position, PlayerAgent.destination) * 4);
+            Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, PlayerAgent.destination) * 4);
         }
         _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
     }

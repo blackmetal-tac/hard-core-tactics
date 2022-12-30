@@ -53,7 +53,7 @@ public class WPNManager : MonoBehaviour
     void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        _updateTimer = Time.fixedTime + _delay;
+        _updateTimer = Time.time + _delay;
 
         // Set AMS parameters 
         if (_projectileType == ProjectileType.AMS)
@@ -103,10 +103,10 @@ public class WPNManager : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // Timer to slow update
-        if (Time.fixedTime >= _updateTimer)
+        if (Time.time >= _updateTimer)
         {
             // Bullet spread for UI crosshair 
             if (UnitManager.transform.parent.name == "Player" && UnitManager.Spread < 2
@@ -117,7 +117,7 @@ public class WPNManager : MonoBehaviour
 
             if (_spread > 0)
             {
-                _spread -= Time.fixedDeltaTime * 2;
+                _spread -= Time.deltaTime * 2;
                 UnitManager.Spread = _spread;
             }
             else
@@ -125,7 +125,7 @@ public class WPNManager : MonoBehaviour
                 _spread = 0;
                 UnitManager.Spread = _spread;
             }
-            _updateTimer = Time.fixedTime + _delay;
+            _updateTimer = Time.time + _delay;
         }
     }
 

@@ -38,7 +38,7 @@ public class Shield : MonoBehaviour
         });        
     }
 
-    void FixedUpdate()
+    void Update()
     {  
         if (!_loading)
         {

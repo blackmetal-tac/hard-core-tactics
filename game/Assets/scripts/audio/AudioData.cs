@@ -13,7 +13,7 @@ public class AudioData : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();	
     }
 
-    void FixedUpdate()
+    void Update()
     {
 		//Get audio data from track for visualization
         _audioSource.GetSpectrumData(Samples, 0, FFTWindow.Blackman);

@@ -33,7 +33,7 @@ public class SliderScr : MonoBehaviour
         });   
     }
 
-    void FixedUpdate()
+    void Update()
     {        
         if (SliderObject.transform.parent.name == "ShieldUI" && SliderObject.value == 2)
         {

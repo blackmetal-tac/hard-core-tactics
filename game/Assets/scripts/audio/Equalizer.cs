@@ -20,7 +20,7 @@ public class Equalizer : MonoBehaviour
         _shield = GetComponent<Shield>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // Audio waves low to high, need only 6 parameters 
         // {{0-28}(bass) {29-47}(whisle)} {48-251}(hard hits) {252-}(electric)}
@@ -81,7 +81,7 @@ public class Equalizer : MonoBehaviour
 
         if (waveArray[1] > 0)
         {
-            waveArray[1] -= Time.fixedDeltaTime + (waveArray[1] * 0.85f);
+            waveArray[1] -= Time.deltaTime + (waveArray[1] * 0.85f);
         }
 
         if (mult == 120)
@@ -90,7 +90,7 @@ public class Equalizer : MonoBehaviour
         }
         else 
         {
-            waveArray[2] = Mathf.Lerp(waveArray[2], waveArray[1], Time.fixedDeltaTime * 3);
+            waveArray[2] = Mathf.Lerp(waveArray[2], waveArray[1], Time.deltaTime * 3);
         }
         return waveArray[2];
     }

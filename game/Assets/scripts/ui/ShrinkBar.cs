@@ -48,7 +48,7 @@ public class ShrinkBar : MonoBehaviour
         _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);
     }
@@ -103,13 +103,13 @@ public class ShrinkBar : MonoBehaviour
         if (shield)
         {
             // Health bar damage animation
-            _unitManager.UnitShield.ShrinkTimer -= Time.fixedDeltaTime;
+            _unitManager.UnitShield.ShrinkTimer -= Time.deltaTime;
             if (_unitManager.UnitShield.ShrinkTimer < 0)
             {
                 float shrinkSpeed = 1f;
                 if (healthImage.fillAmount < damageImage.fillAmount)
                 {
-                    damageImage.fillAmount -= shrinkSpeed * Time.fixedDeltaTime;
+                    damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
                 }
                 else
                 {
@@ -120,13 +120,13 @@ public class ShrinkBar : MonoBehaviour
         else
         {
             // Health bar damage animation
-            _unitManager.ShrinkTimer -= Time.fixedDeltaTime;
+            _unitManager.ShrinkTimer -= Time.deltaTime;
             if (_unitManager.ShrinkTimer < 0)
             {
                 float shrinkSpeed = 1f;
                 if (healthImage.fillAmount < damageImage.fillAmount)
                 {
-                    damageImage.fillAmount -= shrinkSpeed * Time.fixedDeltaTime;
+                    damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
                 }
                 else
                 {

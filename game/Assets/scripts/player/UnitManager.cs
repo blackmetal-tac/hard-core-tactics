@@ -138,7 +138,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
         _shrinkBar.UpdateShield();
         _shrinkBar.UpdateHealth();
@@ -194,7 +194,7 @@ public class UnitManager : MonoBehaviour
         _weaponUI.CoreButtonP.UpdateStatus();
     }
 
-    // Set move position and maximum move distance (speed)
+    // Set move position to maximum move distance (speed)
     public void SetDestination(Vector3 movePoint, NavMeshAgent navAgent)
     {
         NavMeshPath path = new NavMeshPath();

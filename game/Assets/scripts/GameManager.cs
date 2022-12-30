@@ -65,12 +65,12 @@ public class GameManager : MonoBehaviour
         _timeValue = TurnTime;
         _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
 
-        // Set target
+        // Set target ???
         _crosshair = GameObject.Find("Crosshair");
-        _enemy = GameObject.Find("Enemy");
+        _enemy = GameObject.Find("Enemy").transform.GetChild(0).gameObject;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // Crosshair position
         _crosshair.transform.position = _camMain.WorldToScreenPoint(_enemy.transform.position);
