@@ -5,7 +5,7 @@ using TMPro;
 public class WeaponUI : MonoBehaviour
 {
     private UnitManager _playerManager;
-    private CoreButton _coreButton;
+    public CoreButton CoreButtonP;
 
     [System.Serializable]
     private class WeaponButton
@@ -41,7 +41,7 @@ public class WeaponUI : MonoBehaviour
         _weaponButtons.Add(new WeaponButton(GameObject.Find("ShieldUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("ShieldUI").GetComponentInChildren<SliderScr>(), GameObject.Find("ShieldUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
         _weaponButtons.Add(new WeaponButton(GameObject.Find("CoolingUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("CoolingUI").GetComponentInChildren<SliderScr>(), GameObject.Find("CoolingUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
         
-        _coreButton = GameObject.Find("CoreButton").GetComponent<CoreButton>();
+        CoreButtonP = GameObject.Find("CoreButton").GetComponent<CoreButton>();
 
         UpdateUI();
     }
@@ -50,7 +50,7 @@ public class WeaponUI : MonoBehaviour
     public void UpdateUI()
     {
         _playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
-        _coreButton.PlayerManager = _playerManager;        
+        CoreButtonP.PlayerManager = _playerManager;        
 
         // Shield controls
         _weaponButtons[6].WeaponName.text = _playerManager.UnitShield.name;

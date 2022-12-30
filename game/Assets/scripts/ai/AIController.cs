@@ -76,11 +76,11 @@ public class AIController : MonoBehaviour
         // Cooling overdrive
         if (_unitManager.CoolingDownTimer <= 0 && _unitManager.Heat >= _unitManager.HeatTreshold)
         {
-            _unitManager.Cooling = _unitManager.coolingModes[1].Cooling;            
+            _unitManager.Cooling = _unitManager.CoolingModesP[1].Cooling;            
         }
         else if (_unitManager.CoolingDownTimer <= 3 && _unitManager.CoolingDownTimer > 0)
         {
-            _unitManager.Cooling = _unitManager.coolingModes[0].Cooling; 
+            _unitManager.Cooling = _unitManager.CoolingModesP[0].Cooling; 
         }
         _unitManager.CoolingOverdrive();
     }

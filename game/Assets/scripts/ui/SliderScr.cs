@@ -45,7 +45,7 @@ public class SliderScr : MonoBehaviour
         }
         
         if (SliderObject.transform.parent.name == "CoolingUI" && SliderObject.value == 1 
-            || SliderObject.transform.parent.name == "CoolingUI" && PlayerManager.Cooling == PlayerManager.coolingModes[1].Cooling)
+            || SliderObject.transform.parent.name == "CoolingUI" && PlayerManager.Cooling == PlayerManager.CoolingModesP[1].Cooling)
         {
             BounceUI(_coolingUI);
         }
@@ -59,7 +59,7 @@ public class SliderScr : MonoBehaviour
         {
             if (PlayerManager.CoolingDownTimer <= 0 && PlayerManager.Heat >= PlayerManager.HeatTreshold)
             {
-                PlayerManager.Cooling = PlayerManager.coolingModes[1].Cooling; 
+                PlayerManager.Cooling = PlayerManager.CoolingModesP[1].Cooling; 
                 PlayerManager.CoolingOverdrive();                    
             }
         }
@@ -80,12 +80,12 @@ public class SliderScr : MonoBehaviour
         }
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {            
-            PlayerManager.Cooling = PlayerManager.coolingModes[(int)SliderObject.value].Cooling;
-            ModeName.text = PlayerManager.coolingModes[(int)SliderObject.value].ModeName;            
+            PlayerManager.Cooling = PlayerManager.CoolingModesP[(int)SliderObject.value].Cooling;
+            ModeName.text = PlayerManager.CoolingModesP[(int)SliderObject.value].ModeName;            
 
             if (_gameManager.InAction)
             {                
-                if (PlayerManager.Cooling == PlayerManager.coolingModes[1].Cooling)
+                if (PlayerManager.Cooling == PlayerManager.CoolingModesP[1].Cooling)
                 {
                     PlayerManager.CoolingOverdrive();
                 }

@@ -5,11 +5,12 @@ using TMPro;
 
 public class CoreButton : MonoBehaviour
 {
-    public UnitManager PlayerManager;
+    [HideInInspector] public UnitManager PlayerManager;
+    private GameManager _gameManager;
     private Button _button;
     private AudioSource _audioUI;
     private AudioClip _buttonClick;
-    private GameObject _buttonBorder;
+    private GameObject _buttonBorder, _actionMask; 
     private TextMeshProUGUI _switchText;
     private Tweener _tweener;
 
@@ -23,6 +24,9 @@ public class CoreButton : MonoBehaviour
         _buttonBorder = _button.transform.Find("ButtonBorder").gameObject;
         _switchText = transform.Find("Switch").GetComponentInChildren<TextMeshProUGUI>();
         _tweener = _buttonBorder.transform.DOScaleX(1.1f, 1f).SetLoops(-1);
+        _tweener.Pause();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _actionMask = transform.parent.Find("ActionMask").gameObject;
     }
 
     void ButtonClick()
@@ -51,5 +55,32 @@ public class CoreButton : MonoBehaviour
         {
             _switchText.text = "Off";        
         }
+    }
+
+    public void UpdateStatus() // ???
+    {
+        _actionMask.transform.localScale = Vector3.one;
+        if (PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer == 5)
+        {
+            _switchText.text = "On" + "\n" + 2 + " trns";
+        }
+        else if (PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer == 4)
+        {
+            _switchText.text = "On" + "\n" + 1 + " turn";
+        }
+        else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer > 1)
+        {
+            _tweener.Pause();
+            _switchText.text = "Off" + "\n" + PlayerManager.CoreDownTimer + " trns";        
+        }
+        else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer == 1)
+        {
+            _switchText.text = "Off" + "\n" + PlayerManager.CoreDownTimer + " turn"; 
+        }
+        else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer <= 0 && !_gameManager.InAction)
+        {
+            _actionMask.transform.localScale = Vector3.zero;
+            _switchText.text = "Off";
+        }       
     }
 }

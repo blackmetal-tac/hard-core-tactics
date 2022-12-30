@@ -65,7 +65,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // Dynamic _crosshair
-        _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 2 + _playerManager.MoveSpeed / 10, Time.fixedDeltaTime * 3);
+        _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 2 + 
+        _playerManager.MoveSpeed / 10, Time.fixedDeltaTime * 3);
         _crosshair.transform.localScale = _crosshairSize * Vector3.one;
     }
 
@@ -75,7 +76,10 @@ public class PlayerController : MonoBehaviour
         bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~IgnoreLayers);
 
         if (isHit)
-        {
+        {            
+            _clickMarker.transform.position = hit.point;
+            _clickMarker.transform.localScale = Vector3.zero;
+            _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.2f);
             _playerManager.SetDestination(hit.point, PlayerAgent);
         }       
     }
@@ -96,11 +100,9 @@ public class PlayerController : MonoBehaviour
             Vector3 pointPosition = new(PlayerAgent.path.corners[i].x, PlayerAgent.path.corners[i].y,
                     PlayerAgent.path.corners[i].z);
             _walkPath.SetPosition(i, pointPosition);
-            _clickMarker.transform.position = new Vector3(pointPosition.x, 0.05f, pointPosition.z);
-            _clickMarker.transform.localScale = Vector3.zero;
-            _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.2f);
+            _clickMarker.transform.position = Vector3.MoveTowards(_clickMarker.transform.position, PlayerAgent.destination, 
+            Time.fixedDeltaTime * Vector3.Distance(_clickMarker.transform.position, PlayerAgent.destination) * 4);
         }
-
         _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
     }
 

@@ -23,7 +23,7 @@ public class UnitManager : MonoBehaviour
     private readonly float _rotSpeed = 1f;
 
     [HideInInspector] public List<WPNManager> WeaponList;
-    [HideInInspector] public int WeaponCount = 0, CoolingDownTimer;
+    [HideInInspector] public int WeaponCount = 0, CoolingDownTimer, CoreDownTimer;
     private WeaponUI _weaponUI;
 
     [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer;
@@ -36,7 +36,7 @@ public class UnitManager : MonoBehaviour
         public string ModeName;
         public float Cooling;
     }
-    public List<CoolingModes> coolingModes; 
+    public List<CoolingModes> CoolingModesP; 
     
     [System.Serializable]
     public class CoreParameters
@@ -81,7 +81,7 @@ public class UnitManager : MonoBehaviour
         _shrinkBar = GetComponentInChildren<ShrinkBar>();
         UnitShield.ShieldID = transform.parent.name;
         Heat = 1;
-        Cooling = coolingModes[0].Cooling;        
+        Cooling = CoolingModesP[0].Cooling;        
 
         // Load HP, Shield, Heat bars
         this.Progress(_gameManager.LoadTime, () => {
@@ -191,6 +191,7 @@ public class UnitManager : MonoBehaviour
                 weapon.FireBurst(Target);
             }
         }
+        _weaponUI.CoreButtonP.UpdateStatus();
     }
 
     // Set move position and maximum move distance (speed)
@@ -201,23 +202,31 @@ public class UnitManager : MonoBehaviour
 
         NavMesh.CalculatePath(transform.position, movePoint, NavMesh.AllAreas, path);
         for (int i = 0; i < path.corners.Length - 1; i++)
-        {
-            float segmentDistance = (path.corners[i + 1] - path.corners[i]).magnitude;
-            if (segmentDistance <= _walkDistance)
+        {            
+            float pathLenght = GetPathLength(path);
+            if (pathLenght <= _walkDistance)
             {
-                navAgent.SetDestination(movePoint);
-                MoveSpeed = segmentDistance / _gameManager.TurnTime;
-                MoveSpeed = Mathf.Round(100 * MoveSpeed) / 100;
+                navAgent.SetDestination(movePoint);                
+                MoveSpeed = pathLenght / _gameManager.TurnTime;                
             }
             else
             {
                 Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * _walkDistance);
-                NavMesh.CalculatePath(transform.position, finalPoint, NavMesh.AllAreas, path);
-                navAgent.SetPath(path);
-                MoveSpeed = _walkDistance / _gameManager.TurnTime;
+                navAgent.SetDestination(finalPoint);
+                MoveSpeed = pathLenght / _gameManager.TurnTime;
                 break;
             }
         }
+    }
+
+    public static float GetPathLength(NavMeshPath path)
+    {
+        float lenght = 0;       
+        for (int i = 1; i < path.corners.Length; ++i)
+        {
+            lenght += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+        }
+        return lenght;
     }
 
     // Take damage
@@ -318,11 +327,19 @@ public class UnitManager : MonoBehaviour
             _weaponUI.WeaponUp(7);
         }
         CoolingOverdrive();
+
+        CoreDownTimer -= 1;
+        if (CoreDownTimer == 3) // ???
+        {
+            CoreSwitch = !CoreSwitch;
+            _walkDistance -= _coreParameters.MoveBoost; 
+        }
+        _weaponUI.CoreButtonP.UpdateStatus();
     }
 
     public void CoolingOverdrive()
     {
-        if (Cooling == coolingModes[1].Cooling && CoolingDownTimer <= 0 )
+        if (Cooling == CoolingModesP[1].Cooling && CoolingDownTimer <= 0 )
         {
             CoolingDownTimer = 5; 
             if (transform.parent.name == "Player")
@@ -332,21 +349,22 @@ public class UnitManager : MonoBehaviour
         }
         else if (CoolingDownTimer <= 3)
         {
-            Cooling = coolingModes[0].Cooling;
+            Cooling = CoolingModesP[0].Cooling;
         }
     }    
 
     public void CoreOverdrive()
     {        
-        CoreSwitch = !CoreSwitch;
-        if (CoreSwitch)
+        CoreSwitch = !CoreSwitch;        
+        if (CoreSwitch && CoreDownTimer <= 0)
         {
+            CoreDownTimer = 5;
             _walkDistance += _coreParameters.MoveBoost;
         }
         else
         {
-            _walkDistance -= _coreParameters.MoveBoost;
-            //_navMeshAgent.ResetPath();  
+            CoreDownTimer = 0;
+            _walkDistance -= _coreParameters.MoveBoost;            
             SetDestination(_clickMarker.transform.position, _navMeshAgent);
         }        
     }

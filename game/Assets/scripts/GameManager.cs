@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private AIController _AIController;
     private UnitManager _playerManager, _enemyManager;
     private WeaponUI _weaponUI;
+    private CoreButton _coreButton;
 
     public ObjectPool<PoolObject> BulletsPool, MissilesPool, AmsPool, ExplosionPool;
 
@@ -57,6 +58,7 @@ public class GameManager : MonoBehaviour
         _audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
         _buttonBorder = _executeButton.transform.Find("ButtonBorder").gameObject;
         _buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
+        _coreButton = GameObject.Find("CoreButton").GetComponent<CoreButton>();
        
         // Turn timer
         _timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
