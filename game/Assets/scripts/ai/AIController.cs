@@ -43,7 +43,7 @@ public class AIController : MonoBehaviour
     // Action phase
     public void Move()
     {        
-        _unitAgent.speed = _unitManager.MoveSpeed + 0.5f;
+        _unitAgent.speed = _unitManager.MoveSpeed + 0.5f;        
         _unitManager.UnitShield.TurnOnOff();        
 
         // Change fire modes depending on heat or enable weapon after overheat
@@ -51,13 +51,13 @@ public class AIController : MonoBehaviour
         {
             if (weapon != null && weapon.DownTimer <= 0 && _unitManager.Heat < _unitManager.HeatTreshold)
             {
-                int changeMode = Random.Range(1, weapon.weaponModes.Count);
-                weapon.BurstSize = weapon.weaponModes[changeMode].FireMode;
+                int changeMode = Random.Range(1, weapon.WeaponModesP.Count);
+                weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
             }
             else if (weapon != null && weapon.DownTimer <= 0 && _unitManager.Heat >= _unitManager.HeatTreshold)
             {
-                int changeMode = Random.Range(0, weapon.weaponModes.Count - 1);
-                weapon.BurstSize = weapon.weaponModes[changeMode].FireMode;
+                int changeMode = Random.Range(0, weapon.WeaponModesP.Count - 1);
+                weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
             }
         }        
 

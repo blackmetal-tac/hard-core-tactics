@@ -62,13 +62,13 @@ public class UnitManager : MonoBehaviour
         {
             if (weapon != null)
             {
-                weapon.UnitManager = this;
+                weapon.UnitManagerP = this;
                 weapon.UnitID = transform.parent.name;
                 WeaponCount += 1;
             }
         }
 
-        UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();
+        UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();        
     }
 
     // Start is called before the first frame update
@@ -80,6 +80,7 @@ public class UnitManager : MonoBehaviour
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         _shrinkBar = GetComponentInChildren<ShrinkBar>();
         UnitShield.ShieldID = transform.parent.name;
+        UnitShield.UnitManagerP = this;
         Heat = 1;
         Cooling = CoolingModesP[0].Cooling;        
 
@@ -113,19 +114,6 @@ public class UnitManager : MonoBehaviour
             }
 
             _shrinkBar.UpdateHeat();
-        });
-
-        // Load Heat
-        this.Progress(_gameManager.LoadTime, () => {
-            if (UnitShield.HP < 1)
-            {
-                UnitShield.HP += Time.deltaTime * 0.6f;
-            }
-
-            if (HP < 1)
-            {
-                HP += Time.deltaTime * 0.6f;
-            }
         });
 
         // Aim at the enemy ???
@@ -201,22 +189,23 @@ public class UnitManager : MonoBehaviour
         navAgent.speed = 0;
 
         NavMesh.CalculatePath(transform.position, movePoint, NavMesh.AllAreas, path);
+        float pathLenght = GetPathLength(path);
         for (int i = 0; i < path.corners.Length - 1; i++)
         {            
-            float pathLenght = GetPathLength(path);
+           
             if (pathLenght <= _walkDistance)
             {
-                navAgent.SetDestination(movePoint);                
+                navAgent.SetDestination(movePoint);
                 MoveSpeed = pathLenght / _gameManager.TurnTime;                
             }
             else
             {
                 Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * _walkDistance);
                 navAgent.SetDestination(finalPoint);
-                MoveSpeed = pathLenght / _gameManager.TurnTime;
+                MoveSpeed = _walkDistance / _gameManager.TurnTime;                
                 break;
             }
-        }
+        }        
     }
 
     public static float GetPathLength(NavMeshPath path)
@@ -266,7 +255,7 @@ public class UnitManager : MonoBehaviour
         if (wpnIndex < WeaponCount && WeaponList[wpnIndex] != null && WeaponList[wpnIndex].DownTimer <= 0)
         {
             WeaponList[wpnIndex].DownTimer = 3;
-            WeaponList[wpnIndex].BurstSize = WeaponList[wpnIndex].weaponModes[0].FireMode;
+            WeaponList[wpnIndex].BurstSize = WeaponList[wpnIndex].WeaponModesP[0].FireMode;
             WeaponList[wpnIndex].ChangeShotsCount();
 
             if (transform.parent.name == "Player")
@@ -276,14 +265,7 @@ public class UnitManager : MonoBehaviour
         } 
         else if (wpnIndex == WeaponCount && UnitShield.DownTimer <= 0)
         {
-            UnitShield.DownTimer = 3;
-            UnitShield.ChangeMode(UnitShield.shieldModes[0]); 
-            UnitShield.TurnOnOff();
-
-            if (transform.parent.name == "Player")
-            {                
-                _weaponUI.WeaponDown(wpnIndex, UnitShield.DownTimer);
-            }
+            DisableShield();
         }
     }
 
@@ -367,5 +349,17 @@ public class UnitManager : MonoBehaviour
             _walkDistance -= _coreParameters.MoveBoost;            
             SetDestination(_clickMarker.transform.position, _navMeshAgent);
         }        
+    }
+
+    public void DisableShield()
+    {
+        UnitShield.DownTimer = 3;
+        UnitShield.ChangeMode(UnitShield.shieldModes[0]); 
+        UnitShield.TurnOnOff();
+
+        if (transform.parent.name == "Player")
+        {                
+            _weaponUI.WeaponDown(6, UnitShield.DownTimer);
+        }
     }
 }

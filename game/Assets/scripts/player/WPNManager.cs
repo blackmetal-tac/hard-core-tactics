@@ -28,13 +28,13 @@ public class WPNManager : MonoBehaviour
         public string ModeName;
         public int FireMode;
     }
-    public List<WeaponModes> weaponModes;
+    public List<WeaponModes> WeaponModesP;
 
     private Transform _tubesContainer;
     private List<Transform> _tubes;
 
     [HideInInspector] public GameObject FirePoint, TargetAMS;
-    [HideInInspector] public UnitManager UnitManager;
+    [HideInInspector] public UnitManager UnitManagerP;
     private bool _isFriend;
     private GameManager _gameManager;
     private Collider _colliderAMS;
@@ -60,7 +60,7 @@ public class WPNManager : MonoBehaviour
         {
             _damage = 0;
             _colliderAMS = GetComponentInChildren<Collider>();
-            if (UnitManager.transform.parent.parent.name == "PlayerSquad")
+            if (UnitManagerP.transform.parent.parent.name == "PlayerSquad")
             {
                 _colliderAMS.gameObject.layer = 14;
             }
@@ -88,7 +88,7 @@ public class WPNManager : MonoBehaviour
         }
 
         // Friend/Foe system for AMS to intercept
-        if (UnitManager.transform.parent.parent.name == "PlayerSquad")
+        if (UnitManagerP.transform.parent.parent.name == "PlayerSquad")
         {
             _isFriend = true;
         }
@@ -109,21 +109,21 @@ public class WPNManager : MonoBehaviour
         if (Time.time >= _updateTimer)
         {
             // Bullet spread for UI crosshair 
-            if (UnitManager.transform.parent.name == "Player" && UnitManager.Spread < 2
+            if (UnitManagerP.transform.parent.name == "Player" && UnitManagerP.Spread < 2
                 && _gameManager.InAction && _projectileType != ProjectileType.AMS)
             {
-                UnitManager.Spread += _spread / 50;
+                UnitManagerP.Spread += _spread / 50;
             }
 
             if (_spread > 0)
             {
                 _spread -= Time.deltaTime * 2;
-                UnitManager.Spread = _spread;
+                UnitManagerP.Spread = _spread;
             }
             else
             {
                 _spread = 0;
-                UnitManager.Spread = _spread;
+                UnitManagerP.Spread = _spread;
             }
             _updateTimer = Time.time + _delay;
         }
@@ -135,9 +135,9 @@ public class WPNManager : MonoBehaviour
         if (_projectileType != ProjectileType.Laser)
         {
             _spreadVector = new(
-                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
-                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread / 2, (UnitManager.MoveSpeed * _spreadMult) + _spread / 2),
-                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread));
+                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread),
+                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread / 2, (UnitManagerP.MoveSpeed * _spreadMult) + _spread / 2),
+                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread));
         }
         else
         {
@@ -203,7 +203,7 @@ public class WPNManager : MonoBehaviour
     {      
         // Move laser when firing 
         Vector3 direction = target.transform.position - FirePoint.transform.position;   
-        _laserPoint = Vector3.MoveTowards(_laserPoint, direction + _spreadVector, Time.deltaTime * 2);
+        _laserPoint = Vector3.MoveTowards(_laserPoint, direction + _spreadVector, Time.deltaTime * 1);
         FirePoint.transform.LookAt(_laserPoint); 
         
         // Draw line forward
@@ -239,9 +239,9 @@ public class WPNManager : MonoBehaviour
                 }
             }
 
-            if (UnitManager.Heat < 1)
+            if (UnitManagerP.Heat < 1)
             {
-                UnitManager.Heat += _heat * _laserWidth;
+                UnitManagerP.Heat += _heat * _laserWidth;
             }
         }
         else
@@ -260,9 +260,9 @@ public class WPNManager : MonoBehaviour
         {
             _laserPoint = target.transform.position;
             _spreadVector = new(
-                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
-                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread),
-                Random.Range((-UnitManager.MoveSpeed * _spreadMult) - _spread, (UnitManager.MoveSpeed * _spreadMult) + _spread));
+                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread),
+                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread),
+                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread));
            
             _laserOn = true;
             this.Wait(_fireDelay / 2, () =>
@@ -326,9 +326,9 @@ public class WPNManager : MonoBehaviour
 
     private void HeatRecoil()
     {
-        if (UnitManager.Heat < 1)
+        if (UnitManagerP.Heat < 1)
         {
-            UnitManager.Heat += _heat;
+            UnitManagerP.Heat += _heat;
         }
 
         if (_spread < 1)

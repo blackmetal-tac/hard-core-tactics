@@ -6,8 +6,7 @@ using OWS.ObjectPooling;
 
 public class GameManager : MonoBehaviour
 {
-    private Camera _camMain;
-    private GameObject _executeButton, _buttonBorder, _crosshair, _enemy, _actionMask, 
+    private GameObject _executeButton, _buttonBorder, _enemy, _actionMask, 
         _clickMarker, _projectileOBJ;
     private PlayerController _playerController;
     private AIController _AIController;
@@ -34,7 +33,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         DOTween.SetTweensCapacity(500, 50);
-        _camMain = Camera.main;
         _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         _AIController = GameObject.Find("Enemy").GetComponent<AIController>();
         _playerManager = _playerController.GetComponentInChildren<UnitManager>();
@@ -65,15 +63,8 @@ public class GameManager : MonoBehaviour
         _timeValue = TurnTime;
         _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
 
-        // Set target ???
-        _crosshair = GameObject.Find("Crosshair");
+        // Set target ???        
         _enemy = GameObject.Find("Enemy").transform.GetChild(0).gameObject;
-    }
-
-    void Update()
-    {
-        // Crosshair position
-        _crosshair.transform.position = _camMain.WorldToScreenPoint(_enemy.transform.position);
     }
 
     // Start turn

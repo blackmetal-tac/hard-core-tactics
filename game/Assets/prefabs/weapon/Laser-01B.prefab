@@ -83,7 +83,7 @@ MonoBehaviour:
   _radiusAMS: 0
   _projectileSpeed: 0
   _projectileSize: 0
-  _heat: 0.1
+  _heat: 0.05
   _recoil: 0
   _damage: 0.05
   _fireDelay: 1
@@ -92,8 +92,8 @@ MonoBehaviour:
   BurstSize: 0
   DownTimer: 0
   LastBurst: 0
-  weaponModes:
-  - ModeName: off
+  WeaponModesP:
+  - ModeName: Off
     FireMode: 0
   - ModeName: x1
     FireMode: 1

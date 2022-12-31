@@ -8,6 +8,7 @@ public class Shield : MonoBehaviour
     [HideInInspector] public Material Material;
     [HideInInspector] public string ShieldID;
     [HideInInspector] public int DownTimer;    
+    [HideInInspector] public UnitManager UnitManagerP;    
     [SerializeField] private float _size = 0.9f;
     private Collider _shieldCollider;
     private GameManager _gameManager;
@@ -40,17 +41,12 @@ public class Shield : MonoBehaviour
 
     void Update()
     {  
-        if (!_loading)
+        if (!_loading && DownTimer <= 0)
         {
             transform.localScale = (_size + Scale) * Vector3.one;
         }
         
         Material.SetFloat("_Alpha", (0.3f + ShieldIntencity / 10) * HP);                
-
-        if (HP > 0)
-        {
-            _shieldCollider.enabled = true;
-        }
     }
 
     public void TakeDamage(float damage)
@@ -63,9 +59,9 @@ public class Shield : MonoBehaviour
         }
 
         // Shield down
-        if (HP <= 0)
+        if (HP <= 0 && DownTimer <= 0)
         {
-            _shieldCollider.enabled = false;
+            UnitManagerP.DisableShield();
         }
     }
 

@@ -6,6 +6,7 @@ using DG.Tweening;
 public class PlayerController : MonoBehaviour
 { 
 	public LayerMask IgnoreLayers;
+    private Camera _camMain;
 	
 	// NavMesh
     [HideInInspector] public NavMeshAgent PlayerAgent;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _camMain = Camera.main;
         _crosshair = GameObject.Find("Crosshair");		
 
         // Navmesh setup        
@@ -68,6 +70,9 @@ public class PlayerController : MonoBehaviour
         _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 2 + 
         _playerManager.MoveSpeed / 10, Time.deltaTime * 3);
         _crosshair.transform.localScale = _crosshairSize * Vector3.one;
+
+        // Crosshair position
+        _crosshair.transform.position = _camMain.WorldToScreenPoint(_playerManager.Target.transform.position);
     }
 
     private void MoveToClick()
@@ -108,7 +113,7 @@ public class PlayerController : MonoBehaviour
 
     public void Move()
     {
-        PlayerAgent.speed = _playerManager.MoveSpeed + 0.5f;
+        PlayerAgent.speed = _playerManager.MoveSpeed + 0.5f;        
         _playerManager.UnitShield.TurnOnOff();
         _playerManager.CoolingOverdrive();
     }

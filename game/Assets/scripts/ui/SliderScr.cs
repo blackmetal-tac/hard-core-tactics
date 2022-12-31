@@ -106,8 +106,8 @@ public class SliderScr : MonoBehaviour
         }
         else
         {
-            Weapon.BurstSize = Weapon.weaponModes[(int)SliderObject.value].FireMode;
-            ModeName.text = Weapon.weaponModes[(int)SliderObject.value].ModeName;
+            Weapon.BurstSize = Weapon.WeaponModesP[(int)SliderObject.value].FireMode;
+            ModeName.text = Weapon.WeaponModesP[(int)SliderObject.value].ModeName;
             Weapon.ChangeShotsCount(); // shots for burst laser
 
             if (_gameManager.InAction)

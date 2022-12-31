@@ -83,7 +83,7 @@ MonoBehaviour:
   _radiusAMS: 15
   _projectileSpeed: 15
   _projectileSize: 0.03
-  _heat: 0.01
+  _heat: 0.001
   _recoil: 0.1
   _damage: 0
   _fireDelay: 1
@@ -92,13 +92,13 @@ MonoBehaviour:
   BurstSize: 10
   DownTimer: 0
   LastBurst: 0
-  weaponModes:
-  - ModeName: off
+  WeaponModesP:
+  - ModeName: Off
     FireMode: 0
+  - ModeName: x5
+    FireMode: 5
   - ModeName: x10
     FireMode: 10
-  - ModeName: x15
-    FireMode: 15
   FirePoint: {fileID: 0}
   TargetAMS: {fileID: 0}
   UnitManager: {fileID: 0}
