@@ -83,7 +83,7 @@ MonoBehaviour:
   _radiusAMS: 0
   _projectileSpeed: 0
   _projectileSize: 0
-  _heat: 0.05
+  _heat: 0.06
   _recoil: 0
   _damage: 0.05
   _fireDelay: 1
@@ -101,7 +101,7 @@ MonoBehaviour:
     FireMode: 2
   FirePoint: {fileID: 0}
   TargetAMS: {fileID: 0}
-  UnitManager: {fileID: 0}
+  UnitManagerP: {fileID: 0}
   UnitID: 
 --- !u!120 &4987383190760336454
 LineRenderer:

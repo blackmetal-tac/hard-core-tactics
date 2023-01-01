@@ -80,10 +80,10 @@ MonoBehaviour:
   _projectileType: 3
   Homing: 0
   _burstLaser: 0
-  _radiusAMS: 15
+  _radiusAMS: 10
   _projectileSpeed: 15
   _projectileSize: 0.03
-  _heat: 0.001
+  _heat: 0.004
   _recoil: 0.1
   _damage: 0
   _fireDelay: 1
@@ -101,7 +101,7 @@ MonoBehaviour:
     FireMode: 10
   FirePoint: {fileID: 0}
   TargetAMS: {fileID: 0}
-  UnitManager: {fileID: 0}
+  UnitManagerP: {fileID: 0}
   UnitID: 
 --- !u!1 &742256072195818861
 GameObject:

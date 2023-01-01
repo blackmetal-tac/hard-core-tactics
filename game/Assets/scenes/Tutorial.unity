@@ -1742,7 +1742,7 @@ MonoBehaviour:
   Cooling: 0
   HeatTreshold: 0.7
   _shieldRegen: 0.03
-  _heatCheckTime: 0.5
+  _heatCheckTime: 0.2
   _heatSafeRoll: 5
   _walkDistance: 3
   WeaponList: []
@@ -3160,7 +3160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 194564
+    m_Bits: 261495
   PlayerAgent: {fileID: 0}
 --- !u!1 &652705616
 GameObject:
@@ -9498,7 +9498,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 753842249}
-  m_PlaneDistance: 0.4
+  m_PlaneDistance: 0.35
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -9947,26 +9947,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
-        type: 3}
-      propertyPath: _recoil
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
-        type: 3}
-      propertyPath: _radiusAMS
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
-        type: 3}
-      propertyPath: _projectileType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
-        type: 3}
-      propertyPath: _projectileSpeed
-      value: 15
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec, type: 3}
 --- !u!1 &1944642909
@@ -10370,7 +10350,7 @@ MonoBehaviour:
   Cooling: 0
   HeatTreshold: 0.7
   _shieldRegen: 0.03
-  _heatCheckTime: 0.5
+  _heatCheckTime: 0.2
   _heatSafeRoll: 5
   _walkDistance: 3
   WeaponList: []
@@ -11624,26 +11604,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
-        type: 3}
-      propertyPath: _recoil
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
-        type: 3}
-      propertyPath: _radiusAMS
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
-        type: 3}
-      propertyPath: _projectileType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 187078880366221861, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
-        type: 3}
-      propertyPath: _projectileSpeed
-      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec, type: 3}

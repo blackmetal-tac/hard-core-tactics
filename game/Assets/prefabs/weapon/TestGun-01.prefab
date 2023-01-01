@@ -82,7 +82,7 @@ MonoBehaviour:
   _radiusAMS: 0
   _projectileSpeed: 10
   _projectileSize: 0.05
-  _heat: 0.005
+  _heat: 0.008
   _recoil: 0.1
   _damage: 0.015
   _fireDelay: 1
@@ -100,5 +100,5 @@ MonoBehaviour:
     FireMode: 6
   FirePoint: {fileID: 0}
   TargetAMS: {fileID: 0}
-  UnitManager: {fileID: 0}
+  UnitManagerP: {fileID: 0}
   UnitID: 

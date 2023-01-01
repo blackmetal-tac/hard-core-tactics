@@ -37,7 +37,8 @@ public class AIController : MonoBehaviour
         {
             _unitAgent.stoppingDistance = 1f;
         }
-        _unitManager.SetDestination(_unitAgent.destination, _unitAgent);
+        //_unitManager.SetDestination(_unitAgent.destination, _unitAgent);
+        _unitAgent.SetDestination(RandomNavmeshLocation(3));
     }
 
     // Action phase
@@ -63,14 +64,12 @@ public class AIController : MonoBehaviour
 
         // Shield management
         if (_unitManager.UnitShield.DownTimer <= 0 && _unitManager.Heat < _unitManager.HeatTreshold)
-        {
-            int changeMode = Random.Range(1, _unitManager.UnitShield.shieldModes.Count);
-            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[changeMode]);
+        {            
+            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[2]);
         }
         else if (_unitManager.UnitShield.DownTimer <= 0 && _unitManager.Heat >= _unitManager.HeatTreshold)
-        {
-            int changeMode = Random.Range(0, _unitManager.UnitShield.shieldModes.Count - 1);
-            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[changeMode]);
+        {            
+            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);
         }        
 
         // Cooling overdrive
@@ -83,6 +82,19 @@ public class AIController : MonoBehaviour
             _unitManager.Cooling = _unitManager.CoolingModesP[0].Cooling; 
         }
         _unitManager.CoolingOverdrive();
+    }
+
+    public Vector3 RandomNavmeshLocation(float radius) 
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * radius;
+        randomDirection += transform.position;
+        NavMeshHit hit;
+        Vector3 finalPosition = Vector3.zero;
+        if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1)) 
+        {
+            finalPosition = hit.position;            
+        }
+        return finalPosition;
     }
     
     public void EndMove()

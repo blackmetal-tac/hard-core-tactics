@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
 
         if (isHit)
         {            
+            Debug.Log(hit.transform.name);
             _clickMarker.transform.position = hit.point;
             _clickMarker.transform.localScale = Vector3.zero;
             _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.5f);

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
@@ -187,9 +188,9 @@ public class UnitManager : MonoBehaviour
     {
         NavMeshPath path = new NavMeshPath();
         navAgent.speed = 0;
-
+        
         NavMesh.CalculatePath(transform.position, movePoint, NavMesh.AllAreas, path);
-        float pathLenght = GetPathLength(path);
+        float pathLenght = GetPathLength(path);        
         for (int i = 0; i < path.corners.Length - 1; i++)
         {            
            
@@ -205,7 +206,7 @@ public class UnitManager : MonoBehaviour
                 MoveSpeed = _walkDistance / _gameManager.TurnTime;                
                 break;
             }
-        }        
+        }
     }
 
     public static float GetPathLength(NavMeshPath path)
