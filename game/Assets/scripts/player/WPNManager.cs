@@ -292,7 +292,7 @@ public class WPNManager : MonoBehaviour
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
         {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, _projectileSpeed);
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _projectileSpeed);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
         }

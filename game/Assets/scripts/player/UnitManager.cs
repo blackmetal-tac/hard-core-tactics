@@ -15,7 +15,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField][Range(0, 0.5f)] private float _shieldRegen;
     [SerializeField][Range(0, 1)] private float _heatCheckTime;
     [SerializeField][Range(0, 10)] private int _heatSafeRoll;
-    [SerializeField][Range(0, 10)] private int _walkDistance;
+    [Range(0, 10)] public int WalkDistance;
 
 	private GameManager _gameManager;
     private ShrinkBar _shrinkBar;
@@ -194,22 +194,22 @@ public class UnitManager : MonoBehaviour
         for (int i = 0; i < path.corners.Length - 1; i++)
         {            
            
-            if (pathLenght <= _walkDistance)
+            if (pathLenght <= WalkDistance)
             {
                 navAgent.SetDestination(movePoint);
                 MoveSpeed = pathLenght / _gameManager.TurnTime;                
             }
             else
             {
-                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * _walkDistance);
+                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * WalkDistance);
                 navAgent.SetDestination(finalPoint);
-                MoveSpeed = _walkDistance / _gameManager.TurnTime;                
+                MoveSpeed = WalkDistance / _gameManager.TurnTime;                
                 break;
             }
         }
     }
 
-    public static float GetPathLength(NavMeshPath path)
+    public float GetPathLength(NavMeshPath path)
     {
         float lenght = 0;       
         for (int i = 1; i < path.corners.Length; ++i)
@@ -315,7 +315,7 @@ public class UnitManager : MonoBehaviour
         if (CoreDownTimer == 3) // ???
         {
             CoreSwitch = !CoreSwitch;
-            _walkDistance -= _coreParameters.MoveBoost; 
+            WalkDistance -= _coreParameters.MoveBoost; 
         }
         _weaponUI.CoreButtonP.UpdateStatus();
     }
@@ -342,13 +342,17 @@ public class UnitManager : MonoBehaviour
         if (CoreSwitch && CoreDownTimer <= 0)
         {
             CoreDownTimer = 5;
-            _walkDistance += _coreParameters.MoveBoost;
+            WalkDistance += _coreParameters.MoveBoost;
         }
         else
         {
             CoreDownTimer = 0;
-            _walkDistance -= _coreParameters.MoveBoost;            
-            SetDestination(_clickMarker.transform.position, _navMeshAgent);
+            WalkDistance -= _coreParameters.MoveBoost;      
+
+            if (transform.parent.name == "Player")
+            {                
+                SetDestination(_clickMarker.transform.position, _navMeshAgent);
+            }                
         }        
     }
 

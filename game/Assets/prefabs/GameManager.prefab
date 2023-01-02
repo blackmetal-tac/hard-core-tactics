@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 959372898255461151}
   - component: {fileID: 4381126895597698802}
   - component: {fileID: 457119259248222204}
-  - component: {fileID: 31664129342748041}
+  - component: {fileID: 8084863431149737245}
   m_Layer: 11
   m_Name: BulletMesh
   m_TagString: Untagged
@@ -144,9 +144,9 @@ CapsuleCollider:
   m_GameObject: {fileID: 648605811298458055}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 7
-  m_Height: 7
+  m_Enabled: 0
+  m_Radius: 8
+  m_Height: 8
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &457119259248222204
@@ -165,7 +165,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &31664129342748041
+--- !u!114 &8084863431149737245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -174,10 +174,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 648605811298458055}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3beb35392a0f3634985286d9d70d244c, type: 3}
+  m_Script: {fileID: 11500000, guid: da500456c420286408655b6c58a5ee17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 0
   BulletID: 
 --- !u!1 &3951382612890237716
 GameObject:

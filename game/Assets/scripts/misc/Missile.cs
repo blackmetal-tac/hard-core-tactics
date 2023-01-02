@@ -56,7 +56,6 @@ public class Missile : MonoBehaviour
         {
             Explode();                    
         }
-  
     }
 
     public void Explode()
@@ -111,7 +110,7 @@ public class Missile : MonoBehaviour
         _timer -= Time.deltaTime;
     }
 
-    public void CalculateSpread()
+    private void CalculateSpread()
     {
         _spreadVector = new(
             Random.Range(-_spread, _spread),

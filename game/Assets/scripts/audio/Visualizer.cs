@@ -67,6 +67,7 @@ public class Visualizer : MonoBehaviour
 
                     _rightQuads[i] = instanceQuad;                    
                 }
+                transform.localScale = Vector3.one * 0.9f;
             });
         }
     }
@@ -129,7 +130,7 @@ public class Visualizer : MonoBehaviour
                 for (int i = 0; i < _samles; i++)
                 {                                                                                                   
                     _rightQuads[i].transform.localScale = new Vector3(_width, _audioData.Samples[i] * _amp * (i / 2 + 1) + _height, 1);
-                }
+                }                
             });
         }
     }

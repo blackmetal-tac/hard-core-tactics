@@ -79,6 +79,16 @@ namespace OWS.ObjectPooling
             return go;
         }
 
+        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float speed)
+        {
+            GameObject go = Pull().gameObject;
+            go.transform.position = position;
+            go.transform.rotation = rotation;
+            go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on            
+            go.GetComponentInChildren<Rigidbody>().velocity = speed * go.transform.forward;
+            return go;
+        }
+
         public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed)
         {
             GameObject go = Pull().gameObject;

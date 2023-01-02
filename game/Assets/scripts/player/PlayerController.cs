@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour
 
     public void Move()
     {
-        PlayerAgent.speed = _playerManager.MoveSpeed + 0.5f;        
+        PlayerAgent.speed = _playerManager.MoveSpeed + 0.1f;        
         _playerManager.UnitShield.TurnOnOff();
         _playerManager.CoolingOverdrive();
     }

@@ -85,8 +85,7 @@ public class GameManager : MonoBehaviour
 
         // Enemy actions ???
         if (!_enemyManager.IsDead)
-        {
-            _AIController.SetPath(_playerController.PlayerAgent);            
+        {                        
             _AIController.Move();
         }
 
