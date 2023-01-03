@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
 using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
 {
-	[HideInInspector] public GameObject Target;
+	[HideInInspector] public UnitManager Target;
     private GameObject _clickMarker;
     [HideInInspector] public Shield UnitShield;
 	
     // Stats    
-    [HideInInspector] public float HP, Heat, Cooling;
-	[Range(0, 1)] public float HeatTreshold;
+    [HideInInspector] public float HP, Heat, Cooling, MissileLockTimer;
+	[Range(0, 1)] public float HeatTreshold;    
     [SerializeField][Range(0, 0.5f)] private float _shieldRegen;
     [SerializeField][Range(0, 1)] private float _heatCheckTime;
     [SerializeField][Range(0, 10)] private int _heatSafeRoll;
@@ -27,7 +26,7 @@ public class UnitManager : MonoBehaviour
     [HideInInspector] public int WeaponCount = 0, CoolingDownTimer, CoreDownTimer;
     private WeaponUI _weaponUI;
 
-    [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer;
+    [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer, HeatModifier;
     [HideInInspector] public bool IsDead, AutoCooling, CoreSwitch; // Death trigger
     private float _lastCheck;
 
@@ -131,6 +130,11 @@ public class UnitManager : MonoBehaviour
     {
         _shrinkBar.UpdateShield();
         _shrinkBar.UpdateHealth();
+
+        if (MissileLockTimer > 0)
+        {
+            MissileLockTimer -= Time.deltaTime;
+        }        
     }
 
     // Do actions in Update
@@ -141,18 +145,16 @@ public class UnitManager : MonoBehaviour
             StartShoot();
 
             // Shield regeneration
-            if (!IsDead)
-            {            
-                UnitShield.Regenerate();            
-            }
-
+            UnitShield.Regenerate();
+            
             // Heat dissipation
-            if (Heat > 0 && !IsDead)
+            if (Heat > 0)
             {
-                Heat -= Time.deltaTime * (Cooling - UnitShield.Heat);                
+                Heat -= Time.deltaTime * Cooling;                
                 _shrinkBar.UpdateHeat();
 
-                if (Heat > HeatTreshold && Time.time > _lastCheck + _heatCheckTime) // Roll Heat penalty
+                // Roll Heat penalty
+                if (Heat > HeatTreshold && Time.time > _lastCheck + _heatCheckTime) 
                 {
                     OverheatRoll();
                     _lastCheck = Time.time;

@@ -79,6 +79,7 @@ public class Shield : MonoBehaviour
                 HP += Time.deltaTime * (Regeneration);
             }  
         }
+        UnitManagerP.Heat += Time.deltaTime * Heat;    
     }
 
     public void TurnOnOff()

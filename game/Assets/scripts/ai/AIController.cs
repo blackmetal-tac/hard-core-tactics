@@ -18,7 +18,7 @@ public class AIController : MonoBehaviour
         _unitManager = GetComponentInChildren<UnitManager>();
 
 		// ??? set target to shoot
-		_unitManager.Target = GameObject.Find("PlayerSquad").transform.Find("Player").GetChild(0).gameObject;
+		_unitManager.Target = GameObject.Find("PlayerSquad").transform.Find("Player").GetComponentInChildren<UnitManager>();
         _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);            
     }   
 

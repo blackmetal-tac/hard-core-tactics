@@ -81,12 +81,12 @@ MonoBehaviour:
   Homing: 0
   _burstLaser: 0
   _radiusAMS: 10
-  _projectileSpeed: 15
+  _projectileSpeed: 20
   _projectileSize: 0.03
   _heat: 0.004
   _recoil: 0.1
   _damage: 0
-  _fireDelay: 0.5
+  _fireDelay: 0.4
   _fireRate: 3000
   _laserRange: 0
   BurstSize: 10

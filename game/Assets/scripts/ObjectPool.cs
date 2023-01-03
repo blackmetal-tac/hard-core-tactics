@@ -113,7 +113,7 @@ namespace OWS.ObjectPooling
             return go;
         }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, Vector3 target, bool isFriend)
+        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, UnitManager target, bool isFriend)
         {
             GameObject go = Pull().gameObject;
             go.transform.position = position;

@@ -5,7 +5,7 @@ public class Missile : MonoBehaviour
 {
     [HideInInspector] public float Damage;
     [HideInInspector] public float Speed;
-    [HideInInspector] public Vector3 Target;
+    [HideInInspector] public UnitManager Target;
     [HideInInspector] public Rigidbody MissileBody;
     [HideInInspector] public Collider MissileCollider;
     [HideInInspector] public bool Homing;
@@ -26,10 +26,10 @@ public class Missile : MonoBehaviour
         _timer = _baseTimer;
 		
 		// Look at target
-        _spreadVector = new(
-            Random.Range(-_spread, _spread) + Target.x - _poolObject.transform.position.x,
-            Random.Range(-_spread / 4, _spread / 4) + Target.y - _poolObject.transform.position.y,
-            Random.Range(-_spread, _spread) + Target.z - _poolObject.transform.position.z);
+        /*_spreadVector = new(
+            Random.Range(-_spread, _spread) + Target.transform.position.x - _poolObject.transform.position.x,
+            Random.Range(-_spread / 4, _spread / 4) + Target.transform.position.y - _poolObject.transform.position.y,
+            Random.Range(-_spread, _spread) + Target.transform.position.z - _poolObject.transform.position.z);*/
     }
 
     void Update() 
@@ -37,10 +37,12 @@ public class Missile : MonoBehaviour
         if (_poolObject.transform.localScale != Vector3.zero && !Homing)
         {
             MoveTowards();
+            Target.MissileLockTimer = 1;
         }
         else if (_poolObject.transform.localScale != Vector3.zero && Homing)
         {
             FollowTarget();
+            Target.MissileLockTimer = 1;
         }
     }
 
@@ -60,7 +62,7 @@ public class Missile : MonoBehaviour
 
     public void Explode()
     {
-        _timer = _baseTimer;            
+        _timer = _baseTimer;
         MissileBody.velocity = Vector3.zero;
         MissileCollider.enabled = false;
         _gameManager.ExplosionPool.PullGameObject(transform.position, 1f, Damage / 2);
@@ -77,7 +79,7 @@ public class Missile : MonoBehaviour
 
         if (_timer > 0)
         {
-            Vector3 direction = Target - _poolObject.transform.position;
+            Vector3 direction = Target.transform.position - _poolObject.transform.position;
             _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
                 Quaternion.LookRotation(direction + _spreadVector), Time.time * 0.1f);
         }

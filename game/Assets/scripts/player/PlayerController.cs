@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 	void Awake()
 	{
 		_playerManager = GetComponentInChildren<UnitManager>();
-		_playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetChild(0).gameObject;
+		_playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
 	}
 
     // Start is called before the first frame update

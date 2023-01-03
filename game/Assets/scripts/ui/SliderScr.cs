@@ -10,7 +10,7 @@ public class SliderScr : MonoBehaviour
     [HideInInspector] public WPNManager Weapon;
     [HideInInspector] public TextMeshProUGUI ModeName;    
     [HideInInspector] public UnitManager PlayerManager;
-    private CanvasGroup _shieldUI, _coolingUI;
+    private CanvasGroup _shieldUI, _coolingUI, _missileLockUI;
     private bool _bounce;
 
     // Start is called before the first frame update
@@ -18,10 +18,19 @@ public class SliderScr : MonoBehaviour
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _actionMask = transform.parent.parent.Find("ActionMask").gameObject;
-        _shieldUI = GameObject.Find("ShieldOverdriveUI").GetComponent<CanvasGroup>();
-        _coolingUI = GameObject.Find("CoolingOverdriveUI").GetComponent<CanvasGroup>();
         SliderObject = GetComponent<Slider>();
         SliderObject.onValueChanged.AddListener(delegate { ChangeWPNmode(); });
+
+        if (SliderObject.transform.parent.name == "ShieldUI")
+        {
+            _shieldUI = GameObject.Find("ShieldOverdriveUI").GetComponent<CanvasGroup>();
+        }
+        else if (SliderObject.transform.parent.name == "CoolingUI")
+        {
+            _coolingUI = GameObject.Find("CoolingOverdriveUI").GetComponent<CanvasGroup>();
+            _missileLockUI = GameObject.Find("MissileLockUI").GetComponent<CanvasGroup>();
+        }
+
         ModeName = transform.Find("Handle Slide Area").Find("Handle").GetComponentInChildren<TextMeshProUGUI>();
 
         this.Wait(1, () =>{
@@ -52,6 +61,18 @@ public class SliderScr : MonoBehaviour
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {
             _coolingUI.alpha = 0;
+        }
+
+        if (SliderObject.transform.parent.name == "CoolingUI")
+        {
+            if (PlayerManager.MissileLockTimer > 0)
+            {
+                BounceUI(_missileLockUI);
+            }
+            else
+            {
+                _missileLockUI.alpha = 0;
+            }
         }
 
         // Auto Cooling overdrive

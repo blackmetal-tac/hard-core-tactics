@@ -11,7 +11,7 @@ public class WPNManager : MonoBehaviour
     [SerializeField] private ProjectileType _projectileType;
     public bool Homing;
     [SerializeField] private bool _burstLaser;
-    [SerializeField][Range(0, 15)] private int _radiusAMS, _projectileSpeed;
+    [SerializeField][Range(0, 20)] private int _radiusAMS, _projectileSpeed;
     [SerializeField][Range(0, 0.5f)] private float _projectileSize, _heat, _recoil, _damage;
     [SerializeField][Range(0, 1)] private float _fireDelay;
     [SerializeField][Range(0, 3000)] private float _fireRate, _laserRange;  
@@ -130,7 +130,7 @@ public class WPNManager : MonoBehaviour
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
-    public void FireBurst(GameObject target)
+    public void FireBurst(UnitManager target)
     {
         if (_projectileType != ProjectileType.Laser)
         {
@@ -173,6 +173,12 @@ public class WPNManager : MonoBehaviour
             }
         }
 
+        // AMS heat generation
+        if (_projectileType == ProjectileType.AMS && BurstSize > 0)
+        {
+            UnitManagerP.Heat += Time.deltaTime * _heat * 5;
+        }
+
         // Fire different projectiles
         if (Time.time > LastBurst + _fireDelay)
         {
@@ -183,7 +189,7 @@ public class WPNManager : MonoBehaviour
             }
             else if (_projectileType == ProjectileType.Missile && !Homing)
             {
-                StartCoroutine(FireMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target.transform.position));
+                StartCoroutine(FireMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target));
                 LastBurst = Time.time + _gameManager.TurnTime - _fireDelay; // fire burst once (increase delay)
             }
             else if (_projectileType == ProjectileType.Missile && Homing)
@@ -193,13 +199,13 @@ public class WPNManager : MonoBehaviour
             }
             else if (_projectileType == ProjectileType.AMS && TargetAMS != null)
             {
-                StartCoroutine(FireAMSCoroutine(FirePoint, _gameManager.AmsPool));
+                StartCoroutine(FireAMSCoroutine(FirePoint, _gameManager.AmsPool));                
                 LastBurst = Time.time;
             }
         }
     }
 
-    private void FireLaser(GameObject target)
+    private void FireLaser(UnitManager target)
     {      
         // Move laser when firing 
         Vector3 direction = target.transform.position - FirePoint.transform.position;   
@@ -299,7 +305,7 @@ public class WPNManager : MonoBehaviour
     }
 
     // Coroutine for missiles
-    private IEnumerator FireMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, Vector3 target)
+    private IEnumerator FireMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, UnitManager target)
     {
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
@@ -312,7 +318,7 @@ public class WPNManager : MonoBehaviour
     }
 
     // Coroutine for Homing missiles
-    private IEnumerator FireHMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, GameObject target)
+    private IEnumerator FireHMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, UnitManager target)
     {
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
@@ -337,7 +343,7 @@ public class WPNManager : MonoBehaviour
         }
     }
 
-    // Set shots count for burst
+    // Set shots count for burst laser
     public void ChangeShotsCount()
     {
         if (_burstLaser)
