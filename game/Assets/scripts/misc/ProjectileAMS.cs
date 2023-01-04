@@ -29,7 +29,7 @@ public class ProjectileAMS : MonoBehaviour
     {  
         if (collider.name == "MissileMesh")
         {
-            Debug.Log("intercepted");
+            //Debug.Log("intercepted");
         }
         PullBack();
     }

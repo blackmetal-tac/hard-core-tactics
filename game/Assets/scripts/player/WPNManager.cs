@@ -7,8 +7,8 @@ using DG.Tweening;
 public class WPNManager : MonoBehaviour
 {
     // Weapon stats
-    private enum ProjectileType { Bullet, Missile, Laser, AMS }
-    [SerializeField] private ProjectileType _projectileType;
+    public enum ProjectileType { Bullet, Missile, Laser, AMS }
+    public ProjectileType ProjectileTypeP;
     public bool Homing;
     [SerializeField] private bool _burstLaser;
     [SerializeField][Range(0, 20)] private int _radiusAMS, _projectileSpeed;
@@ -56,7 +56,7 @@ public class WPNManager : MonoBehaviour
         _updateTimer = Time.time + _delay;
 
         // Set AMS parameters 
-        if (_projectileType == ProjectileType.AMS)
+        if (ProjectileTypeP == ProjectileType.AMS)
         {
             _damage = 0;
             _colliderAMS = GetComponentInChildren<Collider>();
@@ -76,7 +76,7 @@ public class WPNManager : MonoBehaviour
             _radiusAMS = 0;
         }
 
-        if (_projectileType == ProjectileType.Missile)
+        if (ProjectileTypeP == ProjectileType.Missile)
         {
             // Count tubes to fire missile from each
             _tubesContainer = transform.Find("Tubes");       
@@ -93,7 +93,7 @@ public class WPNManager : MonoBehaviour
             _isFriend = true;
         }
 
-        if (_projectileType == ProjectileType.Laser)
+        if (ProjectileTypeP == ProjectileType.Laser)
         {
             _lineRenderer = GetComponent<LineRenderer>();
             _lineRenderer.startWidth = 0f;
@@ -110,7 +110,7 @@ public class WPNManager : MonoBehaviour
         {
             // Bullet spread for UI crosshair 
             if (UnitManagerP.transform.parent.name == "Player" && UnitManagerP.Spread < 2
-                && _gameManager.InAction && _projectileType != ProjectileType.AMS)
+                && _gameManager.InAction && ProjectileTypeP != ProjectileType.AMS)
             {
                 UnitManagerP.Spread += _spread / 50;
             }
@@ -132,7 +132,7 @@ public class WPNManager : MonoBehaviour
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
     public void FireBurst(UnitManager target)
     {
-        if (_projectileType != ProjectileType.Laser)
+        if (ProjectileTypeP != ProjectileType.Laser)
         {
             _spreadVector = new(
                 Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread),
@@ -158,13 +158,13 @@ public class WPNManager : MonoBehaviour
             }
         }
 
-        if (_projectileType != ProjectileType.Laser || _projectileType != ProjectileType.AMS
+        if (ProjectileTypeP != ProjectileType.Laser || ProjectileTypeP != ProjectileType.AMS
             || !Homing)
         {
             FirePoint.transform.LookAt(target.transform.position + _spreadVector);
         }
 
-        if (_projectileType == ProjectileType.AMS && TargetAMS != null)
+        if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null)
         {
             FirePoint.transform.LookAt(TargetAMS.transform.position + _spreadVector);
             if (TargetAMS.transform.parent.localScale == Vector3.zero)
@@ -174,7 +174,7 @@ public class WPNManager : MonoBehaviour
         }
 
         // AMS heat generation
-        if (_projectileType == ProjectileType.AMS && BurstSize > 0)
+        if (ProjectileTypeP == ProjectileType.AMS && BurstSize > 0)
         {
             UnitManagerP.Heat += Time.deltaTime * _heat * 5;
         }
@@ -182,22 +182,22 @@ public class WPNManager : MonoBehaviour
         // Fire different projectiles
         if (Time.time > LastBurst + _fireDelay)
         {
-            if (_projectileType == ProjectileType.Bullet)
+            if (ProjectileTypeP == ProjectileType.Bullet)
             {
                 StartCoroutine(FireBulletCoroutine(FirePoint, _gameManager.BulletsPool, UnitID));
                 LastBurst = Time.time;
             }
-            else if (_projectileType == ProjectileType.Missile && !Homing)
+            else if (ProjectileTypeP == ProjectileType.Missile && !Homing)
             {
                 StartCoroutine(FireMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target));
                 LastBurst = Time.time + _gameManager.TurnTime - _fireDelay; // fire burst once (increase delay)
             }
-            else if (_projectileType == ProjectileType.Missile && Homing)
+            else if (ProjectileTypeP == ProjectileType.Missile && Homing)
             {
                 StartCoroutine(FireHMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target));
                 LastBurst = Time.time + _gameManager.TurnTime - _fireDelay; // fire burst once (increase delay)
             }
-            else if (_projectileType == ProjectileType.AMS && TargetAMS != null)
+            else if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null)
             {
                 StartCoroutine(FireAMSCoroutine(FirePoint, _gameManager.AmsPool));                
                 LastBurst = Time.time;

@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f518b814caee24b99627b6c5f14c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _projectileType: 2
+  ProjectileTypeP: 2
   Homing: 0
   _burstLaser: 0
   _radiusAMS: 0

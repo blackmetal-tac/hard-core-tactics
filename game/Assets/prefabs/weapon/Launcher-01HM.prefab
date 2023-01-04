@@ -46,11 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f518b814caee24b99627b6c5f14c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _projectileType: 1
+  ProjectileTypeP: 1
   Homing: 1
   _burstLaser: 0
   _radiusAMS: 0
-  _projectileSpeed: 10
+  _projectileSpeed: 5
   _projectileSize: 0.1
   _heat: 0.01
   _recoil: 0.1
@@ -70,7 +70,7 @@ MonoBehaviour:
     FireMode: 4
   FirePoint: {fileID: 0}
   TargetAMS: {fileID: 0}
-  UnitManager: {fileID: 0}
+  UnitManagerP: {fileID: 0}
   UnitID: 
 --- !u!1 &4266089538669041059
 GameObject:

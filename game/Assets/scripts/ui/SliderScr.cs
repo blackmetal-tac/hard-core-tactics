@@ -10,7 +10,7 @@ public class SliderScr : MonoBehaviour
     [HideInInspector] public WPNManager Weapon;
     [HideInInspector] public TextMeshProUGUI ModeName;    
     [HideInInspector] public UnitManager PlayerManager;
-    private CanvasGroup _shieldUI, _coolingUI, _missileLockUI;
+    private CanvasGroup _shieldUI, _coolingUI, _missileLockUI, _amsUI;
     private bool _bounce;
 
     // Start is called before the first frame update
@@ -21,6 +21,7 @@ public class SliderScr : MonoBehaviour
         SliderObject = GetComponent<Slider>();
         SliderObject.onValueChanged.AddListener(delegate { ChangeWPNmode(); });
 
+        // Sliders UI indicators
         if (SliderObject.transform.parent.name == "ShieldUI")
         {
             _shieldUI = GameObject.Find("ShieldOverdriveUI").GetComponent<CanvasGroup>();
@@ -30,40 +31,56 @@ public class SliderScr : MonoBehaviour
             _coolingUI = GameObject.Find("CoolingOverdriveUI").GetComponent<CanvasGroup>();
             _missileLockUI = GameObject.Find("MissileLockUI").GetComponent<CanvasGroup>();
         }
-
+        
         ModeName = transform.Find("Handle Slide Area").Find("Handle").GetComponentInChildren<TextMeshProUGUI>();
-
+        
         this.Wait(1, () =>{
             // Reset base cooling mode
-            if (SliderObject.transform.parent.name == "CoolingUI")
+            if (_coolingUI != null)
             {
                 SliderObject.value = 0;
-            }     
+            }  
+
+            if (Weapon != null && Weapon.ProjectileTypeP == WPNManager.ProjectileType.AMS)
+            {
+                _amsUI = GameObject.Find("AMSUI").GetComponent<CanvasGroup>();                
+            }   
         });   
     }
 
     void Update()
-    {        
-        if (SliderObject.transform.parent.name == "ShieldUI" && SliderObject.value == 2)
+    {       
+        if (_amsUI != null)
+        {            
+            if (SliderObject.value > 0)
+            {
+                BounceUI(_amsUI);
+            }
+            else
+            {
+                _amsUI.alpha = 0;
+            }
+        }        
+
+        if (_shieldUI != null && SliderObject.value == 2)
         {
             BounceUI(_shieldUI);            
         }
-        else if (SliderObject.transform.parent.name == "ShieldUI")
+        else if (_shieldUI != null)
         {
             _shieldUI.alpha = 0;
-        }
+        }        
         
-        if (SliderObject.transform.parent.name == "CoolingUI" && SliderObject.value == 1 
-            || SliderObject.transform.parent.name == "CoolingUI" && PlayerManager.Cooling == PlayerManager.CoolingModesP[1].Cooling)
+        if (_coolingUI != null && PlayerManager.Cooling == PlayerManager.CoolingModesP[1].Cooling)
         {
             BounceUI(_coolingUI);
         }
-        else if (SliderObject.transform.parent.name == "CoolingUI")
+        else if (_coolingUI != null)
         {
             _coolingUI.alpha = 0;
         }
 
-        if (SliderObject.transform.parent.name == "CoolingUI")
+        if (_coolingUI != null)
         {
             if (PlayerManager.MissileLockTimer > 0)
             {
@@ -76,7 +93,7 @@ public class SliderScr : MonoBehaviour
         }
 
         // Auto Cooling overdrive
-        if (SliderObject.transform.parent.name == "CoolingUI" && SliderObject.value == 2 && _gameManager.InAction)
+        if (_coolingUI != null && SliderObject.value == 2 && _gameManager.InAction)
         {
             if (PlayerManager.CoolingDownTimer <= 0 && PlayerManager.Heat >= PlayerManager.HeatTreshold)
             {
@@ -88,7 +105,7 @@ public class SliderScr : MonoBehaviour
 
     public void ChangeWPNmode()
     {
-        if (SliderObject.transform.parent.name == "ShieldUI")
+        if (_shieldUI != null)
         {
             PlayerManager.UnitShield.ChangeMode(PlayerManager.UnitShield.shieldModes[(int)SliderObject.value]);
             ModeName.text = PlayerManager.UnitShield.shieldModes[(int)SliderObject.value].ModeName;
@@ -99,7 +116,7 @@ public class SliderScr : MonoBehaviour
                 _actionMask.transform.localScale = Vector3.one;
             }
         }
-        else if (SliderObject.transform.parent.name == "CoolingUI")
+        else if (_coolingUI != null)
         {            
             PlayerManager.Cooling = PlayerManager.CoolingModesP[(int)SliderObject.value].Cooling;
             ModeName.text = PlayerManager.CoolingModesP[(int)SliderObject.value].ModeName;            
