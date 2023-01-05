@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 { 
-	public LayerMask IgnoreLayers;
+	[SerializeField] private LayerMask _ignoreLayers;
     private Camera _camMain;
 	
 	// NavMesh
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
     private void MoveToClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~IgnoreLayers);        
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~_ignoreLayers);        
 
         if (isHit)
         {            

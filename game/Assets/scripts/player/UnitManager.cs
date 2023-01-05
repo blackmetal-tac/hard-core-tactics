@@ -142,7 +142,10 @@ public class UnitManager : MonoBehaviour
     {
         if (!IsDead)
         {
-            StartShoot();
+            if (!Target.IsDead)
+            {
+                StartShoot();
+            }            
 
             // Shield regeneration
             UnitShield.Regenerate();

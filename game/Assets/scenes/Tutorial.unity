@@ -1761,9 +1761,9 @@ MonoBehaviour:
   CoreSwitch: 0
   CoolingModesP:
   - ModeName: On
-    Cooling: 0.1
+    Cooling: 0.25
   - ModeName: Over
-    Cooling: 0.3
+    Cooling: 0.5
   - ModeName: Auto
     Cooling: 0
   _coreParameters:
@@ -3167,7 +3167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af96a245eaf239646a24c5ff29a5e7b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IgnoreLayers:
+  _ignoreLayers:
     serializedVersion: 2
     m_Bits: 261495
   PlayerAgent: {fileID: 0}
@@ -10678,9 +10678,9 @@ MonoBehaviour:
   CoreSwitch: 0
   CoolingModesP:
   - ModeName: On
-    Cooling: 0.1
+    Cooling: 0.25
   - ModeName: Over
-    Cooling: 0.3
+    Cooling: 0.5
   - ModeName: Auto
     Cooling: 0
   _coreParameters:
@@ -12652,16 +12652,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4987383190760336449, guid: a6556bcb56d998f4e90f12dd915861ef,
         type: 3}
-      propertyPath: _damage
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 4987383190760336449, guid: a6556bcb56d998f4e90f12dd915861ef,
-        type: 3}
-      propertyPath: _recoil
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4987383190760336449, guid: a6556bcb56d998f4e90f12dd915861ef,
-        type: 3}
       propertyPath: _laserWidth
       value: 1
       objectReference: {fileID: 0}
@@ -12917,11 +12907,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4266089538177853289, guid: 94384da20836d724ea5f521b70943c15,
-        type: 3}
-      propertyPath: Homing
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4266089538177853289, guid: 94384da20836d724ea5f521b70943c15,
         type: 3}
