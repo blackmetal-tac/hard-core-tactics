@@ -11,7 +11,6 @@ public class WPNManager : MonoBehaviour
     public ProjectileType ProjectileTypeP;
     [SerializeField] private LayerMask _ignoreLayers;
     public bool Homing;
-    [SerializeField] private bool _burstLaser;
     [SerializeField][Range(0, 20)] private int _radiusAMS, _projectileSpeed;
     [SerializeField][Range(0, 0.3f)] private float _projectileSize, _heat, _recoil, _damage;
     [SerializeField][Range(0, 2)] private float _fireDelay;
@@ -42,7 +41,6 @@ public class WPNManager : MonoBehaviour
 
     private LineRenderer _lineRenderer;
     private bool _laserOn, _oneTime;
-    private int _shotsCount;
     [HideInInspector] public string UnitID;
 
     void Awake()
@@ -186,12 +184,12 @@ public class WPNManager : MonoBehaviour
             else if (ProjectileTypeP == ProjectileType.Missile && !Homing)
             {
                 StartCoroutine(FireMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target));
-                LastBurst = Time.time;// + _gameManager.TurnTime - _fireDelay; // fire burst once (increase delay)
+                LastBurst = Time.time;
             }
             else if (ProjectileTypeP == ProjectileType.Missile && Homing)
             {
                 StartCoroutine(FireHMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target));
-                LastBurst = Time.time;// + _gameManager.TurnTime - _fireDelay; // fire burst once (increase delay)
+                LastBurst = Time.time;
             }
             else if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null)
             {
@@ -327,18 +325,5 @@ public class WPNManager : MonoBehaviour
         {
             _spread += _recoil;
         }
-    }
-
-    // Set shots count for burst laser
-    public void ChangeShotsCount()
-    {
-        if (_burstLaser)
-        {
-            _shotsCount = BurstSize;
-        }
-        else
-        {
-            _shotsCount = 1;
-        }              
-    }
+    } 
 }

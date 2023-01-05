@@ -261,8 +261,7 @@ public class UnitManager : MonoBehaviour
         if (wpnIndex < WeaponCount && WeaponList[wpnIndex] != null && WeaponList[wpnIndex].DownTimer <= 0)
         {
             WeaponList[wpnIndex].DownTimer = 3;
-            WeaponList[wpnIndex].BurstSize = WeaponList[wpnIndex].WeaponModesP[0].FireMode;
-            WeaponList[wpnIndex].ChangeShotsCount();
+            WeaponList[wpnIndex].BurstSize = WeaponList[wpnIndex].WeaponModesP[0].FireMode;            
 
             if (transform.parent.name == "Player")
             {
