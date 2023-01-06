@@ -87,7 +87,7 @@ MonoBehaviour:
   _projectileSize: 0
   _heat: 0.06
   _recoil: 0
-  _damage: 0.02
+  _damage: 0.05
   _fireDelay: 1.5
   _fireRate: 1
   _laserRange: 100

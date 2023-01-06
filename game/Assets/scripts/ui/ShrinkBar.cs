@@ -12,6 +12,7 @@ public class ShrinkBar : MonoBehaviour
         _unitHeatGroup;
     private GameManager _gameManager;
     private int _trasparencyMult = 5;
+    private float _shrinkSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,7 @@ public class ShrinkBar : MonoBehaviour
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _unitManager = transform.GetComponentInParent<UnitManager>();
         _unitUI = transform.Find("UnitUI").gameObject;
+        _shrinkSpeed = 0.5f;
 
         // Health status Health
         // Shield
@@ -105,11 +107,10 @@ public class ShrinkBar : MonoBehaviour
             // Health bar damage animation
             _unitManager.UnitShield.ShrinkTimer -= Time.deltaTime;
             if (_unitManager.UnitShield.ShrinkTimer < 0)
-            {
-                float shrinkSpeed = 1f;
+            {                
                 if (healthImage.fillAmount < damageImage.fillAmount)
                 {
-                    damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
+                    damageImage.fillAmount -= _shrinkSpeed * Time.deltaTime;
                 }
                 else
                 {
@@ -122,11 +123,10 @@ public class ShrinkBar : MonoBehaviour
             // Health bar damage animation
             _unitManager.ShrinkTimer -= Time.deltaTime;
             if (_unitManager.ShrinkTimer < 0)
-            {
-                float shrinkSpeed = 1f;
+            {                
                 if (healthImage.fillAmount < damageImage.fillAmount)
                 {
-                    damageImage.fillAmount -= shrinkSpeed * Time.deltaTime;
+                    damageImage.fillAmount -= _shrinkSpeed * Time.deltaTime;
                 }
                 else
                 {

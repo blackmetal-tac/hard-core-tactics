@@ -61,18 +61,32 @@ public class PlayerController : MonoBehaviour
         }
 
         // Draw player path
-        if (PlayerAgent.hasPath && !_playerManager.IsDead)
+        if (PlayerAgent.hasPath)
         {
             DrawPath();
         }
 
-        // Dynamic _crosshair
-        _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 2 + 
-        _playerManager.MoveSpeed / 10, Time.deltaTime * 3);
-        _crosshair.transform.localScale = _crosshairSize * Vector3.one;
+        if (_playerManager.IsDead)
+        {
+            _walkPath.startWidth = 0;
+            _walkPath.endWidth = 0;
+            _clickMarker.transform.localScale = Vector3.zero;
+        }
 
-        // Crosshair position
-        _crosshair.transform.position = _camMain.WorldToScreenPoint(_playerManager.Target.transform.position);
+        if (!_playerManager.Target.IsDead)
+        {
+            // Dynamic _crosshair
+            _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 2 + 
+            _playerManager.MoveSpeed / 10, Time.deltaTime * 3);
+            _crosshair.transform.localScale = _crosshairSize * Vector3.one;
+
+            // Crosshair position
+            _crosshair.transform.position = _camMain.WorldToScreenPoint(_playerManager.Target.transform.position);
+        }
+        else
+        {
+            _crosshair.transform.localScale = Vector3.zero;
+        }
     }
 
     private void MoveToClick()
@@ -93,13 +107,15 @@ public class PlayerController : MonoBehaviour
     // Draw player path
     public void DrawPath()
     {
+        _walkPath.startWidth = 0.02f;
+        _walkPath.endWidth = 0.02f;
         _walkPath.positionCount = PlayerAgent.path.corners.Length;
         _walkPath.SetPosition(0, transform.position);
 
         if (PlayerAgent.path.corners.Length < 2)
         {
             return;
-        }
+        } 
 
         for (int i = 1; i < PlayerAgent.path.corners.Length; i++)
         {
@@ -109,12 +125,12 @@ public class PlayerController : MonoBehaviour
             _clickMarker.transform.position = Vector3.MoveTowards(_clickMarker.transform.position, PlayerAgent.destination, 
             Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, PlayerAgent.destination) * 4);
         }
-        _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
+        _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));        
     }
 
     public void Move()
     {
-        PlayerAgent.speed = _playerManager.MoveSpeed + 0.1f;        
+        PlayerAgent.speed = _playerManager.MoveSpeed * 1.1f;        
         _playerManager.UnitShield.TurnOnOff();
         _playerManager.CoolingOverdrive();
     }

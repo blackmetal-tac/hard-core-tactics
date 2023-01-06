@@ -37,14 +37,14 @@ public class AIController : MonoBehaviour
     public void Move()
     {   
         SetPath();
-        _unitAgent.speed = _unitManager.MoveSpeed + 0.1f;        
+        _unitAgent.speed = _unitManager.MoveSpeed * 1.1f;        
         _unitManager.UnitShield.TurnOnOff();   
         _unitManager.CoreOverdrive();             
 
         // Change fire modes depending on heat or enable weapon after overheat
         foreach (WPNManager weapon in _unitManager.WeaponList)
         {
-            if (_unitManager.CoolingDownTimer > 3)
+            if (weapon != null && _unitManager.CoolingDownTimer > 3)
             {
                 weapon.BurstSize = weapon.WeaponModesP[2].FireMode;
             }
@@ -78,11 +78,11 @@ public class AIController : MonoBehaviour
         // Get distance between Target to avoid collision
         float targetDistance = Vector3.Distance(_unitAgent.destination, _unitManager.Target.transform.position);
 
-        if (targetDistance > 10) // ??? effective range
+        if (targetDistance > 10 && _unitManager.WalkDistance > 0) // ??? effective range
         {       
             _unitAgent.stoppingDistance = 0f;
             NavMeshPath path = new NavMeshPath();
-            while (_unitManager.GetPathLength(path) < 0.5f) // ??? movement behavior
+            while (_unitManager.GetPathLength(path) < 0.5f && _unitManager.WalkDistance > 0.5f) // ??? movement behavior
             {
                 _unitAgent.SetDestination(new Vector3(
                     _unitManager.Target.transform.position.x + Random.Range(-_moveOffset, _moveOffset),
@@ -90,18 +90,20 @@ public class AIController : MonoBehaviour
                     _unitManager.Target.transform.position.z));
                 NavMesh.CalculatePath(_unitAgent.transform.position, _unitAgent.destination, NavMesh.AllAreas, path);                
             }
-            _unitManager.SetDestination(_unitAgent.destination, _unitAgent);            
+            _unitManager.SetDestination(_unitAgent.destination, _unitAgent);     
+            Debug.Log("long");       
         }
-        else
+        else if (_unitManager.WalkDistance > 0)
         {        
             _unitAgent.stoppingDistance = 1f;      
             NavMeshPath path = new NavMeshPath();
-            while (_unitManager.GetPathLength(path) < 0.5f) // ??? movement behavior
+            while (_unitManager.GetPathLength(path) < 0.5f && _unitManager.WalkDistance > 0.5f) // ??? movement behavior
             {
                 _unitAgent.SetDestination(RandomNavmeshLocation(_unitManager.WalkDistance));
                 NavMesh.CalculatePath(_unitAgent.transform.position, _unitAgent.destination, NavMesh.AllAreas, path);                
             }
             _unitManager.MoveSpeed = _unitManager.GetPathLength(path) / _gameManager.TurnTime;
+            Debug.Log("short");  
         }
     }
 

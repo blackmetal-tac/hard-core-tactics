@@ -237,7 +237,7 @@ public class UnitManager : MonoBehaviour
         // Death
         if (HP <= 0)
         {
-            IsDead = true;
+            IsDead = true;            
             _navMeshAgent.enabled = false;
             GetComponent<Collider>().enabled = false;
             transform.localScale = Vector3.zero;
@@ -346,12 +346,12 @@ public class UnitManager : MonoBehaviour
         if (CoreSwitch && CoreDownTimer <= 0)
         {
             CoreDownTimer = 5;
-            WalkDistance += _coreParameters.MoveBoost;
+            WalkDistance *= _coreParameters.MoveBoost;
         }
         else
         {
             CoreDownTimer = 0;
-            WalkDistance -= _coreParameters.MoveBoost;      
+            WalkDistance /= _coreParameters.MoveBoost;      
 
             if (transform.parent.name == "Player")
             {                
