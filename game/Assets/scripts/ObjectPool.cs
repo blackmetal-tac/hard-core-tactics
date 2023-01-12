@@ -113,7 +113,8 @@ namespace OWS.ObjectPooling
             return go;
         }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, UnitManager target, bool isFriend)
+        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, 
+            UnitManager target, bool isFriend, bool homing)
         {
             GameObject go = Pull().gameObject;
             go.transform.position = position;
@@ -129,31 +130,16 @@ namespace OWS.ObjectPooling
             {
                 missile.MissileCollider.gameObject.layer = 13;
             }
-            missile.Homing = false;
-            missile.Target = target;
-            missile.Damage = damage;
-            missile.Speed = speed;
-            return go;
-        }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, GameObject target, bool isFriend)
-        {
-            GameObject go = Pull().gameObject;
-            go.transform.position = position;
-            go.transform.rotation = rotation;
-            go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
-            Missile missile = go.GetComponentInChildren<Missile>();
-            missile.MissileCollider.enabled = true;
-            if (isFriend)
+            if (homing)
             {
-                missile.MissileCollider.gameObject.layer = 12;
+                missile.Homing = true;                
             }
             else
             {
-                missile.MissileCollider.gameObject.layer = 13;
-            }
-            missile.Homing = true;
-            missile.HomingTarget = target;
+                missile.Homing = false;                
+            }                  
+            missile.Target = target;     
             missile.Damage = damage;
             missile.Speed = speed;
             return go;

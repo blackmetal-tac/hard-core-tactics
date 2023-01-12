@@ -90,8 +90,7 @@ public class AIController : MonoBehaviour
                     _unitManager.Target.transform.position.z));
                 NavMesh.CalculatePath(_unitAgent.transform.position, _unitAgent.destination, NavMesh.AllAreas, path);                
             }
-            _unitManager.SetDestination(_unitAgent.destination, _unitAgent);     
-            Debug.Log("long");       
+            _unitManager.SetDestination(_unitAgent.destination, _unitAgent);                        
         }
         else if (_unitManager.WalkDistance > 0)
         {        
@@ -102,8 +101,7 @@ public class AIController : MonoBehaviour
                 _unitAgent.SetDestination(RandomNavmeshLocation(_unitManager.WalkDistance));
                 NavMesh.CalculatePath(_unitAgent.transform.position, _unitAgent.destination, NavMesh.AllAreas, path);                
             }
-            _unitManager.MoveSpeed = _unitManager.GetPathLength(path) / _gameManager.TurnTime;
-            Debug.Log("short");  
+            _unitManager.MoveSpeed = _unitManager.GetPathLength(path) / _gameManager.TurnTime;             
         }
     }
 

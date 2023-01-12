@@ -8,8 +8,7 @@ public class Missile : MonoBehaviour
     [HideInInspector] public UnitManager Target;
     [HideInInspector] public Rigidbody MissileBody;
     [HideInInspector] public Collider MissileCollider;
-    [HideInInspector] public bool Homing;
-    [HideInInspector] public GameObject HomingTarget;
+    [HideInInspector] public bool Homing;    
     private GameManager _gameManager;
     private PoolObject _poolObject;
     private readonly float _spread = 0.5f, _delay = 0.1f, _baseTimer = 0.5f;
@@ -24,12 +23,6 @@ public class Missile : MonoBehaviour
         MissileBody = GetComponent<Rigidbody>();
         MissileCollider = GetComponent<Collider>();
         _timer = _baseTimer;
-		
-		// Look at target
-        /*_spreadVector = new(
-            Random.Range(-_spread, _spread) + Target.transform.position.x - _poolObject.transform.position.x,
-            Random.Range(-_spread / 4, _spread / 4) + Target.transform.position.y - _poolObject.transform.position.y,
-            Random.Range(-_spread, _spread) + Target.transform.position.z - _poolObject.transform.position.z);*/
     }
 
     void Update() 
@@ -99,13 +92,13 @@ public class Missile : MonoBehaviour
         if (_timer > 0 && _timer < _baseTimer)
         {
             _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
-                Quaternion.LookRotation(_poolObject.transform.forward + _spreadVector), Time.time * 0.1f);
+                Quaternion.LookRotation(_poolObject.transform.forward + _spreadVector / 2), Time.time * 0.1f);
         }
         else if (_timer > -_baseTimer)
         {
-            Vector3 direction = HomingTarget.transform.position - _poolObject.transform.position;
+            Vector3 direction = Target.transform.position - _poolObject.transform.position;
             _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
-                Quaternion.LookRotation(direction + _spreadVector), Time.time * 1f);
+                Quaternion.LookRotation(direction + _spreadVector / 2), Time.time * 1f);
         }
 
         _poolObject.transform.position += Speed * Time.deltaTime * _poolObject.transform.forward;

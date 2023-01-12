@@ -21,6 +21,7 @@ public class WPNManager : MonoBehaviour
     private Vector3 _spreadVector, _laserPoint;
     private float _spread, _updateTimer, _laserWidth;
     private readonly float _delay = 0.1f;
+    float totalShots;
 
     [System.Serializable]
     public class WeaponModes
@@ -140,22 +141,22 @@ public class WPNManager : MonoBehaviour
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
     public void FireBurst(UnitManager target)
     {
-        if (ProjectileTypeP != ProjectileType.Laser)
+        if (ProjectileTypeP != ProjectileType.Laser && BurstSize > 0)
         {
             _spreadVector = new(
                 Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread),
                 Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread / 2, (UnitManagerP.MoveSpeed * _spreadMult) + _spread / 2),
                 Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread));
         }
-        else
+        else if (BurstSize > 0)
         {
             FireLaser(target);
         }
 
-        if (ProjectileTypeP != ProjectileType.Laser || ProjectileTypeP != ProjectileType.AMS
-            || !Homing)
+        if (ProjectileTypeP == ProjectileType.Bullet && BurstSize > 0
+            || ProjectileTypeP == ProjectileType.Missile && BurstSize > 0 && !Homing)
         {
-            FirePoint.transform.LookAt(target.transform.position + _spreadVector);
+            FirePoint.transform.LookAt(target.transform.position + _spreadVector);                       
         }
 
         if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null)
@@ -174,7 +175,7 @@ public class WPNManager : MonoBehaviour
         }
 
         // Fire different projectiles
-        if (Time.time > LastBurst + _fireDelay)
+        if (Time.time > LastBurst + _fireDelay && BurstSize > 0)
         {
             if (ProjectileTypeP == ProjectileType.Bullet)
             {
@@ -223,11 +224,11 @@ public class WPNManager : MonoBehaviour
                 _lineRenderer.SetPosition(1, hit.point);
                 if (hit.collider.name == "Body")
                 {
-                    hit.collider.GetComponent<UnitManager>().TakeDamage(_damage * _laserWidth);
+                    hit.collider.GetComponent<UnitManager>().TakeDamage(_damage * _laserWidth / 2);
                 }
                 else if (hit.collider.gameObject.layer == 17)
                 {
-                    hit.collider.GetComponent<Shield>().TakeDamage(_damage * _laserWidth * 2);                    
+                    hit.collider.GetComponent<Shield>().TakeDamage(_damage * _laserWidth * 2);
                 }
                 else if (_isFriend && hit.collider.gameObject.layer == 13 // Detonate foe's missiles
                     || !_isFriend && hit.collider.gameObject.layer == 12)
@@ -270,10 +271,11 @@ public class WPNManager : MonoBehaviour
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
         {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, _projectileSpeed, unitID);
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, 
+                _projectileSpeed, unitID);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
-        }
+        }        
     }
 
     // Coroutine for separate bursts of AMS
@@ -295,7 +297,8 @@ public class WPNManager : MonoBehaviour
         for (int i = 0; i < BurstSize; i++)
         {
             firePoint.transform.position = _tubes[i].position;
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, _projectileSpeed, target, _isFriend);
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, 
+                _projectileSpeed, target, _isFriend, Homing);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
         }
@@ -308,8 +311,9 @@ public class WPNManager : MonoBehaviour
         for (int i = 0; i < BurstSize; i++)
         {
             firePoint.transform.position = _tubes[i].position;
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, _projectileSpeed, target, _isFriend);
-            HeatRecoil();
+            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, 
+                _projectileSpeed, target, _isFriend, Homing);
+            HeatRecoil();            
             yield return new WaitForSeconds(shotDelay);
         }
     }
