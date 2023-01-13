@@ -3803,6 +3803,7 @@ MonoBehaviour:
   _cameraSpeed: 5
   _rotationSpeed: 1
   _cameraFocus: {fileID: 1990597468}
+  _mapSize: 10
 --- !u!1 &756432400
 GameObject:
   m_ObjectHideFlags: 0

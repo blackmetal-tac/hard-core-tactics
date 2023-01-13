@@ -5,9 +5,10 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float _cameraSpeed, _rotationSpeed;    
     [SerializeField] private GameObject _cameraFocus;
+    [SerializeField] private int _mapSize;
 
     private PlayerInput _playerInput;
-    private InputAction _move, _look, _rightClick;    
+    private InputAction _move, _look, _rightClick, _middleClick, _rotate;    
     private float _rotation;
     private bool _once;    
 
@@ -28,6 +29,12 @@ public class CameraMovement : MonoBehaviour
 
         _rightClick = _playerInput.UI.RightClick;
         _rightClick.Enable();
+
+        _middleClick = _playerInput.UI.MiddleClick;
+        _middleClick.Enable();
+
+        _rotate = _playerInput.UI.Rotate;
+        _rotate.Enable();
     }
 
     void OnDisable()
@@ -35,6 +42,8 @@ public class CameraMovement : MonoBehaviour
         _move.Disable();
         _look.Disable();
         _rightClick.Disable();
+        _middleClick.Disable();
+        _rotate.Disable();
     }
 
     // Update is called once per frame
@@ -46,11 +55,13 @@ public class CameraMovement : MonoBehaviour
             _once = true;
         }*/
 
-        Move();
+        if (_move.IsPressed() || _middleClick.IsPressed())
+        {
+            Move();
+        }       
 
-        
 
-        if (_rightClick.IsPressed())
+        if (_rightClick.IsPressed() || _rotate.IsPressed())
         {
             Rotate();
         }        
@@ -58,20 +69,38 @@ public class CameraMovement : MonoBehaviour
 
     public void Move()
     {
-        Vector2 moveDirection = _move.ReadValue<Vector2>();
-        _cameraFocus.transform.position += new Vector3(moveDirection.x, 0 , moveDirection.y) * Time.deltaTime * _cameraSpeed;
-    }
+        if (_move.IsPressed())
+        {
+            Vector2 moveDirection = _move.ReadValue<Vector2>();
+            _cameraFocus.transform.position += new Vector3(moveDirection.x, 0 , moveDirection.y) * Time.deltaTime * _cameraSpeed;
+        }
 
-    public void MouseMove()
-    {
-
+        if (_middleClick.IsPressed())
+        {
+            Vector2 moveDirection = _look.ReadValue<Vector2>();
+            _cameraFocus.transform.position += new Vector3(moveDirection.x, 0 , moveDirection.y) * Time.deltaTime * _cameraSpeed / 4;
+        }
+        _cameraFocus.transform.position = new Vector3(Mathf.Clamp(_cameraFocus.transform.position.x, -_mapSize, _mapSize),
+                _cameraFocus.transform.position.y,
+                Mathf.Clamp(_cameraFocus.transform.position.z, -_mapSize, _mapSize));
     }
 
     private void Rotate()
     {
-        Vector3 look = _look.ReadValue<Vector2>();
-        _rotation += look.x *_rotationSpeed;
-        _cameraFocus.transform.rotation = Quaternion.Euler(new Vector3(_cameraFocus.transform.rotation.x, _rotation, 
-            _cameraFocus.transform.rotation.z));     
+        if (_rightClick.IsPressed())
+        {
+            Vector3 look = _look.ReadValue<Vector2>();
+            _rotation += look.x *_rotationSpeed;
+            _cameraFocus.transform.rotation = Quaternion.Euler(new Vector3(_cameraFocus.transform.rotation.x, _rotation, 
+                _cameraFocus.transform.rotation.z));     
+        }    
+
+        if (_rotate.IsPressed())
+        {            
+            float look = _rotate.ReadValue<float>();  
+            _rotation += look *_rotationSpeed;          
+            _cameraFocus.transform.rotation = Quaternion.Euler(new Vector3(_cameraFocus.transform.rotation.x, _rotation, 
+                _cameraFocus.transform.rotation.z));  
+        }    
     }
 }
