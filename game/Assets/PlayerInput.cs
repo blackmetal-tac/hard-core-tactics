@@ -338,12 +338,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""ScrollWheel"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""551f4da9-aed2-4317-9014-4f6e0cc24707"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""MiddleClick"",
@@ -398,6 +398,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""AltAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""98e37b6f-29bc-4085-9f43-c93aa51d4724"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -833,7 +842,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""WASD"",
                     ""id"": ""82c08768-2073-4028-931f-d1bdbf407dfa"",
-                    ""path"": ""Dpad(mode=2)"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -842,7 +851,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
+                    ""name"": ""Up"",
                     ""id"": ""22bb9f83-bec1-4a6f-9707-ee6bb59ade0f"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
@@ -853,19 +862,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""up"",
+                    ""name"": ""Down"",
                     ""id"": ""78c14043-5e9a-4d4a-a493-809443beb2a0"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""b6cd7634-2420-4d35-b036-ca2ae5418a03"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -875,56 +873,23 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""down"",
-                    ""id"": ""69d6fb32-b992-492e-8b6a-df9b22fb5368"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""80d39f62-ef8a-4fd4-989f-9dcddfbd4194"",
+                    ""name"": ""Left"",
+                    ""id"": ""7c36b741-c61b-4c02-aa47-06270228c2e5"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
+                    ""groups"": """",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""eb06ffd4-be9b-47e0-ade3-0dee3c59ed63"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""3f1f5ff6-1d2d-4581-a267-a93e192cfd02"",
+                    ""name"": ""Right"",
+                    ""id"": ""14444737-8d2e-4714-bb36-f1359fa2e0f2"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""a1a85986-680b-4462-bd76-76fb465aba25"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
+                    ""groups"": """",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -1016,6 +981,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e256a9f6-47ce-4b8d-97cc-caf53653c61e"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AltAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1103,6 +1079,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_Move = m_UI.FindAction("Move", throwIfNotFound: true);
         m_UI_Rotate = m_UI.FindAction("Rotate", throwIfNotFound: true);
+        m_UI_AltAction = m_UI.FindAction("AltAction", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1224,6 +1201,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_Move;
     private readonly InputAction m_UI_Rotate;
+    private readonly InputAction m_UI_AltAction;
     public struct UIActions
     {
         private @PlayerInput m_Wrapper;
@@ -1241,6 +1219,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
         public InputAction @Move => m_Wrapper.m_UI_Move;
         public InputAction @Rotate => m_Wrapper.m_UI_Rotate;
+        public InputAction @AltAction => m_Wrapper.m_UI_AltAction;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1289,6 +1268,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Rotate.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRotate;
+                @AltAction.started -= m_Wrapper.m_UIActionsCallbackInterface.OnAltAction;
+                @AltAction.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnAltAction;
+                @AltAction.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnAltAction;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1332,6 +1314,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @AltAction.started += instance.OnAltAction;
+                @AltAction.performed += instance.OnAltAction;
+                @AltAction.canceled += instance.OnAltAction;
             }
         }
     }
@@ -1402,5 +1387,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnAltAction(InputAction.CallbackContext context);
     }
 }

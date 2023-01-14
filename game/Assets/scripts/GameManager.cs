@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         DOTween.SetTweensCapacity(500, 50);
-        _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        _playerController = GameObject.Find("Player").GetComponent<PlayerController>();        
         _AIController = GameObject.Find("Enemy").GetComponent<AIController>();
         _playerManager = _playerController.GetComponentInChildren<UnitManager>();
         _enemyManager = _AIController.GetComponentInChildren<UnitManager>();
