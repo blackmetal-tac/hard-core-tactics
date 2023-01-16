@@ -79,32 +79,21 @@ namespace OWS.ObjectPooling
             return go;
         }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float speed)
+        public GameObject PullGameObject(Transform firePoint, float size, float speed)
         {
             GameObject go = Pull().gameObject;
-            go.transform.position = position;
-            go.transform.rotation = rotation;
+            go.transform.position = firePoint.position;
+            go.transform.rotation = firePoint.rotation;
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on            
             go.GetComponentInChildren<Rigidbody>().velocity = speed * go.transform.forward;
             return go;
         }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed)
+        public GameObject PullGameObject(Transform firePoint, float size, float damage, float speed, string bulletID)
         {
             GameObject go = Pull().gameObject;
-            go.transform.position = position;
-            go.transform.rotation = rotation;
-            go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
-            go.GetComponentInChildren<Projectile>().Damage = damage;
-            go.GetComponentInChildren<Rigidbody>().velocity = speed * go.transform.forward;
-            return go;
-        }
-
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, string bulletID)
-        {
-            GameObject go = Pull().gameObject;
-            go.transform.position = position;
-            go.transform.rotation = rotation;
+            go.transform.position = firePoint.position;
+            go.transform.rotation = firePoint.rotation;
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
             Projectile projectile = go.GetComponentInChildren<Projectile>();
             projectile.Damage = damage;
@@ -113,12 +102,12 @@ namespace OWS.ObjectPooling
             return go;
         }
 
-        public GameObject PullGameObject(Vector3 position, Quaternion rotation, float size, float damage, float speed, 
-            UnitManager target, bool isFriend, bool homing)
+        public GameObject PullGameObject(Transform firePoint, float size, float damage, float speed, 
+            UnitManager target, bool isFriend)
         {
             GameObject go = Pull().gameObject;
-            go.transform.position = position;
-            go.transform.rotation = rotation;
+            go.transform.position = firePoint.position;
+            go.transform.rotation = firePoint.rotation;
             go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
             Missile missile = go.GetComponentInChildren<Missile>();
             missile.MissileCollider.enabled = true;
@@ -131,15 +120,34 @@ namespace OWS.ObjectPooling
                 missile.MissileCollider.gameObject.layer = 13;
             }
 
-            if (homing)
+            missile.Homing = true;                
+            missile.Target = target;     
+            missile.Damage = damage;
+            missile.Speed = speed;
+            return go;
+        }
+
+        public GameObject PullGameObject(Transform firePoint, Vector3 spread, float size, float damage, 
+            float speed, UnitManager target, bool isFriend)
+        {
+            GameObject go = Pull().gameObject;
+            go.transform.position = firePoint.position;
+            go.transform.rotation = firePoint.rotation;
+            go.gameObject.transform.localScale = size * Vector3.one; //ensure the object is on
+            Missile missile = go.GetComponentInChildren<Missile>();
+            missile.MissileCollider.enabled = true;
+            if (isFriend)
             {
-                missile.Homing = true;                
+                missile.MissileCollider.gameObject.layer = 12;
             }
             else
             {
-                missile.Homing = false;                
-            }                  
+                missile.MissileCollider.gameObject.layer = 13;
+            }
+ 
+            missile.Homing = false;
             missile.Target = target;     
+            missile.SpreadVector = spread;
             missile.Damage = damage;
             missile.Speed = speed;
             return go;

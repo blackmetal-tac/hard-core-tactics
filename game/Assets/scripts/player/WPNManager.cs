@@ -129,7 +129,7 @@ public class WPNManager : MonoBehaviour
         }
 
         if (_lineRenderer != null && !_gameManager.InAction || _lineRenderer != null && UnitManagerP.IsDead
-            || _lineRenderer != null && UnitManagerP.Target.IsDead)
+            || _lineRenderer != null && UnitManagerP.Target.IsDead || _lineRenderer != null && BurstSize == 0)
         {
             _laserOn = false;
             _lineRenderer.startWidth = _laserWidth;
@@ -179,22 +179,22 @@ public class WPNManager : MonoBehaviour
         {
             if (ProjectileTypeP == ProjectileType.Bullet)
             {
-                StartCoroutine(FireBulletCoroutine(FirePoint, _gameManager.BulletsPool, UnitID));
+                StartCoroutine(FireBulletCoroutine());
                 LastBurst = Time.time;
             }
             else if (ProjectileTypeP == ProjectileType.Missile && !Homing)
             {
-                StartCoroutine(FireMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target));
+                StartCoroutine(FireMissilesCoroutine(target));                
                 LastBurst = Time.time;
             }
             else if (ProjectileTypeP == ProjectileType.Missile && Homing)
             {
-                StartCoroutine(FireHMissilesCoroutine(FirePoint, _gameManager.MissilesPool, target));
+                StartCoroutine(FireHMissilesCoroutine(target));
                 LastBurst = Time.time;
             }
             else if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null)
             {
-                StartCoroutine(FireAMSCoroutine(FirePoint, _gameManager.AmsPool));                
+                StartCoroutine(FireAMSCoroutine());                
                 LastBurst = Time.time;
             }
         }
@@ -266,53 +266,52 @@ public class WPNManager : MonoBehaviour
     }
     
     // Coroutine for separate bursts of bullets
-    private IEnumerator FireBulletCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, string unitID)
+    private IEnumerator FireBulletCoroutine()
     {
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
         {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, 
-                _projectileSpeed, unitID);
+            _gameManager.BulletsPool.PullGameObject(FirePoint.transform, _projectileSize, _damage, _projectileSpeed, UnitID);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
         }        
     }
 
     // Coroutine for separate bursts of AMS
-    private IEnumerator FireAMSCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool)
+    private IEnumerator FireAMSCoroutine()
     {
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
-        {
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _projectileSpeed);
+        { 
+            _gameManager.AmsPool.PullGameObject(FirePoint.transform, _projectileSize, _projectileSpeed);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
         }
     }
 
     // Coroutine for missiles
-    private IEnumerator FireMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, UnitManager target)
+    private IEnumerator FireMissilesCoroutine(UnitManager target)
     {
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
         {
-            firePoint.transform.position = _tubes[i].position;
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, 
-                _projectileSpeed, target, _isFriend, Homing);
+            FirePoint.transform.position = _tubes[i].position;
+            _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _spreadVector, _projectileSize, _damage, 
+                _projectileSpeed, target, _isFriend);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
         }
     }
 
     // Coroutine for Homing missiles
-    private IEnumerator FireHMissilesCoroutine(GameObject firePoint, ObjectPool<PoolObject> objectPool, UnitManager target)
+    private IEnumerator FireHMissilesCoroutine(UnitManager target)
     {
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
         {
-            firePoint.transform.position = _tubes[i].position;
-            objectPool.PullGameObject(firePoint.transform.position, firePoint.transform.rotation, _projectileSize, _damage, 
-                _projectileSpeed, target, _isFriend, Homing);
+            FirePoint.transform.position = _tubes[i].position;
+            _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _projectileSize, _damage, 
+                _projectileSpeed, target, _isFriend);
             HeatRecoil();            
             yield return new WaitForSeconds(shotDelay);
         }

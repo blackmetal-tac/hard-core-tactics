@@ -114,11 +114,11 @@ MonoBehaviour:
     m_Bits: 0
   Homing: 0
   _radiusAMS: 0
-  _projectileSpeed: 5
+  _projectileSpeed: 6
   _projectileSize: 0.1
   _heat: 0.015
-  _recoil: 0.1
-  _damage: 0.01
+  _recoil: 0.3
+  _damage: 0.005
   _fireDelay: 2
   _fireRate: 500
   _laserRange: 0

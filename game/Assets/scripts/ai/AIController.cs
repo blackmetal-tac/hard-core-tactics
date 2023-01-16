@@ -37,7 +37,7 @@ public class AIController : MonoBehaviour
     public void Move()
     {   
         SetPath();
-        _unitAgent.speed = _unitManager.MoveSpeed * 1.1f;        
+        _unitAgent.speed = _unitManager.MoveSpeed;        
         _unitManager.UnitShield.TurnOnOff();   
         _unitManager.CoreOverdrive();             
 

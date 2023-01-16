@@ -1,8 +1,8 @@
-TestGun(x3) - 		15 shots / 0.15 dmg / 5 sec turn
+TestGun(x3) - 		15 shots / 0.075 dmg / 5 sec turn
 					15 shots / 0.12 heat
-LauncherM(x3) - 	9 shots / 0.18 + 0.0225 dmg(armor) / 0 + 0.09 dmg(shield) / 5 sec turn
+LauncherM(x3) - 	9 shots / 0.09 + 0.01175 dmg(armor) / 0 + 0.045 dmg(shield) / 5 sec turn
 					9 shots / 0.135 heat 
-LauncherHM(x2) - 	6 shots / 0.12 + 0.015 dmg(armor) / 0 + 0.06 dmg(shield) / 5 sec turn
+LauncherHM(x2) - 	6 shots / 0.06 + 0.0075 dmg(armor) / 0 + 0.03 dmg(shield) / 5 sec turn
 					6 shots / 0.09 heat
 Laser(x1) - 		~1.0875 dmg(armor) / ~4.35 dmg(shield) / 5 sec turn
 					~5.0 heat

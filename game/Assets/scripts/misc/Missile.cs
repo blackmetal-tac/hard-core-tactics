@@ -3,9 +3,9 @@ using OWS.ObjectPooling;
 
 public class Missile : MonoBehaviour
 {
-    [HideInInspector] public float Damage;
-    [HideInInspector] public float Speed;
+    [HideInInspector] public float Damage, Speed;
     [HideInInspector] public UnitManager Target;
+    [HideInInspector] public Vector3 SpreadVector;
     [HideInInspector] public Rigidbody MissileBody;
     [HideInInspector] public Collider MissileCollider;
     [HideInInspector] public bool Homing;    
@@ -30,12 +30,18 @@ public class Missile : MonoBehaviour
         if (_poolObject.transform.localScale != Vector3.zero && !Homing)
         {
             MoveTowards();
-            Target.MissileLockTimer = 1;
+            if (_gameManager.InAction)
+            {
+                Target.MissileLockTimer = 0.5f;
+            }            
         }
         else if (_poolObject.transform.localScale != Vector3.zero && Homing)
         {
             FollowTarget();
-            Target.MissileLockTimer = 1;
+            if (_gameManager.InAction)
+            {
+                Target.MissileLockTimer = 0.5f;
+            }  
         }
     }
 
@@ -72,7 +78,7 @@ public class Missile : MonoBehaviour
 
         if (_timer > 0)
         {
-            Vector3 direction = Target.transform.position - _poolObject.transform.position;
+            Vector3 direction = (Target.transform.position + SpreadVector) - _poolObject.transform.position;
             _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
                 Quaternion.LookRotation(direction + _spreadVector), Time.time * 0.1f);
         }
