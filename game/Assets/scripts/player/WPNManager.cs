@@ -12,12 +12,12 @@ public class WPNManager : MonoBehaviour
     [SerializeField] private LayerMask _ignoreLayers;
     public bool Homing;
     [SerializeField][Range(0, 20)] private int _radiusAMS, _projectileSpeed;
-    [SerializeField][Range(0, 0.3f)] private float _projectileSize, _heat, _recoil, _damage;
-    [SerializeField][Range(0, 2)] private float _fireDelay;
+    [SerializeField][Range(0, 0.3f)] private float _projectileSize, _heat, _damage;
+    [SerializeField][Range(0, 2)] private float _recoil, _fireDelay;
     [SerializeField][Range(0, 3000)] private float _fireRate, _laserRange;  
 	[HideInInspector] public int BurstSize, DownTimer;
     [HideInInspector] public float LastBurst;
-    private readonly float _spreadMult = 0.5f;
+    private readonly float _spreadMult = 0.2f;
     private Vector3 _spreadVector, _laserPoint;
     private float _spread, _updateTimer, _laserWidth;
     private readonly float _delay = 0.1f;
@@ -224,11 +224,11 @@ public class WPNManager : MonoBehaviour
                 _lineRenderer.SetPosition(1, hit.point);
                 if (hit.collider.name == "Body")
                 {
-                    hit.collider.GetComponent<UnitManager>().TakeDamage(_damage * _laserWidth / 2);
+                    hit.collider.GetComponent<UnitManager>().TakeDamage((_damage / 4) * _laserWidth);
                 }
                 else if (hit.collider.gameObject.layer == 17)
                 {
-                    hit.collider.GetComponent<Shield>().TakeDamage(_damage * _laserWidth * 2);
+                    hit.collider.GetComponent<Shield>().TakeDamage((_damage * 2) * _laserWidth);
                 }
                 else if (_isFriend && hit.collider.gameObject.layer == 13 // Detonate foe's missiles
                     || !_isFriend && hit.collider.gameObject.layer == 12)

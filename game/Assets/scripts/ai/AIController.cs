@@ -9,6 +9,8 @@ public class AIController : MonoBehaviour
 
     // Move parameters
     private readonly int _moveOffset = 15;
+    private bool _oneTime, _shieldEnable;
+    private static float _shieldTreshold = 0.25f;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +26,42 @@ public class AIController : MonoBehaviour
 
     void Update()
     {
+        if (_unitManager.UnitShield.HP < _shieldTreshold && Time.time > _gameManager.LoadTime && !_oneTime
+            && _unitManager.UnitShield.DownTimer <= 0)
+        {          
+            Debug.Log("off");  
+            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[0]);
+            _unitManager.UnitShield.TurnOnOff();
+            _oneTime = true;
+        }
+
+        if (_unitManager.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
+            && _unitManager.UnitShield.DownTimer <= 0 && _unitManager.UnitShield.Regeneration == 0
+            && _unitManager.Heat < _unitManager.HeatTreshold)
+        {            Debug.Log("on over");
+            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);   
+            _unitManager.UnitShield.TurnOnOff();
+            _shieldEnable = true;
+        }
+        else if (_unitManager.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
+            && _unitManager.UnitShield.DownTimer <= 0 && _unitManager.UnitShield.Regeneration == 0
+            && _unitManager.Heat >= _unitManager.HeatTreshold)
+        {            Debug.Log("on");
+            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);   
+            _unitManager.UnitShield.TurnOnOff();
+            _shieldEnable = true;
+        }
+
+        if (_unitManager.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
+            && _unitManager.UnitShield.DownTimer <= 0
+            && _unitManager.Heat >= _unitManager.HeatTreshold)
+        {   
+            Debug.Log("cool");         
+            _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);   
+            _unitManager.UnitShield.TurnOnOff();
+            _shieldEnable = true;
+        }
+
         // Cooling overdrive
         if (_unitManager.CoolingDownTimer <= 0 && _unitManager.Heat >= _unitManager.HeatTreshold 
         && _gameManager.InAction)
@@ -61,15 +99,20 @@ public class AIController : MonoBehaviour
         }        
 
         // Shield management
-        if (_unitManager.UnitShield.DownTimer <= 0 && _unitManager.Heat < _unitManager.HeatTreshold)
-        {         
+        if (_unitManager.UnitShield.DownTimer <= 0 && _unitManager.Heat < _unitManager.HeatTreshold
+            && _unitManager.UnitShield.HP > _shieldTreshold)
+        {    
             _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[2]);
             _unitManager.UnitShield.TurnOnOff();
+            _oneTime = false;
+            _shieldEnable = false;
         }
-        else if (_unitManager.UnitShield.DownTimer <= 0)
+        else if (_unitManager.UnitShield.DownTimer <= 0 && _unitManager.UnitShield.HP > _shieldTreshold)
         { 
             _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);   
             _unitManager.UnitShield.TurnOnOff();
+            _oneTime = false;
+            _shieldEnable = false;
         }   
     }
 

@@ -14,6 +14,7 @@ public class Missile : MonoBehaviour
     private readonly float _spread = 0.5f, _delay = 0.1f, _baseTimer = 0.5f;
     private float _timer, _lastCheck;
     private Vector3 _spreadVector;
+    private bool _oneTime;
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +63,7 @@ public class Missile : MonoBehaviour
     public void Explode()
     {
         _timer = _baseTimer;
+        _oneTime = false;
         MissileBody.velocity = Vector3.zero;
         MissileCollider.enabled = false;
         _gameManager.ExplosionPool.PullGameObject(transform.position, 1f, Damage / 2);
@@ -95,18 +97,23 @@ public class Missile : MonoBehaviour
             _lastCheck = Time.time;            
         }
 
-        if (_timer > 0 && _timer < _baseTimer)
-        {
+        if (_timer > 0)
+        {            
             _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
                 Quaternion.LookRotation(_poolObject.transform.forward + _spreadVector / 2), Time.time * 0.1f);
         }
-        else if (_timer > -_baseTimer)
+        else if (_timer < 0 && _timer > -_baseTimer)
         {
+            if (!_oneTime)
+            {
+                Speed += Speed / 2;
+                _oneTime = true;               
+            }
+
             Vector3 direction = Target.transform.position - _poolObject.transform.position;
             _poolObject.transform.rotation = Quaternion.RotateTowards(_poolObject.transform.rotation,
                 Quaternion.LookRotation(direction + _spreadVector / 2), Time.time * 1f);
-        }
-
+        }        
         _poolObject.transform.position += Speed * Time.deltaTime * _poolObject.transform.forward;
         _timer -= Time.deltaTime;
     }
