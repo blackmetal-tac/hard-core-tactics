@@ -28,8 +28,7 @@ public class AIController : MonoBehaviour
     {
         if (_unitManager.UnitShield.HP < _shieldTreshold && Time.time > _gameManager.LoadTime && !_oneTime
             && _unitManager.UnitShield.DownTimer <= 0)
-        {          
-            Debug.Log("off");  
+        {      
             _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[0]);
             _unitManager.UnitShield.TurnOnOff();
             _oneTime = true;
@@ -38,7 +37,7 @@ public class AIController : MonoBehaviour
         if (_unitManager.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
             && _unitManager.UnitShield.DownTimer <= 0 && _unitManager.UnitShield.Regeneration == 0
             && _unitManager.Heat < _unitManager.HeatTreshold)
-        {            Debug.Log("on over");
+        {           
             _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);   
             _unitManager.UnitShield.TurnOnOff();
             _shieldEnable = true;
@@ -46,7 +45,7 @@ public class AIController : MonoBehaviour
         else if (_unitManager.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
             && _unitManager.UnitShield.DownTimer <= 0 && _unitManager.UnitShield.Regeneration == 0
             && _unitManager.Heat >= _unitManager.HeatTreshold)
-        {            Debug.Log("on");
+        {            
             _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);   
             _unitManager.UnitShield.TurnOnOff();
             _shieldEnable = true;
@@ -55,8 +54,7 @@ public class AIController : MonoBehaviour
         if (_unitManager.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
             && _unitManager.UnitShield.DownTimer <= 0
             && _unitManager.Heat >= _unitManager.HeatTreshold)
-        {   
-            Debug.Log("cool");         
+        {         
             _unitManager.UnitShield.ChangeMode(_unitManager.UnitShield.shieldModes[1]);   
             _unitManager.UnitShield.TurnOnOff();
             _shieldEnable = true;

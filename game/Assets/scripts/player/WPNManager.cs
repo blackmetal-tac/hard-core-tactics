@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using OWS.ObjectPooling;
 using DG.Tweening;
 
 public class WPNManager : MonoBehaviour
@@ -9,8 +8,10 @@ public class WPNManager : MonoBehaviour
     // Weapon stats
     public enum ProjectileType { Bullet, Missile, Laser, AMS }
     public ProjectileType ProjectileTypeP;
+    private Camera _camMain;
     [SerializeField] private LayerMask _ignoreLayers;
     public bool Homing;
+    [HideInInspector] public bool IsFriend;
     [SerializeField][Range(0, 20)] private int _radiusAMS, _projectileSpeed;
     [SerializeField][Range(0, 0.3f)] private float _projectileSize, _heat, _damage;
     [SerializeField][Range(0, 2)] private float _recoil, _fireDelay;
@@ -35,8 +36,8 @@ public class WPNManager : MonoBehaviour
     private List<Transform> _tubes;
 
     [HideInInspector] public GameObject FirePoint, TargetAMS;
-    [HideInInspector] public UnitManager UnitManagerP;
-    private bool _isFriend;
+    private GameObject _crosshairAMS;
+    [HideInInspector] public UnitManager UnitManagerP;    
     private GameManager _gameManager;
     private Collider _colliderAMS;
 
@@ -52,15 +53,23 @@ public class WPNManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();        
+        _crosshairAMS = GameObject.Find("CrosshairAMS");
         _updateTimer = Time.time + _delay;
+        _camMain = Camera.main;
+
+        // Friend/Foe system for AMS to intercept
+        if (UnitManagerP.transform.parent.parent.name == "PlayerSquad")
+        {
+            IsFriend = true;            
+        }
 
         // Set AMS parameters 
         if (ProjectileTypeP == ProjectileType.AMS)
         {
             _damage = 0;
             _colliderAMS = GetComponentInChildren<Collider>();
-            if (UnitManagerP.transform.parent.parent.name == "PlayerSquad")
+            if (IsFriend)
             {
                 _colliderAMS.gameObject.layer = 14;
             }
@@ -85,12 +94,6 @@ public class WPNManager : MonoBehaviour
             {
                 _tubes.Add(_tubesContainer.GetChild(i));
             }
-        }
-
-        // Friend/Foe system for AMS to intercept
-        if (UnitManagerP.transform.parent.parent.name == "PlayerSquad")
-        {
-            _isFriend = true;
         }
 
         if (ProjectileTypeP == ProjectileType.Laser)
@@ -136,6 +139,17 @@ public class WPNManager : MonoBehaviour
             _lineRenderer.endWidth = _laserWidth;
             DOTween.To(() => _laserWidth, x => _laserWidth = x, 0f, _fireDelay / 6);
         }
+
+        if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null 
+            && TargetAMS.transform.parent.transform.localScale == Vector3.zero)
+        {            
+            TargetAMS = null;
+        }
+
+        if (UnitManagerP.transform.parent.name == "Player" && ProjectileTypeP == ProjectileType.AMS && TargetAMS == null) 
+        {
+            _crosshairAMS.transform.localScale = Vector3.zero;                     
+        }
     }
 
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
@@ -161,10 +175,13 @@ public class WPNManager : MonoBehaviour
 
         if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null)
         {
-            FirePoint.transform.LookAt(TargetAMS.transform.position + _spreadVector);
-            if (TargetAMS.transform.parent.localScale == Vector3.zero)
+            FirePoint.transform.LookAt(TargetAMS.transform.position + _spreadVector);            
+
+            if (UnitManagerP.transform.parent.name == "Player")
             {
-                TargetAMS = null;
+                // AMS Crosshair position
+                _crosshairAMS.transform.position = _camMain.WorldToScreenPoint(TargetAMS.transform.position);
+                _crosshairAMS.transform.localScale = Vector3.one * 0.1f;
             }
         }
 
@@ -230,8 +247,8 @@ public class WPNManager : MonoBehaviour
                 {
                     hit.collider.GetComponent<Shield>().TakeDamage((_damage * 2) * _laserWidth);
                 }
-                else if (_isFriend && hit.collider.gameObject.layer == 13 // Detonate foe's missiles
-                    || !_isFriend && hit.collider.gameObject.layer == 12)
+                else if (IsFriend && hit.collider.gameObject.layer == 13 // Detonate foe's missiles
+                    || !IsFriend && hit.collider.gameObject.layer == 12)
                 {
                     hit.collider.GetComponent<Missile>().Explode();                                       
                 }
@@ -297,7 +314,7 @@ public class WPNManager : MonoBehaviour
         {
             FirePoint.transform.position = _tubes[i].position;
             _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _spreadVector, _projectileSize, _damage, 
-                _projectileSpeed, target, _isFriend);
+                _projectileSpeed, target, IsFriend);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
         }
@@ -311,7 +328,7 @@ public class WPNManager : MonoBehaviour
         {
             FirePoint.transform.position = _tubes[i].position;
             _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _projectileSize, _damage, 
-                _projectileSpeed, target, _isFriend);
+                _projectileSpeed, target, IsFriend);
             HeatRecoil();            
             yield return new WaitForSeconds(shotDelay);
         }

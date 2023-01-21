@@ -11,14 +11,24 @@ public class CollisionAMS : MonoBehaviour
 
     private void OnTriggerStay(Collider collider)
     {
-        if (_wpnManager.TargetAMS == null)
+        if (_wpnManager.TargetAMS == null && _wpnManager.IsFriend && collider.gameObject.layer == 13
+            && collider.transform.parent.transform.localScale != Vector3.zero)
         {            
-            _wpnManager.TargetAMS = collider.gameObject;
+            _wpnManager.TargetAMS = collider.gameObject;            
+        }
+        
+        if (_wpnManager.TargetAMS == null && !_wpnManager.IsFriend && collider.gameObject.layer == 12
+            && collider.transform.parent.transform.localScale != Vector3.zero)
+        {            
+            _wpnManager.TargetAMS = collider.gameObject;            
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider collider)
     {
-        _wpnManager.TargetAMS = null;
+        if (_wpnManager.TargetAMS == collider.gameObject)
+        {            
+            _wpnManager.TargetAMS = null;
+        }        
     }
 }
