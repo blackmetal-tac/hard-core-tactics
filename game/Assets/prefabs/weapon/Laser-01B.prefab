@@ -82,13 +82,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 130422
   Homing: 0
+  IsFriend: 0
   _radiusAMS: 0
   _projectileSpeed: 0
   _projectileSize: 0
   _heat: 0.05
-  _recoil: 0
   _damage: 0.05
-  _fireDelay: 1.5
+  _recoil: 0
+  _fireDelay: 2
   _fireRate: 1
   _laserRange: 100
   BurstSize: 0

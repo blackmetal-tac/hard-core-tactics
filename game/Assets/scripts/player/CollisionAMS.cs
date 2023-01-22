@@ -12,15 +12,17 @@ public class CollisionAMS : MonoBehaviour
     private void OnTriggerStay(Collider collider)
     {
         if (_wpnManager.TargetAMS == null && _wpnManager.IsFriend && collider.gameObject.layer == 13
-            && collider.transform.parent.transform.localScale != Vector3.zero)
+            && collider.transform.parent.transform.localScale != Vector3.zero && !collider.GetComponent<Missile>().Locked)
         {            
-            _wpnManager.TargetAMS = collider.gameObject;            
+            _wpnManager.TargetAMS = collider.gameObject;       
+            collider.GetComponent<Missile>().Locked = true;
         }
         
         if (_wpnManager.TargetAMS == null && !_wpnManager.IsFriend && collider.gameObject.layer == 12
-            && collider.transform.parent.transform.localScale != Vector3.zero)
+            && collider.transform.parent.transform.localScale != Vector3.zero && !collider.GetComponent<Missile>().Locked)
         {            
-            _wpnManager.TargetAMS = collider.gameObject;            
+            _wpnManager.TargetAMS = collider.gameObject;  
+            collider.GetComponent<Missile>().Locked = true;          
         }
     }
 

@@ -23,6 +23,11 @@ public class ShrinkBar : MonoBehaviour
         _unitUI = transform.Find("UnitUI").gameObject;
         _shrinkSpeed = 0.5f;
 
+        if (_unitManager.transform.parent.name == "Player")
+        {
+            _unitUI.GetComponent<ScaleUI>().Player = true;
+        }
+
         // Health status Health
         // Shield
         _shieldImage = _unitUI.transform.Find("HP").Find("Shield").Find("Health").GetComponent<Image>();
@@ -52,7 +57,10 @@ public class ShrinkBar : MonoBehaviour
 
     void Update()
     {
-        _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);
+        if (_unitManager.transform.parent.name != "Player")
+        {
+            _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);
+        }               
     }
 
     public void UpdateShield()

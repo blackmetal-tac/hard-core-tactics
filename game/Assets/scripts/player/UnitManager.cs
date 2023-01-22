@@ -28,6 +28,7 @@ public class UnitManager : MonoBehaviour
 
     [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer, HeatModifier;
     [HideInInspector] public bool IsDead, AutoCooling, CoreSwitch; // Death trigger
+    private bool _oneTime;
     private float _lastCheck;
 
     [System.Serializable]
@@ -67,7 +68,6 @@ public class UnitManager : MonoBehaviour
                 WeaponCount += 1;
             }
         }
-
         UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();        
     }
 
@@ -112,7 +112,6 @@ public class UnitManager : MonoBehaviour
             {
                 Heat = 0;
             }
-
             _shrinkBar.UpdateHeat();
         });
 
@@ -134,7 +133,14 @@ public class UnitManager : MonoBehaviour
         if (MissileLockTimer > 0)
         {
             MissileLockTimer -= Time.deltaTime;
-        }        
+        } 
+
+        // Refresh after unit switching
+        if (IsDead && !_oneTime || Target.IsDead && !_oneTime)
+        {
+            EndMove();
+            _oneTime = true;
+        }          
     }
 
     // Do actions in Update
@@ -168,7 +174,7 @@ public class UnitManager : MonoBehaviour
                     _lastCheck = Time.time;
                 }
             }
-        }        
+        }
     }
 
     private void StartShoot()
@@ -369,6 +375,18 @@ public class UnitManager : MonoBehaviour
         if (transform.parent.name == "Player")
         {                
             _weaponUI.WeaponDown(6, UnitShield.DownTimer);
+        }
+    }
+
+    public void EndMove()
+    {
+        UpdateOverheatTimer();
+        foreach (WPNManager weapon in WeaponList)
+        {
+            if (weapon != null)
+            {
+                weapon.EndMove();
+            }
         }
     }
 }

@@ -51,13 +51,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   Homing: 1
+  IsFriend: 0
   _radiusAMS: 0
   _projectileSpeed: 6
   _projectileSize: 0.1
   _heat: 0.015
   _damage: 0.004
   _recoil: 0.4
-  _fireDelay: 2
+  _fireDelay: 2.5
   _fireRate: 500
   _laserRange: 0
   BurstSize: 0

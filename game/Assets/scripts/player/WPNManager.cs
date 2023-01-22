@@ -13,8 +13,8 @@ public class WPNManager : MonoBehaviour
     public bool Homing;
     [HideInInspector] public bool IsFriend;
     [SerializeField][Range(0, 20)] private int _radiusAMS, _projectileSpeed;
-    [SerializeField][Range(0, 0.3f)] private float _projectileSize, _heat, _damage;
-    [SerializeField][Range(0, 2)] private float _recoil, _fireDelay;
+    [SerializeField][Range(0, 0.4f)] private float _projectileSize, _heat, _damage, _recoil;
+    [SerializeField][Range(0, 3)] private float _fireDelay;
     [SerializeField][Range(0, 3000)] private float _fireRate, _laserRange;  
 	[HideInInspector] public int BurstSize, DownTimer;
     [HideInInspector] public float LastBurst;
@@ -36,7 +36,7 @@ public class WPNManager : MonoBehaviour
     private List<Transform> _tubes;
 
     [HideInInspector] public GameObject FirePoint, TargetAMS;
-    private GameObject _crosshairAMS;
+    private CrosshairAMS _crosshairAMS;
     [HideInInspector] public UnitManager UnitManagerP;    
     private GameManager _gameManager;
     private Collider _colliderAMS;
@@ -53,8 +53,25 @@ public class WPNManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();        
-        _crosshairAMS = GameObject.Find("CrosshairAMS");
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();  
+
+        // Check if has 2 AMS' 
+        _crosshairAMS = GameObject.Find("CrosshairAMS").GetComponent<CrosshairAMS>();
+        if (!_crosshairAMS.Taken)
+        {           
+            _crosshairAMS.Taken = true;
+        }
+        else
+        {
+            _crosshairAMS = null;
+        }
+
+        if (_crosshairAMS == null)
+        {
+            _crosshairAMS = GameObject.Find("CrosshairAMS2").GetComponent<CrosshairAMS>();
+            _crosshairAMS.Taken = true;
+        }
+
         _updateTimer = Time.time + _delay;
         _camMain = Camera.main;
 
@@ -131,24 +148,11 @@ public class WPNManager : MonoBehaviour
             _updateTimer = Time.time + _delay;
         }
 
-        if (_lineRenderer != null && !_gameManager.InAction || _lineRenderer != null && UnitManagerP.IsDead
-            || _lineRenderer != null && UnitManagerP.Target.IsDead || _lineRenderer != null && BurstSize == 0)
-        {
-            _laserOn = false;
-            _lineRenderer.startWidth = _laserWidth;
-            _lineRenderer.endWidth = _laserWidth;
-            DOTween.To(() => _laserWidth, x => _laserWidth = x, 0f, _fireDelay / 6);
-        }
-
         if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null 
             && TargetAMS.transform.parent.transform.localScale == Vector3.zero)
         {            
             TargetAMS = null;
-        }
-
-        if (UnitManagerP.transform.parent.name == "Player" && ProjectileTypeP == ProjectileType.AMS && TargetAMS == null) 
-        {
-            _crosshairAMS.transform.localScale = Vector3.zero;                     
+            _crosshairAMS.transform.localScale = Vector3.zero;  
         }
     }
 
@@ -316,6 +320,8 @@ public class WPNManager : MonoBehaviour
             _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _spreadVector, _projectileSize, _damage, 
                 _projectileSpeed, target, IsFriend);
             HeatRecoil();
+            //totalShots += 1;
+            //Debug.Log(totalShots);
             yield return new WaitForSeconds(shotDelay);
         }
     }
@@ -329,7 +335,9 @@ public class WPNManager : MonoBehaviour
             FirePoint.transform.position = _tubes[i].position;
             _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _projectileSize, _damage, 
                 _projectileSpeed, target, IsFriend);
-            HeatRecoil();            
+            HeatRecoil(); 
+            //totalShots += 1;
+            //Debug.Log(totalShots);           
             yield return new WaitForSeconds(shotDelay);
         }
     }
@@ -346,4 +354,23 @@ public class WPNManager : MonoBehaviour
             _spread += _recoil;
         }
     } 
+
+    public void EndMove()
+    {
+        if (_lineRenderer != null)
+        {
+            this.Progress(1, () => {
+                _laserOn = false;
+                _lineRenderer.startWidth = _laserWidth;
+                _lineRenderer.endWidth = _laserWidth;
+                DOTween.To(() => _laserWidth, x => _laserWidth = x, 0f, _fireDelay / 6);
+            });
+        }
+
+        if (ProjectileTypeP == ProjectileType.AMS)
+        {
+            TargetAMS = null;
+            _crosshairAMS.transform.localScale = Vector3.zero;
+        }
+    }
 }

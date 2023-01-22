@@ -8,7 +8,7 @@ public class Missile : MonoBehaviour
     [HideInInspector] public Vector3 SpreadVector;
     [HideInInspector] public Rigidbody MissileBody;
     [HideInInspector] public Collider MissileCollider;
-    [HideInInspector] public bool Homing;    
+    [HideInInspector] public bool Homing, Locked;    
     private GameManager _gameManager;
     private PoolObject _poolObject;
     private readonly float _spread = 0.5f, _delay = 0.1f, _baseTimer = 0.5f;
@@ -64,6 +64,7 @@ public class Missile : MonoBehaviour
     {
         _timer = _baseTimer;
         _oneTime = false;
+        Locked = false;
         MissileBody.velocity = Vector3.zero;
         MissileCollider.enabled = false;
         _gameManager.ExplosionPool.PullGameObject(transform.position, 1f, Damage / 2);
