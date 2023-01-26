@@ -691,6 +691,7 @@ MonoBehaviour:
   _time: 1
   _delay: 3
   _playSound: 1
+  Player: 0
 --- !u!1 &107675511
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,6 +821,7 @@ MonoBehaviour:
   _time: 1
   _delay: 0
   _playSound: 1
+  Player: 0
 --- !u!1 &176498711
 GameObject:
   m_ObjectHideFlags: 0
@@ -3635,6 +3637,7 @@ MonoBehaviour:
   _time: 1
   _delay: 2
   _playSound: 1
+  Player: 0
 --- !u!1001 &694014226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3974,6 +3977,7 @@ MonoBehaviour:
   _time: 1
   _delay: 8
   _playSound: 1
+  Player: 0
 --- !u!114 &774559798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7990,6 +7994,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TestAMS-01
+      objectReference: {fileID: 0}
+    - target: {fileID: 187078880366221859, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 187078880366221860, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec,
         type: 3}
@@ -13241,6 +13250,7 @@ MonoBehaviour:
   _time: 1
   _delay: 1
   _playSound: 1
+  Player: 0
 --- !u!114 &6201401810111353250
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,10 +18,8 @@ public class WPNManager : MonoBehaviour
     [SerializeField][Range(0, 3000)] private float _fireRate, _laserRange;  
 	[HideInInspector] public int BurstSize, DownTimer;
     [HideInInspector] public float LastBurst;
-    private readonly float _spreadMult = 0.2f;
     private Vector3 _spreadVector, _laserPoint;
-    private float _spread, _updateTimer, _laserWidth;
-    private readonly float _delay = 0.1f;
+    private float _laserWidth;
     float totalShots;
 
     [System.Serializable]
@@ -71,8 +69,7 @@ public class WPNManager : MonoBehaviour
             _crosshairAMS = GameObject.Find("CrosshairAMS2").GetComponent<CrosshairAMS>();
             _crosshairAMS.Taken = true;
         }
-
-        _updateTimer = Time.time + _delay;
+        
         _camMain = Camera.main;
 
         // Friend/Foe system for AMS to intercept
@@ -125,29 +122,6 @@ public class WPNManager : MonoBehaviour
 
     void Update()
     {
-        // Timer to slow update
-        if (Time.time >= _updateTimer)
-        {
-            // Bullet spread for UI crosshair 
-            if (UnitManagerP.transform.parent.name == "Player" && UnitManagerP.Spread < 2
-                && _gameManager.InAction && ProjectileTypeP != ProjectileType.AMS)
-            {
-                UnitManagerP.Spread += _spread / 50;
-            }
-
-            if (_spread > 0)
-            {
-                _spread -= Time.deltaTime * 2;
-                UnitManagerP.Spread = _spread;
-            }
-            else
-            {
-                _spread = 0;
-                UnitManagerP.Spread = _spread;
-            }
-            _updateTimer = Time.time + _delay;
-        }
-
         if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null 
             && TargetAMS.transform.parent.transform.localScale == Vector3.zero)
         {            
@@ -159,34 +133,17 @@ public class WPNManager : MonoBehaviour
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
     public void FireBurst(UnitManager target)
     {
-        if (ProjectileTypeP != ProjectileType.Laser && BurstSize > 0)
-        {
-            _spreadVector = new(
-                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread),
-                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread / 2, (UnitManagerP.MoveSpeed * _spreadMult) + _spread / 2),
-                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread));
-        }
-        else if (BurstSize > 0)
+        if (ProjectileTypeP == ProjectileType.Laser)
         {
             FireLaser(target);
-        }
+        }  
 
-        if (ProjectileTypeP == ProjectileType.Bullet && BurstSize > 0
-            || ProjectileTypeP == ProjectileType.Missile && BurstSize > 0 && !Homing)
-        {
-            FirePoint.transform.LookAt(target.transform.position + _spreadVector);                       
-        }
-
-        if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null)
-        {
-            FirePoint.transform.LookAt(TargetAMS.transform.position + _spreadVector);            
-
-            if (UnitManagerP.transform.parent.name == "Player")
-            {
-                // AMS Crosshair position
-                _crosshairAMS.transform.position = _camMain.WorldToScreenPoint(TargetAMS.transform.position);
-                _crosshairAMS.transform.localScale = Vector3.one * 0.1f;
-            }
+        // AMS Crosshair position
+        if (UnitManagerP.transform.parent.name == "Player" && ProjectileTypeP == ProjectileType.AMS && TargetAMS != null
+            && BurstSize > 0)
+        {  
+            _crosshairAMS.transform.position = _camMain.WorldToScreenPoint(TargetAMS.transform.position);
+            _crosshairAMS.transform.localScale = Vector3.one * 0.1f;
         }
 
         // AMS heat generation
@@ -200,7 +157,7 @@ public class WPNManager : MonoBehaviour
         {
             if (ProjectileTypeP == ProjectileType.Bullet)
             {
-                StartCoroutine(FireBulletCoroutine());
+                StartCoroutine(FireBulletCoroutine(target));
                 LastBurst = Time.time;
             }
             else if (ProjectileTypeP == ProjectileType.Missile && !Homing)
@@ -272,11 +229,7 @@ public class WPNManager : MonoBehaviour
         if (Time.time > LastBurst + _fireDelay)
         {
             _laserPoint = target.transform.position;
-            _spreadVector = new(
-                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread),
-                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread),
-                Random.Range((-UnitManagerP.MoveSpeed * _spreadMult) - _spread, (UnitManagerP.MoveSpeed * _spreadMult) + _spread));
-           
+            _spreadVector = UnitManagerP.CalculateSpread();
             _laserOn = true;
             this.Wait(_fireDelay / 2, () =>
             {
@@ -287,11 +240,13 @@ public class WPNManager : MonoBehaviour
     }
     
     // Coroutine for separate bursts of bullets
-    private IEnumerator FireBulletCoroutine()
+    private IEnumerator FireBulletCoroutine(UnitManager target)
     {
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
         {
+            _spreadVector = UnitManagerP.CalculateSpread();
+            FirePoint.transform.LookAt(target.transform.position + _spreadVector);
             _gameManager.BulletsPool.PullGameObject(FirePoint.transform, _projectileSize, _damage, _projectileSpeed, UnitID);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
@@ -304,6 +259,11 @@ public class WPNManager : MonoBehaviour
         float shotDelay = 60 / _fireRate;
         for (int i = 0; i < BurstSize; i++)
         { 
+            _spreadVector = UnitManagerP.CalculateSpread();
+            if (TargetAMS != null)
+            {
+                FirePoint.transform.LookAt(TargetAMS.transform.position + _spreadVector);
+            }            
             _gameManager.AmsPool.PullGameObject(FirePoint.transform, _projectileSize, _projectileSpeed);
             HeatRecoil();
             yield return new WaitForSeconds(shotDelay);
@@ -317,6 +277,7 @@ public class WPNManager : MonoBehaviour
         for (int i = 0; i < BurstSize; i++)
         {
             FirePoint.transform.position = _tubes[i].position;
+            _spreadVector = UnitManagerP.CalculateSpread();
             _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _spreadVector, _projectileSize, _damage, 
                 _projectileSpeed, target, IsFriend);
             HeatRecoil();
@@ -333,6 +294,7 @@ public class WPNManager : MonoBehaviour
         for (int i = 0; i < BurstSize; i++)
         {
             FirePoint.transform.position = _tubes[i].position;
+            _spreadVector = UnitManagerP.CalculateSpread();
             _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _projectileSize, _damage, 
                 _projectileSpeed, target, IsFriend);
             HeatRecoil(); 
@@ -349,10 +311,10 @@ public class WPNManager : MonoBehaviour
             UnitManagerP.Heat += _heat;
         }
 
-        if (_spread < 1)
+        if (UnitManagerP.Spread < 1)
         {
-            _spread += _recoil;
-        }
+            UnitManagerP.Spread += _recoil;
+        }        
     } 
 
     public void EndMove()

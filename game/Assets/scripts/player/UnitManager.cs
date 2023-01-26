@@ -21,6 +21,7 @@ public class UnitManager : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     private Vector3 _direction; // Rotate body to the enemy
     private readonly float _rotSpeed = 1f;
+    private readonly float _spreadMult = 0.2f;
 
     [HideInInspector] public List<WPNManager> WeaponList;
     [HideInInspector] public int WeaponCount = 0, CoolingDownTimer, CoreDownTimer;
@@ -80,9 +81,9 @@ public class UnitManager : MonoBehaviour
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
         _shrinkBar = GetComponentInChildren<ShrinkBar>();
         UnitShield.ShieldID = transform.parent.name;
-        UnitShield.UnitManagerP = this;
-        Heat = 1;
-        Cooling = CoolingModesP[0].Cooling;        
+        UnitShield.UnitManagerP = this;       
+        Cooling = CoolingModesP[0].Cooling;
+        Heat = 1;    
 
         // Load HP, Shield, Heat bars
         this.Progress(_gameManager.LoadTime, () => {
@@ -130,6 +131,11 @@ public class UnitManager : MonoBehaviour
         _shrinkBar.UpdateShield();
         _shrinkBar.UpdateHealth();
 
+        if (Spread > 0)
+        {
+            Spread -= Time.deltaTime;
+        }                  
+      
         if (MissileLockTimer > 0)
         {
             MissileLockTimer -= Time.deltaTime;
@@ -148,6 +154,8 @@ public class UnitManager : MonoBehaviour
     {
         if (!IsDead)
         {
+            // For tests
+            // if (!Target.IsDead && transform.parent.name == "Player")
             if (!Target.IsDead)
             {
                 StartShoot();
@@ -378,6 +386,16 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    public Vector3 CalculateSpread()
+    {
+        Vector3 spread = new(
+                Random.Range((-MoveSpeed * _spreadMult) - Spread, (MoveSpeed * _spreadMult) + Spread),
+                Random.Range((-MoveSpeed * _spreadMult) - Spread / 2, (MoveSpeed * _spreadMult) + Spread / 2),
+                Random.Range((-MoveSpeed * _spreadMult) - Spread, (MoveSpeed * _spreadMult) + Spread));
+        
+        return spread;
+    }
+    
     public void EndMove()
     {
         UpdateOverheatTimer();

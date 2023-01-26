@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         if (!_playerManager.Target.IsDead)
         {
             // Dynamic _crosshair
-            _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 2 + 
+            _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 8 + 
             _playerManager.MoveSpeed / 10, Time.deltaTime * 3);
             _crosshair.transform.localScale = _crosshairSize * Vector3.one;
 
