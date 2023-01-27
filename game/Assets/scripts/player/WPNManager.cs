@@ -181,8 +181,8 @@ public class WPNManager : MonoBehaviour
     private void FireLaser(UnitManager target)
     {      
         // Move laser when firing 
-        Vector3 direction = target.transform.position - FirePoint.transform.position;   
-        _laserPoint = Vector3.MoveTowards(_laserPoint, direction + _spreadVector, Time.deltaTime * 1);
+        Vector3 direction = target.transform.position - FirePoint.transform.position;                
+        _laserPoint = Vector3.MoveTowards(_laserPoint, direction + _spreadVector / 2, Time.deltaTime);
         FirePoint.transform.LookAt(_laserPoint); 
         
         // Set laser parameters
@@ -194,6 +194,12 @@ public class WPNManager : MonoBehaviour
         if (_laserOn)
         {            
             DOTween.To(() => _laserWidth, x => _laserWidth = x, _damage * BurstSize, _fireDelay / 6);
+
+            if (!_oneTime)
+            {
+
+                _oneTime = true;
+            }
 
             // Deal laser damage            
             if (Physics.Raycast(FirePoint.transform.position, FirePoint.transform.forward,
@@ -223,13 +229,14 @@ public class WPNManager : MonoBehaviour
         else
         {
             DOTween.To(() => _laserWidth, x => _laserWidth = x, 0f, _fireDelay / 6);
+            _oneTime = false;
         }
 
         // Shoot laser  
         if (Time.time > LastBurst + _fireDelay)
-        {
-            _laserPoint = target.transform.position;
+        {           
             _spreadVector = UnitManagerP.CalculateSpread();
+            _laserPoint = target.transform.position - _spreadVector / 2;
             _laserOn = true;
             this.Wait(_fireDelay / 2, () =>
             {
@@ -262,7 +269,7 @@ public class WPNManager : MonoBehaviour
             _spreadVector = UnitManagerP.CalculateSpread();
             if (TargetAMS != null)
             {
-                FirePoint.transform.LookAt(TargetAMS.transform.position + _spreadVector);
+                FirePoint.transform.LookAt(TargetAMS.transform.position + _spreadVector / 2);
             }            
             _gameManager.AmsPool.PullGameObject(FirePoint.transform, _projectileSize, _projectileSpeed);
             HeatRecoil();

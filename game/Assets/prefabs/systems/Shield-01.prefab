@@ -252,7 +252,7 @@ MonoBehaviour:
     Intencity: 2
   - ModeName: over
     Regen: 0.12
-    Heat: 0.06
+    Heat: 0.12
     Intencity: 4
 --- !u!114 &6285176286650417637
 MonoBehaviour:

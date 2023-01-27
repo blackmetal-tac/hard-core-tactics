@@ -21,7 +21,7 @@ public class UnitManager : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     private Vector3 _direction; // Rotate body to the enemy
     private readonly float _rotSpeed = 1f;
-    private readonly float _spreadMult = 0.2f;
+    private readonly float _spreadMult = 0.1f;
 
     [HideInInspector] public List<WPNManager> WeaponList;
     [HideInInspector] public int WeaponCount = 0, CoolingDownTimer, CoreDownTimer;
