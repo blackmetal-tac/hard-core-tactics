@@ -21,7 +21,7 @@ public class UnitManager : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     private Vector3 _direction; // Rotate body to the enemy
     private readonly float _rotSpeed = 1f;
-    private readonly float _spreadMult = 0.1f;
+    [HideInInspector] public float SpreadMult = 0.1f;
 
     [HideInInspector] public List<WPNManager> WeaponList;
     [HideInInspector] public int WeaponCount = 0, CoolingDownTimer, CoreDownTimer;
@@ -116,6 +116,8 @@ public class UnitManager : MonoBehaviour
             _shrinkBar.UpdateHeat();
         });
 
+        _shrinkBar.UpdateStability();
+
         // Aim at the enemy ???
         foreach (WPNManager weapon in WeaponList)
         {
@@ -134,6 +136,7 @@ public class UnitManager : MonoBehaviour
         if (Spread > 0)
         {
             Spread -= Time.deltaTime;
+            _shrinkBar.UpdateStability();
         }                  
       
         if (MissileLockTimer > 0)
@@ -216,13 +219,15 @@ public class UnitManager : MonoBehaviour
             if (pathLenght <= WalkDistance)
             {
                 navAgent.SetDestination(movePoint);
-                MoveSpeed = pathLenght / _gameManager.TurnTime;                
+                MoveSpeed = pathLenght / _gameManager.TurnTime;      
+                _shrinkBar.UpdateStability();                       
             }
             else
             {
                 Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * WalkDistance);
                 navAgent.SetDestination(finalPoint);
-                MoveSpeed = WalkDistance / _gameManager.TurnTime;                
+                MoveSpeed = WalkDistance / _gameManager.TurnTime;     
+                _shrinkBar.UpdateStability();                        
                 break;
             }
         }
@@ -389,9 +394,9 @@ public class UnitManager : MonoBehaviour
     public Vector3 CalculateSpread()
     {
         Vector3 spread = new(
-                Random.Range((-MoveSpeed * _spreadMult) - Spread, (MoveSpeed * _spreadMult) + Spread),
-                Random.Range((-MoveSpeed * _spreadMult) - Spread / 2, (MoveSpeed * _spreadMult) + Spread / 2),
-                Random.Range((-MoveSpeed * _spreadMult) - Spread, (MoveSpeed * _spreadMult) + Spread));
+                Random.Range((-MoveSpeed * SpreadMult) - Spread, (MoveSpeed * SpreadMult) + Spread),
+                Random.Range((-MoveSpeed * SpreadMult) - Spread / 2, (MoveSpeed * SpreadMult) + Spread / 2),
+                Random.Range((-MoveSpeed * SpreadMult) - Spread, (MoveSpeed * SpreadMult) + Spread));
         
         return spread;
     }

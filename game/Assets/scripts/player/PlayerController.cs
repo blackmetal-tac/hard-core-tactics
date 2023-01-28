@@ -6,7 +6,7 @@ using DG.Tweening;
 public class PlayerController : MonoBehaviour
 { 
 	[SerializeField] private LayerMask _ignoreLayers;
-    private Camera _camMain;
+    private Camera _camMain;    
 	
 	// NavMesh
     [HideInInspector] public NavMeshAgent PlayerAgent;
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private readonly float _crosshairScale = 0.15f;    
 	
 	void Awake()
-	{
+	{        
 		_playerManager = GetComponentInChildren<UnitManager>();
 		_playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
 	}

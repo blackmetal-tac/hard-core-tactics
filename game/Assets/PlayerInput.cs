@@ -407,6 +407,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""94505317-8e22-4b10-ac97-861b3d4a151a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -992,6 +1001,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""AltAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""36682298-a431-4b10-81f2-13b14d8f8182"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1080,6 +1100,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_UI_Move = m_UI.FindAction("Move", throwIfNotFound: true);
         m_UI_Rotate = m_UI.FindAction("Rotate", throwIfNotFound: true);
         m_UI_AltAction = m_UI.FindAction("AltAction", throwIfNotFound: true);
+        m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1202,6 +1223,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Move;
     private readonly InputAction m_UI_Rotate;
     private readonly InputAction m_UI_AltAction;
+    private readonly InputAction m_UI_Pause;
     public struct UIActions
     {
         private @PlayerInput m_Wrapper;
@@ -1220,6 +1242,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_UI_Move;
         public InputAction @Rotate => m_Wrapper.m_UI_Rotate;
         public InputAction @AltAction => m_Wrapper.m_UI_AltAction;
+        public InputAction @Pause => m_Wrapper.m_UI_Pause;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1271,6 +1294,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @AltAction.started -= m_Wrapper.m_UIActionsCallbackInterface.OnAltAction;
                 @AltAction.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnAltAction;
                 @AltAction.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnAltAction;
+                @Pause.started -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1317,6 +1343,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @AltAction.started += instance.OnAltAction;
                 @AltAction.performed += instance.OnAltAction;
                 @AltAction.canceled += instance.OnAltAction;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -1388,5 +1417,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnAltAction(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }

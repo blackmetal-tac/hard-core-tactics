@@ -59,11 +59,6 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (!_once)
-        {
-            transform.LookAt(_cameraFocus.transform);
-            _once = true;
-        }*/
         if (Time.time > _gameManager.LoadTime)
         {
             if (_scrollWheel.IsPressed() || _altAction.IsPressed())

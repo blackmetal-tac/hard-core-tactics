@@ -1,6 +1,7 @@
 using TMPro;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using DG.Tweening;
 using OWS.ObjectPooling;
 
@@ -16,6 +17,11 @@ public class GameManager : MonoBehaviour
 
     public ObjectPool<PoolObject> BulletsPool, MissilesPool, AmsPool, ExplosionPool;
 
+    // Control keys    
+    private PlayerInput _playerInput;
+    private InputAction _pause;
+    private bool _paused;
+
     // UI settings
     public float CrosshairBars, LoadTime;
 
@@ -29,10 +35,26 @@ public class GameManager : MonoBehaviour
     public float TurnTime;
     [HideInInspector] public bool InAction = false;
 
+    void OnEnable()
+    {
+        _pause = _playerInput.UI.Pause;
+        _pause.Enable();
+    }
+
+    void OnDisable()
+    {
+        _pause.Disable();
+    }
+
+    void Awake()
+    {
+        _playerInput = new PlayerInput();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        DOTween.SetTweensCapacity(500, 50);
+        DOTween.SetTweensCapacity(800, 50);
         _playerController = GameObject.Find("Player").GetComponent<PlayerController>();        
         _AIController = GameObject.Find("Enemy").GetComponent<AIController>();
         _playerManager = _playerController.GetComponentInChildren<UnitManager>();
@@ -65,6 +87,23 @@ public class GameManager : MonoBehaviour
 
         // Set target ???        
         _enemy = GameObject.Find("Enemy").transform.GetChild(0).gameObject;
+    }
+    
+    void Update()
+    {
+        // Stop game
+        if (_pause.triggered)
+        {
+            _paused = !_paused;
+            if (_paused)
+            {
+                Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+        }
     }
 
     // Start turn
