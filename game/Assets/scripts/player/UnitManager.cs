@@ -401,15 +401,33 @@ public class UnitManager : MonoBehaviour
         return spread;
     }
     
-    public void EndMove()
+    // Preview the heat for turn
+    public void CalculateHeat()
     {
-        UpdateOverheatTimer();
+        if (transform.parent.name == "Player")
+        {                
+            float heatCalculation = Heat;
+            foreach (WPNManager weapon in WeaponList)
+            {
+                if (weapon != null)
+                {                    
+                    heatCalculation += weapon.CalculateHeat();
+                }
+            }
+            _shrinkBar.HeatCalc = heatCalculation + UnitShield.Heat * _gameManager.TurnTime - Cooling * _gameManager.TurnTime;                      
+        }
+    }
+    
+    public void EndMove()
+    {                
+        UpdateOverheatTimer();        
         foreach (WPNManager weapon in WeaponList)
         {
             if (weapon != null)
             {
                 weapon.EndMove();
             }
-        }
+        }  
+        CalculateHeat(); 
     }
 }

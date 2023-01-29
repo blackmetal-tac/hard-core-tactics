@@ -5,7 +5,7 @@ public class ShrinkBar : MonoBehaviour
 {
     private Camera _camMain;
     private Image _shieldImage, _shieldDmgImage, _shieldImageInd, _shieldDmgImageInd, _healthImage, _healthDmgImage,
-        _healthImageInd, _healthDmgImageInd, _heatImage, _heatImageInd, _stabImageInd;
+        _healthImageInd, _healthDmgImageInd, _heatImage, _heatImageInd, _stabImageInd, _heatCalculation;
     private UnitManager _unitManager;
     private GameObject _unitUI;
     private CanvasGroup _shieldCanvasGroup, _healthCanvasGroup, _heatCanvasGroup, _unitShieldGroup, _unitHealthGroup, 
@@ -13,6 +13,7 @@ public class ShrinkBar : MonoBehaviour
     private GameManager _gameManager;
     private int _trasparencyMult = 5;
     private float _shrinkSpeed;
+    public float HeatCalc;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +51,7 @@ public class ShrinkBar : MonoBehaviour
         _heatImage = _unitUI.transform.Find("Heat").Find("Background").Find("Health").GetComponent<Image>();        
         _heatCanvasGroup = GameObject.Find("HeatIndicator").GetComponent<CanvasGroup>();
         _heatImageInd = GameObject.Find("HeatIndicator").transform.Find("Health").GetComponent<Image>();
+        _heatCalculation = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<Image>();
         _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>();
 
         // Stability 
@@ -61,7 +63,19 @@ public class ShrinkBar : MonoBehaviour
     {
         if (_unitManager.transform.parent.name != "Player")
         {
-            _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);
+            _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);        
+        }
+        else
+        {
+            if (!_gameManager.InAction)
+            {
+                _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount, HeatCalc * 1.3f, Time.deltaTime * 2); 
+                _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);                            
+            }
+            else
+            {
+                _heatCalculation.fillAmount = 0;                
+            }   
         }               
     }
 

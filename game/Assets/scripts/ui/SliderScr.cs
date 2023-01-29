@@ -10,7 +10,7 @@ public class SliderScr : MonoBehaviour
     [HideInInspector] public WPNManager Weapon;
     [HideInInspector] public TextMeshProUGUI ModeName;    
     [HideInInspector] public UnitManager PlayerManager;
-    private CanvasGroup _shieldUI, _coolingUI, _missileLockUI, _amsUI;
+    private CanvasGroup _shieldUI, _coolingUI, _heatCalc, _missileLockUI, _amsUI;
     private bool _bounce;
 
     // Start is called before the first frame update
@@ -29,6 +29,7 @@ public class SliderScr : MonoBehaviour
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {
             _coolingUI = GameObject.Find("CoolingOverdriveUI").GetComponent<CanvasGroup>();
+            _heatCalc = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<CanvasGroup>();
             _missileLockUI = GameObject.Find("MissileLockUI").GetComponent<CanvasGroup>();
         }
         
@@ -46,6 +47,17 @@ public class SliderScr : MonoBehaviour
                 _amsUI = GameObject.Find("AMSUI").GetComponent<CanvasGroup>();                
             }   
         });   
+
+        this.Wait(_gameManager.LoadTime, () => {
+            if (_shieldUI != null || _coolingUI != null)
+            {
+                PlayerManager.CalculateHeat();
+            }
+            else
+            {
+                Weapon.UnitManagerP.CalculateHeat();
+            }
+        });
     }
 
     void Update()
@@ -60,7 +72,7 @@ public class SliderScr : MonoBehaviour
             {
                 _amsUI.alpha = 0;
             }
-        }        
+        }
 
         if (_shieldUI != null && SliderObject.value == 2)
         {
@@ -92,6 +104,11 @@ public class SliderScr : MonoBehaviour
             }
         }
 
+        if (_coolingUI != null && !_gameManager.InAction)
+        {
+            BounceUI(_heatCalc);
+        }        
+
         // Auto Cooling overdrive
         if (_coolingUI != null && SliderObject.value == 2 && _gameManager.InAction)
         {
@@ -111,6 +128,11 @@ public class SliderScr : MonoBehaviour
             ModeName.text = PlayerManager.UnitShield.shieldModes[(int)SliderObject.value].ModeName;
             PlayerManager.UnitShield.TurnOnOff();
 
+            if (Time.time > _gameManager.LoadTime)
+            {
+                PlayerManager.CalculateHeat();
+            }            
+
             if (_gameManager.InAction)
             {                
                 _actionMask.transform.localScale = Vector3.one;
@@ -119,7 +141,12 @@ public class SliderScr : MonoBehaviour
         else if (_coolingUI != null)
         {            
             PlayerManager.Cooling = PlayerManager.CoolingModesP[(int)SliderObject.value].Cooling;
-            ModeName.text = PlayerManager.CoolingModesP[(int)SliderObject.value].ModeName;            
+            ModeName.text = PlayerManager.CoolingModesP[(int)SliderObject.value].ModeName; 
+
+            if (Time.time > _gameManager.LoadTime)
+            {
+                PlayerManager.CalculateHeat();
+            }          
 
             if (_gameManager.InAction)
             {                
@@ -145,13 +172,18 @@ public class SliderScr : MonoBehaviour
         else
         {
             Weapon.BurstSize = Weapon.WeaponModesP[(int)SliderObject.value].FireMode;
-            ModeName.text = Weapon.WeaponModesP[(int)SliderObject.value].ModeName;           
+            ModeName.text = Weapon.WeaponModesP[(int)SliderObject.value].ModeName;
+
+            if (Time.time > _gameManager.LoadTime)
+            {
+                Weapon.UnitManagerP.CalculateHeat();   
+            }       
 
             if (_gameManager.InAction)
             {
                 Weapon.LastBurst = 0f;
                 _actionMask.transform.localScale = Vector3.one;
-            }
+            }                        
         }
     }
 

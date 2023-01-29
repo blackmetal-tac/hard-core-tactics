@@ -324,6 +324,26 @@ public class WPNManager : MonoBehaviour
         }        
     } 
 
+    public float CalculateHeat()
+    {
+        float heat = 0;
+        if (ProjectileTypeP != ProjectileType.Laser)
+        {
+            heat = _heat * BurstSize * _gameManager.TurnTime / _fireDelay;
+            //Debug.Log(transform.name + " / " + heat);
+        }
+        else
+        {
+            heat = _heat * _gameManager.TurnTime;
+        }
+
+        if (ProjectileTypeP == ProjectileType.AMS)
+        {
+            heat += _heat * 5 * _gameManager.TurnTime;
+        } 
+        return heat;
+    }
+
     public void EndMove()
     {
         if (_lineRenderer != null)
