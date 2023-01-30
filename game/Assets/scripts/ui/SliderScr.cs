@@ -5,12 +5,12 @@ using TMPro;
 public class SliderScr : MonoBehaviour
 {
     private GameObject _actionMask;
-    private GameManager _gameManager;
+    private GameManager _gameManager;    
     [HideInInspector] public Slider SliderObject;
     [HideInInspector] public WPNManager Weapon;
     [HideInInspector] public TextMeshProUGUI ModeName;    
     [HideInInspector] public UnitManager PlayerManager;
-    private CanvasGroup _shieldUI, _coolingUI, _heatCalc, _missileLockUI, _amsUI;
+    private CanvasGroup _shieldUI, _coolingUI, _overheatUI, _heatCalc, _missileLockUI, _amsUI;
     private bool _bounce;
 
     // Start is called before the first frame update
@@ -19,7 +19,7 @@ public class SliderScr : MonoBehaviour
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _actionMask = transform.parent.parent.Find("ActionMask").gameObject;
         SliderObject = GetComponent<Slider>();
-        SliderObject.onValueChanged.AddListener(delegate { ChangeWPNmode(); });
+        SliderObject.onValueChanged.AddListener(delegate { ChangeWPNmode(); });        
 
         // Sliders UI indicators
         if (SliderObject.transform.parent.name == "ShieldUI")
@@ -29,8 +29,9 @@ public class SliderScr : MonoBehaviour
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {
             _coolingUI = GameObject.Find("CoolingOverdriveUI").GetComponent<CanvasGroup>();
+            _overheatUI = GameObject.Find("OverheatUI").GetComponent<CanvasGroup>();
             _heatCalc = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<CanvasGroup>();
-            _missileLockUI = GameObject.Find("MissileLockUI").GetComponent<CanvasGroup>();
+            _missileLockUI = GameObject.Find("MissileLockUI").GetComponent<CanvasGroup>();          
         }
         
         ModeName = transform.Find("Handle Slide Area").Find("Handle").GetComponentInChildren<TextMeshProUGUI>();
@@ -101,6 +102,19 @@ public class SliderScr : MonoBehaviour
             else
             {
                 _missileLockUI.alpha = 0;
+            }
+        }
+
+        if (_coolingUI != null )
+        {
+            if (PlayerManager.Heat > PlayerManager.HeatTreshold 
+                || PlayerManager.HeatCalc > PlayerManager.HeatTreshold)
+            {
+                BounceUI(_overheatUI);
+            }            
+            else
+            {
+                _overheatUI.alpha = 0;
             }
         }
 

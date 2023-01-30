@@ -9,7 +9,7 @@ public class UnitManager : MonoBehaviour
     [HideInInspector] public Shield UnitShield;
 	
     // Stats    
-    [HideInInspector] public float HP, Heat, Cooling, MissileLockTimer;
+    [HideInInspector] public float HP, Heat, Cooling, HeatCalc, MissileLockTimer;
 	[Range(0, 1)] public float HeatTreshold;    
     [SerializeField][Range(0, 0.5f)] private float _shieldRegen;
     [SerializeField][Range(0, 1)] private float _heatCheckTime;
@@ -403,7 +403,7 @@ public class UnitManager : MonoBehaviour
     
     // Preview the heat for turn
     public void CalculateHeat()
-    {
+    {        
         if (transform.parent.name == "Player")
         {                
             float heatCalculation = Heat;
@@ -414,8 +414,8 @@ public class UnitManager : MonoBehaviour
                     heatCalculation += weapon.CalculateHeat();
                 }
             }
-            _shrinkBar.HeatCalc = heatCalculation + UnitShield.Heat * _gameManager.TurnTime - Cooling * _gameManager.TurnTime;                      
-        }
+            HeatCalc = Heat + heatCalculation + UnitShield.Heat * _gameManager.TurnTime - Cooling * _gameManager.TurnTime;            
+        }       
     }
     
     public void EndMove()

@@ -334,7 +334,7 @@ public class WPNManager : MonoBehaviour
         }
         else
         {
-            heat = _heat * _gameManager.TurnTime;
+            heat = _heat * BurstSize * _gameManager.TurnTime;            
         }
 
         if (ProjectileTypeP == ProjectileType.AMS)

@@ -5,22 +5,21 @@ public class ShrinkBar : MonoBehaviour
 {
     private Camera _camMain;
     private Image _shieldImage, _shieldDmgImage, _shieldImageInd, _shieldDmgImageInd, _healthImage, _healthDmgImage,
-        _healthImageInd, _healthDmgImageInd, _heatImage, _heatImageInd, _stabImageInd, _heatCalculation;
+        _healthImageInd, _healthDmgImageInd, _heatImage, _heatImageInd, _stabImageInd, _heatCalculation, _heatThreshold;
     private UnitManager _unitManager;
     private GameObject _unitUI;
     private CanvasGroup _shieldCanvasGroup, _healthCanvasGroup, _heatCanvasGroup, _unitShieldGroup, _unitHealthGroup, 
         _unitHeatGroup, _stabCanvasGroup;
-    private GameManager _gameManager;
+    private GameManager _gameManager;    
     private int _trasparencyMult = 5;
-    private float _shrinkSpeed;
-    public float HeatCalc;
+    private float _shrinkSpeed;    
 
     // Start is called before the first frame update
     void Start()
     {
         _camMain = Camera.main;
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        _unitManager = transform.GetComponentInParent<UnitManager>();
+        _unitManager = transform.GetComponentInParent<UnitManager>();        
         _unitUI = transform.Find("UnitUI").gameObject;
         _shrinkSpeed = 0.5f;
 
@@ -52,7 +51,9 @@ public class ShrinkBar : MonoBehaviour
         _heatCanvasGroup = GameObject.Find("HeatIndicator").GetComponent<CanvasGroup>();
         _heatImageInd = GameObject.Find("HeatIndicator").transform.Find("Health").GetComponent<Image>();
         _heatCalculation = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<Image>();
-        _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>();
+        _heatThreshold = GameObject.Find("HeatIndicator").transform.Find("Threshold").GetComponent<Image>();    
+        _heatThreshold.fillAmount = 1 - _unitManager.HeatTreshold;     
+        _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>();         
 
         // Stability 
         _stabCanvasGroup = GameObject.Find("Stability").GetComponent<CanvasGroup>();
@@ -69,8 +70,8 @@ public class ShrinkBar : MonoBehaviour
         {
             if (!_gameManager.InAction)
             {
-                _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount, HeatCalc * 1.3f, Time.deltaTime * 2); 
-                _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);                            
+                _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount, _unitManager.HeatCalc, Time.deltaTime * 2); 
+                _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);                     
             }
             else
             {
