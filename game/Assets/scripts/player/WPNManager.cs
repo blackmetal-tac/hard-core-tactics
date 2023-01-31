@@ -19,8 +19,7 @@ public class WPNManager : MonoBehaviour
 	[HideInInspector] public int BurstSize, DownTimer;
     [HideInInspector] public float LastBurst;
     private Vector3 _spreadVector, _laserPoint;
-    private float _laserWidth;
-    float totalShots;
+    private float _laserWidth;    
 
     [System.Serializable]
     public class WeaponModes
@@ -288,8 +287,6 @@ public class WPNManager : MonoBehaviour
             _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _spreadVector, _projectileSize, _damage, 
                 _projectileSpeed, target, IsFriend);
             HeatRecoil();
-            //totalShots += 1;
-            //Debug.Log(totalShots);
             yield return new WaitForSeconds(shotDelay);
         }
     }
@@ -304,9 +301,7 @@ public class WPNManager : MonoBehaviour
             _spreadVector = UnitManagerP.CalculateSpread();
             _gameManager.MissilesPool.PullGameObject(FirePoint.transform, _projectileSize, _damage, 
                 _projectileSpeed, target, IsFriend);
-            HeatRecoil(); 
-            //totalShots += 1;
-            //Debug.Log(totalShots);           
+            HeatRecoil();                       
             yield return new WaitForSeconds(shotDelay);
         }
     }
@@ -329,8 +324,7 @@ public class WPNManager : MonoBehaviour
         float heat = 0;
         if (ProjectileTypeP != ProjectileType.Laser)
         {
-            heat = _heat * BurstSize * _gameManager.TurnTime / _fireDelay;
-            //Debug.Log(transform.name + " / " + heat);
+            heat = _heat * BurstSize * _gameManager.TurnTime / _fireDelay;            
         }
         else
         {
@@ -341,6 +335,7 @@ public class WPNManager : MonoBehaviour
         {
             heat += _heat * 5 * _gameManager.TurnTime;
         } 
+        Debug.Log(transform.name + " / " + heat);
         return heat;
     }
 

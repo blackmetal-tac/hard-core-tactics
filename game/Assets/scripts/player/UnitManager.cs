@@ -28,7 +28,7 @@ public class UnitManager : MonoBehaviour
     private WeaponUI _weaponUI;
 
     [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer, HeatModifier;
-    [HideInInspector] public bool IsDead, AutoCooling, CoreSwitch; // Death trigger
+    [HideInInspector] public bool IsDead, AutoCooling, CoolOverdrive, CoreSwitch;
     private bool _oneTime;
     private float _lastCheck;
 
@@ -338,7 +338,7 @@ public class UnitManager : MonoBehaviour
         if (CoreDownTimer == 3) // ???
         {
             CoreSwitch = !CoreSwitch;
-            WalkDistance -= _coreParameters.MoveBoost; 
+            WalkDistance /= _coreParameters.MoveBoost; 
         }
         _weaponUI.CoreButtonP.UpdateStatus();
     }
@@ -413,8 +413,24 @@ public class UnitManager : MonoBehaviour
                 {                    
                     heatCalculation += weapon.CalculateHeat();
                 }
-            }
-            HeatCalc = Heat + heatCalculation + UnitShield.Heat * _gameManager.TurnTime - Cooling * _gameManager.TurnTime;            
+            } 
+            HeatCalc = Heat + heatCalculation + UnitShield.Heat * _gameManager.TurnTime - Cooling * _gameManager.TurnTime;
+            CoolOverdrive = false;
+
+            // Calculate auto cooling  
+            if (Cooling == 0)
+            {
+                HeatCalc = Heat + heatCalculation + UnitShield.Heat * _gameManager.TurnTime 
+                        - CoolingModesP[0].Cooling * _gameManager.TurnTime;
+                CoolOverdrive = false;
+
+                if (HeatCalc >= HeatTreshold)
+                {                    
+                    HeatCalc = Heat + heatCalculation + UnitShield.Heat * _gameManager.TurnTime 
+                        - CoolingModesP[1].Cooling * _gameManager.TurnTime;
+                    CoolOverdrive = true;                        
+                }
+            }         
         }       
     }
     

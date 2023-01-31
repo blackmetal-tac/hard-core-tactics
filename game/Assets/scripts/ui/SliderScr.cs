@@ -11,7 +11,7 @@ public class SliderScr : MonoBehaviour
     [HideInInspector] public TextMeshProUGUI ModeName;    
     [HideInInspector] public UnitManager PlayerManager;
     private CanvasGroup _shieldUI, _coolingUI, _overheatUI, _heatCalc, _missileLockUI, _amsUI;
-    private bool _bounce;
+    private ParametersUI _shieldParam, _coolingParam, _overheatParam, _heatCalcParam, _missileLockUIParam, _amsUIParam; 
 
     // Start is called before the first frame update
     void Start()
@@ -25,13 +25,18 @@ public class SliderScr : MonoBehaviour
         if (SliderObject.transform.parent.name == "ShieldUI")
         {
             _shieldUI = GameObject.Find("ShieldOverdriveUI").GetComponent<CanvasGroup>();
+            _shieldParam = GameObject.Find("ShieldOverdriveUI").GetComponent<ParametersUI>();
         }
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {
             _coolingUI = GameObject.Find("CoolingOverdriveUI").GetComponent<CanvasGroup>();
+            _coolingParam = GameObject.Find("CoolingOverdriveUI").GetComponent<ParametersUI>();
             _overheatUI = GameObject.Find("OverheatUI").GetComponent<CanvasGroup>();
+            _overheatParam = GameObject.Find("OverheatUI").GetComponent<ParametersUI>();
             _heatCalc = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<CanvasGroup>();
-            _missileLockUI = GameObject.Find("MissileLockUI").GetComponent<CanvasGroup>();          
+            _heatCalcParam = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<ParametersUI>();
+            _missileLockUI = GameObject.Find("MissileLockUI").GetComponent<CanvasGroup>();       
+            _missileLockUIParam = GameObject.Find("MissileLockUI").GetComponent<ParametersUI>();      
         }
         
         ModeName = transform.Find("Handle Slide Area").Find("Handle").GetComponentInChildren<TextMeshProUGUI>();
@@ -45,7 +50,8 @@ public class SliderScr : MonoBehaviour
 
             if (Weapon != null && Weapon.ProjectileTypeP == WPNManager.ProjectileType.AMS)
             {
-                _amsUI = GameObject.Find("AMSUI").GetComponent<CanvasGroup>();                
+                _amsUI = GameObject.Find("AMSUI").GetComponent<CanvasGroup>();  
+                _amsUIParam = GameObject.Find("AMSUI").GetComponent<ParametersUI>();               
             }   
         });   
 
@@ -67,7 +73,7 @@ public class SliderScr : MonoBehaviour
         {            
             if (SliderObject.value > 0)
             {
-                BounceUI(_amsUI);
+                BounceUI(_amsUI, _amsUIParam);
             }
             else
             {
@@ -77,27 +83,32 @@ public class SliderScr : MonoBehaviour
 
         if (_shieldUI != null && SliderObject.value == 2)
         {
-            BounceUI(_shieldUI);            
+            BounceUI(_shieldUI, _shieldParam);            
         }
         else if (_shieldUI != null)
         {
             _shieldUI.alpha = 0;
         }        
         
-        if (_coolingUI != null && PlayerManager.Cooling == PlayerManager.CoolingModesP[1].Cooling)
+        if (_coolingUI != null)
         {
-            BounceUI(_coolingUI);
-        }
-        else if (_coolingUI != null)
-        {
-            _coolingUI.alpha = 0;
+            if (PlayerManager.Cooling == PlayerManager.CoolingModesP[1].Cooling 
+                || PlayerManager.CoolOverdrive)
+            {
+                BounceUI(_coolingUI, _coolingParam);
+            }
+            else if (PlayerManager.Cooling != PlayerManager.CoolingModesP[1].Cooling 
+                && !PlayerManager.CoolOverdrive)
+            {
+                _coolingUI.alpha = 0;
+            }
         }
 
         if (_coolingUI != null)
         {
             if (PlayerManager.MissileLockTimer > 0)
             {
-                BounceUI(_missileLockUI);
+                BounceUI(_missileLockUI, _missileLockUIParam);
             }
             else
             {
@@ -108,9 +119,9 @@ public class SliderScr : MonoBehaviour
         if (_coolingUI != null )
         {
             if (PlayerManager.Heat > PlayerManager.HeatTreshold 
-                || PlayerManager.HeatCalc > PlayerManager.HeatTreshold)
+                || PlayerManager.HeatCalc >= PlayerManager.HeatTreshold)
             {
-                BounceUI(_overheatUI);
+                BounceUI(_overheatUI, _overheatParam);
             }            
             else
             {
@@ -120,7 +131,7 @@ public class SliderScr : MonoBehaviour
 
         if (_coolingUI != null && !_gameManager.InAction)
         {
-            BounceUI(_heatCalc);
+            BounceUI(_heatCalc, _heatCalcParam);
         }        
 
         // Auto Cooling overdrive
@@ -201,24 +212,24 @@ public class SliderScr : MonoBehaviour
         }
     }
 
-    private void BounceUI(CanvasGroup canvasGroup)
+    private void BounceUI(CanvasGroup canvasGroup, ParametersUI param)
     {        
-        if (!_bounce)
+        if (!param.Bounce)
         {
-            canvasGroup.alpha += Time.deltaTime;
+            canvasGroup.alpha += Time.deltaTime;            
         }
-        else if (_bounce)
+        else 
         {
-            canvasGroup.alpha -= Time.deltaTime;
+            canvasGroup.alpha -= Time.deltaTime;            
         }
 
         if (canvasGroup.alpha <= 0.1f)
         {
-            _bounce = false;
+            param.Bounce = false;
         }
         else if (canvasGroup.alpha >= 1)
         {
-            _bounce = true;            
+            param.Bounce = true;            
         }
     }
 }

@@ -913,6 +913,7 @@ GameObject:
   - component: {fileID: 176498714}
   - component: {fileID: 176498713}
   - component: {fileID: 176498715}
+  - component: {fileID: 176498716}
   m_Layer: 5
   m_Name: ShieldOverdriveUI
   m_TagString: Untagged
@@ -1052,6 +1053,19 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &176498716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176498711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb7413262a46404d8c890567abba6c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bounce: 0
 --- !u!1 &186234406
 GameObject:
   m_ObjectHideFlags: 0
@@ -1286,6 +1300,7 @@ GameObject:
   - component: {fileID: 222955906}
   - component: {fileID: 222955905}
   - component: {fileID: 222955904}
+  - component: {fileID: 222955907}
   m_Layer: 5
   m_Name: CoolingOverdriveUI
   m_TagString: Untagged
@@ -1425,6 +1440,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222955902}
   m_CullTransparentMesh: 1
+--- !u!114 &222955907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222955902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb7413262a46404d8c890567abba6c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bounce: 0
 --- !u!1 &251257497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1909,12 +1937,13 @@ MonoBehaviour:
   HP: 0
   Heat: 0
   Cooling: 0
+  HeatCalc: 0
   MissileLockTimer: 0
   HeatTreshold: 0.7
   _shieldRegen: 0.03
   _heatCheckTime: 0.2
   _heatSafeRoll: 5
-  WalkDistance: 4
+  WalkDistance: 8
   SpreadMult: 0.1
   WeaponList: []
   WeaponCount: 0
@@ -1929,9 +1958,9 @@ MonoBehaviour:
   CoreSwitch: 0
   CoolingModesP:
   - ModeName: On
-    Cooling: 0.25
+    Cooling: 0.2
   - ModeName: Over
-    Cooling: 0.5
+    Cooling: 0.4
   - ModeName: Auto
     Cooling: 0
   _coreParameters:
@@ -1987,6 +2016,7 @@ GameObject:
   - component: {fileID: 332126801}
   - component: {fileID: 332126800}
   - component: {fileID: 332126802}
+  - component: {fileID: 332126803}
   m_Layer: 5
   m_Name: Calculation
   m_TagString: Untagged
@@ -2065,6 +2095,19 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &332126803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332126798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb7413262a46404d8c890567abba6c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bounce: 0
 --- !u!1001 &361440416
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2636,6 +2679,7 @@ GameObject:
   - component: {fileID: 471365435}
   - component: {fileID: 471365434}
   - component: {fileID: 471365433}
+  - component: {fileID: 471365436}
   m_Layer: 5
   m_Name: OverheatUI
   m_TagString: Untagged
@@ -2775,6 +2819,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 471365431}
   m_CullTransparentMesh: 1
+--- !u!114 &471365436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 471365431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb7413262a46404d8c890567abba6c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bounce: 0
 --- !u!1 &484300489
 GameObject:
   m_ObjectHideFlags: 0
@@ -6568,6 +6625,7 @@ GameObject:
   - component: {fileID: 1133730863}
   - component: {fileID: 1133730862}
   - component: {fileID: 1133730861}
+  - component: {fileID: 1133730864}
   m_Layer: 5
   m_Name: MissileLockUI
   m_TagString: Untagged
@@ -6707,6 +6765,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1133730859}
   m_CullTransparentMesh: 1
+--- !u!114 &1133730864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133730859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb7413262a46404d8c890567abba6c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bounce: 0
 --- !u!1 &1152708153
 GameObject:
   m_ObjectHideFlags: 0
@@ -9247,6 +9318,7 @@ GameObject:
   - component: {fileID: 1622751211}
   - component: {fileID: 1622751210}
   - component: {fileID: 1622751209}
+  - component: {fileID: 1622751212}
   m_Layer: 5
   m_Name: AMSUI
   m_TagString: Untagged
@@ -9386,6 +9458,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1622751207}
   m_CullTransparentMesh: 1
+--- !u!114 &1622751212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622751207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb7413262a46404d8c890567abba6c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bounce: 0
 --- !u!1 &1679561625
 GameObject:
   m_ObjectHideFlags: 0
@@ -11611,12 +11696,13 @@ MonoBehaviour:
   HP: 0
   Heat: 0
   Cooling: 0
+  HeatCalc: 0
   MissileLockTimer: 0
   HeatTreshold: 0.7
   _shieldRegen: 0.03
   _heatCheckTime: 0.2
   _heatSafeRoll: 5
-  WalkDistance: 4
+  WalkDistance: 8
   SpreadMult: 0.1
   WeaponList: []
   WeaponCount: 0
@@ -11631,7 +11717,7 @@ MonoBehaviour:
   CoreSwitch: 0
   CoolingModesP:
   - ModeName: On
-    Cooling: 0.25
+    Cooling: 0.2
   - ModeName: Over
     Cooling: 0.5
   - ModeName: Auto

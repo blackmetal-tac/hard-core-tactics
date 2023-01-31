@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CrosshairBars: 0.1
   LoadTime: 2
-  TurnTime: 5
+  TurnTime: 8
   InAction: 0
 --- !u!1 &648605811298458055
 GameObject:
@@ -609,9 +609,11 @@ MonoBehaviour:
   Damage: 0
   Speed: 0
   Target: {fileID: 0}
+  SpreadVector: {x: 0, y: 0, z: 0}
   MissileBody: {fileID: 0}
   MissileCollider: {fileID: 0}
   Homing: 0
+  Locked: 0
 --- !u!1 &8706358219382034970
 GameObject:
   m_ObjectHideFlags: 0
