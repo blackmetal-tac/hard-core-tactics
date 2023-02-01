@@ -117,8 +117,8 @@ MonoBehaviour:
   _radiusAMS: 0
   _projectileSpeed: 6
   _projectileSize: 0.1
-  _heat: 0.01
-  _damage: 0.004
+  _heat: 0.018
+  _damage: 0.005
   _recoil: 0.25
   _fireDelay: 3
   _fireRate: 500

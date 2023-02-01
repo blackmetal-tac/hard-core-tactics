@@ -1932,6 +1932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2ec6bbdff6de940a84b4986e395be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _unitClass: 2
   Target: {fileID: 0}
   UnitShield: {fileID: 0}
   HP: 0
@@ -1955,6 +1956,7 @@ MonoBehaviour:
   HeatModifier: 0
   IsDead: 0
   AutoCooling: 0
+  CoolOverdrive: 0
   CoreSwitch: 0
   CoolingModesP:
   - ModeName: On
@@ -11691,6 +11693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2ec6bbdff6de940a84b4986e395be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _unitClass: 0
   Target: {fileID: 0}
   UnitShield: {fileID: 0}
   HP: 0
@@ -11714,12 +11717,13 @@ MonoBehaviour:
   HeatModifier: 0
   IsDead: 0
   AutoCooling: 0
+  CoolOverdrive: 0
   CoreSwitch: 0
   CoolingModesP:
   - ModeName: On
     Cooling: 0.2
   - ModeName: Over
-    Cooling: 0.5
+    Cooling: 0.4
   - ModeName: Auto
     Cooling: 0
   _coreParameters:

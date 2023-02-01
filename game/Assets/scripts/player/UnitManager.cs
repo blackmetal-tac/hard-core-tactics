@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
 {
+    // Units classes 
+    // Assault - balanced
+    // Scout - fast and nimble / Speed * 1.25 / no aim penalty while moving
+    // Heavy - slow and armored / Speed * 0.75 / takeDamage * 0.75
+    private enum UnitClass { Assault, Scout, Heavy }
+    [SerializeField] private UnitClass _unitClass;
 	[HideInInspector] public UnitManager Target;
     private GameObject _clickMarker;
     [HideInInspector] public Shield UnitShield;
@@ -14,7 +20,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField][Range(0, 0.5f)] private float _shieldRegen;
     [SerializeField][Range(0, 1)] private float _heatCheckTime;
     [SerializeField][Range(0, 10)] private int _heatSafeRoll;
-    [Range(0, 10)] public int WalkDistance;
+    [Range(0, 20)] public int WalkDistance;
 
 	private GameManager _gameManager;
     private ShrinkBar _shrinkBar;
@@ -30,7 +36,7 @@ public class UnitManager : MonoBehaviour
     [HideInInspector] public float MoveSpeed = 0.1f, Spread, ShrinkTimer, HeatModifier;
     [HideInInspector] public bool IsDead, AutoCooling, CoolOverdrive, CoreSwitch;
     private bool _oneTime;
-    private float _lastCheck;
+    private float _lastCheck, _armor = 1;
 
     [System.Serializable]
     public class CoolingModes
@@ -84,6 +90,19 @@ public class UnitManager : MonoBehaviour
         UnitShield.UnitManagerP = this;       
         Cooling = CoolingModesP[0].Cooling;
         Heat = 1;    
+
+        // Class parameters
+        if (_unitClass == UnitClass.Scout)
+        {
+            WalkDistance = (int)(WalkDistance * 1.25f);
+            SpreadMult = 0;
+        }
+
+        if (_unitClass == UnitClass.Heavy)
+        {
+            WalkDistance = (int)(WalkDistance * 0.75f);
+            _armor = 0.75f;
+        }       
 
         // Load HP, Shield, Heat bars
         this.Progress(_gameManager.LoadTime, () => {
@@ -250,7 +269,7 @@ public class UnitManager : MonoBehaviour
         ShrinkTimer = 0.5f;
         if (HP > 0)
         {
-            HP -= damage;            
+            HP -= damage * _armor;            
         }
 
         // Death
@@ -381,7 +400,7 @@ public class UnitManager : MonoBehaviour
 
     public void DisableShield()
     {
-        UnitShield.DownTimer = 3;
+        UnitShield.DownTimer = 2;
         UnitShield.ChangeMode(UnitShield.shieldModes[0]); 
         UnitShield.TurnOnOff();
 

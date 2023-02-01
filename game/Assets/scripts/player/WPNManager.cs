@@ -207,11 +207,11 @@ public class WPNManager : MonoBehaviour
                 _lineRenderer.SetPosition(1, hit.point);
                 if (hit.collider.name == "Body")
                 {
-                    hit.collider.GetComponent<UnitManager>().TakeDamage((_damage / 4) * _laserWidth);
+                    hit.collider.GetComponent<UnitManager>().TakeDamage((_damage / 8) * _laserWidth);
                 }
                 else if (hit.collider.gameObject.layer == 17)
                 {
-                    hit.collider.GetComponent<Shield>().TakeDamage((_damage * 2) * _laserWidth);
+                    hit.collider.GetComponent<Shield>().TakeDamage((_damage * 1.5f) * _laserWidth);
                 }
                 else if (IsFriend && hit.collider.gameObject.layer == 13 // Detonate foe's missiles
                     || !IsFriend && hit.collider.gameObject.layer == 12)
@@ -322,20 +322,28 @@ public class WPNManager : MonoBehaviour
     public float CalculateHeat()
     {
         float heat = 0;
+        //float shots = 0;
+        //float dmg = 0;
         if (ProjectileTypeP != ProjectileType.Laser)
         {
-            heat = _heat * BurstSize * _gameManager.TurnTime / _fireDelay;            
+            heat = _heat * BurstSize * _gameManager.TurnTime / _fireDelay;
+            //dmg = _damage * BurstSize * _gameManager.TurnTime / _fireDelay;
+            //shots = BurstSize * _gameManager.TurnTime / _fireDelay;            
         }
         else
         {
-            heat = _heat * BurstSize * _gameManager.TurnTime;            
+            heat = _heat * BurstSize * _gameManager.TurnTime; 
+            //dmg = _damage * BurstSize * _gameManager.TurnTime;
+            //shots = _gameManager.TurnTime / _fireDelay;              
         }
 
         if (ProjectileTypeP == ProjectileType.AMS)
         {
             heat += _heat * 5 * _gameManager.TurnTime;
         } 
-        Debug.Log(transform.name + " / " + heat);
+        //Debug.Log(transform.name + " shots " + shots);
+        //Debug.Log(transform.name + " dmg " + dmg);
+        //Debug.Log(transform.name + " heat " + heat);
         return heat;
     }
 

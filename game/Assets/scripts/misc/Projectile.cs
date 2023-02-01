@@ -30,7 +30,7 @@ public class Projectile : MonoBehaviour
     {     
         if (collider.gameObject.layer == 17 && BulletID != collider.GetComponent<Shield>().ShieldID)
         {
-            collider.GetComponent<Shield>().TakeDamage(Damage * 2);
+            collider.GetComponent<Shield>().TakeDamage(Damage * 4);
             PullBack();
         }
         else if (collider.name == "Body")
