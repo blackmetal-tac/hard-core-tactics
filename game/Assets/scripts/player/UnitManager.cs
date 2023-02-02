@@ -85,7 +85,7 @@ public class UnitManager : MonoBehaviour
         _clickMarker = GameObject.Find("ClickMarker"); 
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
-        _shrinkBar = GetComponentInChildren<ShrinkBar>();
+        _shrinkBar = GetComponentInChildren<ShrinkBar>();        
         UnitShield.ShieldID = transform.parent.name;
         UnitShield.UnitManagerP = this;       
         Cooling = CoolingModesP[0].Cooling;

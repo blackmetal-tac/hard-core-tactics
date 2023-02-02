@@ -6,7 +6,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float _cameraSpeed, _rotationSpeed, _zoomSpeed;
     [SerializeField] private int _mapSize;
     private GameManager _gameManager;
-    private GameObject _cameraFocus;
+    private GameObject _cameraFocus, _player;
     private PlayerInput _playerInput;
     private InputAction _move, _look, _rightClick, _middleClick, _rotate, _scrollWheel, _altAction;    
     private float _rotation, _angle;
@@ -19,6 +19,12 @@ public class CameraMovement : MonoBehaviour
         _cameraFocus = transform.parent.gameObject;
         transform.LookAt(_cameraFocus.transform);
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
+
+    void Start()
+    {
+        _player = GameObject.Find("Player");
+        _cameraFocus.transform.position = _player.transform.position;
     }
 
     void OnEnable()

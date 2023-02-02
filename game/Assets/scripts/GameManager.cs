@@ -1,6 +1,7 @@
 using TMPro;
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using OWS.ObjectPooling;
@@ -8,10 +9,9 @@ using OWS.ObjectPooling;
 public class GameManager : MonoBehaviour
 {
     private GameObject _executeButton, _buttonBorder, _enemy, _actionMask, 
-        _clickMarker, _projectileOBJ;
+        _clickMarker, _projectileOBJ, _playerSquad, _enemySquad;
     private PlayerController _playerController;
-    private AIController _AIController;
-    private UnitManager _playerManager, _enemyManager;
+    private List<AIController> _AIControllersPlayer, _AIControllersEnemy;    
     private WeaponUI _weaponUI;
     private CoreButton _coreButton;
 
@@ -55,10 +55,19 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         DOTween.SetTweensCapacity(800, 50);
-        _playerController = GameObject.Find("Player").GetComponent<PlayerController>();        
-        _AIController = GameObject.Find("Enemy").GetComponent<AIController>();
-        _playerManager = _playerController.GetComponentInChildren<UnitManager>();
-        _enemyManager = _AIController.GetComponentInChildren<UnitManager>();
+        _playerSquad = GameObject.Find("PlayerSquad");
+        _enemySquad = GameObject.Find("EnemySquad");
+        _playerController = _playerSquad.GetComponentInChildren<PlayerController>(); 
+
+        for (int i = 1; i < _playerSquad.transform.childCount - 1; i++)
+        {            
+            _AIControllersPlayer.Add(_playerSquad.transform.GetChild(i).GetComponent<AIController>());
+        }
+
+        for (int i = 0; i < _enemySquad.transform.childCount; i++)
+        {            
+            _AIControllersEnemy.Add(_enemySquad.transform.GetChild(i).GetComponent<AIController>());
+        }
 
         // Find projectiles and create pools
         _projectileOBJ = transform.Find("Projectiles").Find("Bullet").gameObject;
@@ -122,17 +131,18 @@ public class GameManager : MonoBehaviour
         // Disable buttons
         _actionMask.transform.localScale = Vector3.one;
 
-        // Enemy actions ???
-        if (!_enemyManager.IsDead)
-        {                        
-            _AIController.Move();
+        // Player actions
+        _playerController.Move();
+        foreach (AIController controller in _AIControllersPlayer)
+        {
+            controller.Move();
         }
 
-        // Player actions
-        if (!_playerManager.IsDead)
+        // Enemy actions
+        foreach (AIController controller in _AIControllersEnemy)
         {
-            _playerController.Move();            
-        }        
+            controller.Move();
+        }      
 
         // Action phase
         this.Progress(TurnTime, () => {
@@ -140,17 +150,28 @@ public class GameManager : MonoBehaviour
             _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
             _timeValue -= Time.deltaTime;
 
-            // Enemy actions ???
-            if (!_enemyManager.IsDead)
+            // Player actions
+            if (!_playerController.UnitManagerP.IsDead)
             {
-                _enemyManager.StartAction();                
+                _playerController.UnitManagerP.StartAction();
             }
 
-            // Player actions ???
-            if (!_playerManager.IsDead)
+            foreach (AIController controller in _AIControllersPlayer)
             {
-                _playerManager.StartAction(); 
-            }                       
+                if (!controller.UnitManagerP.IsDead)
+                {
+                    controller.UnitManagerP.StartAction();
+                }
+            }
+
+            // Enemy actions
+            foreach (AIController controller in _AIControllersEnemy)
+            {
+                if (!controller.UnitManagerP.IsDead)
+                {
+                    controller.UnitManagerP.StartAction();
+                }
+            }       
         });
 
         // At the end of turn
@@ -164,17 +185,29 @@ public class GameManager : MonoBehaviour
             _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
             InAction = false;
 
-            // Units actions end
-            if (!_enemyManager.IsDead)
+            // Player actions end
+            if (!_playerController.UnitManagerP.IsDead)
             {
-                _AIController.EndMove();                
+                _playerController.EndMove();
             }
 
-            if (!_playerManager.IsDead)
+            foreach (AIController controller in _AIControllersPlayer)
             {
-                _playerController.EndMove();                
+                if (!controller.UnitManagerP.IsDead)
+                {
+                    controller.EndMove();
+                }
             }
 
+            // Enemy actions ens
+            foreach (AIController controller in _AIControllersEnemy)
+            {
+                if (!controller.UnitManagerP.IsDead)
+                {
+                    controller.EndMove();
+                }
+            }
+            
             // Update player weapon counters
             _weaponUI.DecreaseCounter();
         });

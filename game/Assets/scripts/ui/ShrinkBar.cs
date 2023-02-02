@@ -14,50 +14,59 @@ public class ShrinkBar : MonoBehaviour
     private int _trasparencyMult = 5;
     private float _shrinkSpeed;    
 
+    void Awake()
+    {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _unitManager = transform.GetComponentInParent<UnitManager>();
+        _unitUI = transform.Find("UnitUI").gameObject;
+
+        // Unit shield
+        _shieldImage = _unitUI.transform.Find("HP").Find("Shield").Find("Health").GetComponent<Image>();
+        _shieldDmgImage = _shieldImage.transform.parent.Find("Damage").GetComponent<Image>();
+        _unitShieldGroup = _shieldImage.GetComponentInParent<CanvasGroup>();
+
+        // Unit health
+        _healthImage = _unitUI.transform.Find("HP").Find("Health").Find("Health").GetComponent<Image>();
+        _healthDmgImage = _healthImage.transform.parent.Find("Damage").GetComponent<Image>();
+        _unitHealthGroup = _healthImage.GetComponentInParent<CanvasGroup>();
+
+        // Unit heat
+        _heatImage = _unitUI.transform.Find("Heat").Find("Background").Find("Health").GetComponent<Image>();
+        _heatCanvasGroup = GameObject.Find("HeatIndicator").GetComponent<CanvasGroup>();    
+        _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>();   
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
         _camMain = Camera.main;
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        _unitManager = transform.GetComponentInParent<UnitManager>();        
-        _unitUI = transform.Find("UnitUI").gameObject;
         _shrinkSpeed = 0.5f;
 
         // Disable secondary bars for active unit
         if (_unitManager.transform.parent.name == "Player")
         {
             _unitUI.GetComponent<ScaleUI>().Player = true;
+
+            // Player shield
+            _shieldCanvasGroup = GameObject.Find("ShieldIndicator").GetComponent<CanvasGroup>();
+            _shieldImageInd = GameObject.Find("ShieldIndicator").transform.Find("Health").GetComponent<Image>();
+            _shieldDmgImageInd = GameObject.Find("ShieldIndicator").transform.Find("Damage").GetComponent<Image>();            
+        
+            // Player health
+            _healthCanvasGroup = GameObject.Find("HealthIndicator").GetComponent<CanvasGroup>();
+            _healthImageInd = GameObject.Find("HealthIndicator").transform.Find("Health").GetComponent<Image>();
+            _healthDmgImageInd = GameObject.Find("HealthIndicator").transform.Find("Damage").GetComponent<Image>();            
+
+            // Player heat
+            _heatImageInd = GameObject.Find("HeatIndicator").transform.Find("Health").GetComponent<Image>();
+            _heatCalculation = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<Image>();
+            _heatThreshold = GameObject.Find("HeatIndicator").transform.Find("Threshold").GetComponent<Image>();    
+            _heatThreshold.fillAmount = 1 - _unitManager.HeatTreshold; 
+
+            // Player stability 
+            _stabCanvasGroup = GameObject.Find("Stability").GetComponent<CanvasGroup>();
+            _stabImageInd = GameObject.Find("Stability").transform.Find("Health").GetComponent<Image>();   
         }
-
-        // Health status Health
-        // Shield
-        _shieldImage = _unitUI.transform.Find("HP").Find("Shield").Find("Health").GetComponent<Image>();
-        _shieldDmgImage = _shieldImage.transform.parent.Find("Damage").GetComponent<Image>();      
-        _shieldCanvasGroup = GameObject.Find("ShieldIndicator").GetComponent<CanvasGroup>();
-        _shieldImageInd = GameObject.Find("ShieldIndicator").transform.Find("Health").GetComponent<Image>();
-        _shieldDmgImageInd = GameObject.Find("ShieldIndicator").transform.Find("Damage").GetComponent<Image>();
-        _unitShieldGroup = _shieldImage.GetComponentInParent<CanvasGroup>();
-
-        // Health
-        _healthImage = _unitUI.transform.Find("HP").Find("Health").Find("Health").GetComponent<Image>();
-        _healthDmgImage = _healthImage.transform.parent.Find("Damage").GetComponent<Image>();        
-        _healthCanvasGroup = GameObject.Find("HealthIndicator").GetComponent<CanvasGroup>();
-        _healthImageInd = GameObject.Find("HealthIndicator").transform.Find("Health").GetComponent<Image>();
-        _healthDmgImageInd = GameObject.Find("HealthIndicator").transform.Find("Damage").GetComponent<Image>();
-        _unitHealthGroup = _healthImage.GetComponentInParent<CanvasGroup>();
-
-        // Heat
-        _heatImage = _unitUI.transform.Find("Heat").Find("Background").Find("Health").GetComponent<Image>();        
-        _heatCanvasGroup = GameObject.Find("HeatIndicator").GetComponent<CanvasGroup>();
-        _heatImageInd = GameObject.Find("HeatIndicator").transform.Find("Health").GetComponent<Image>();
-        _heatCalculation = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<Image>();
-        _heatThreshold = GameObject.Find("HeatIndicator").transform.Find("Threshold").GetComponent<Image>();    
-        _heatThreshold.fillAmount = 1 - _unitManager.HeatTreshold;     
-        _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>();         
-
-        // Stability 
-        _stabCanvasGroup = GameObject.Find("Stability").GetComponent<CanvasGroup>();
-        _stabImageInd = GameObject.Find("Stability").transform.Find("Health").GetComponent<Image>();        
     }
 
     void Update()

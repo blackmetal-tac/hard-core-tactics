@@ -15,15 +15,15 @@ public class PlayerController : MonoBehaviour
     // Objects
 	private GameManager _gameManager;
     private GameObject _clickMarker, _crosshair;
-    private UnitManager _playerManager;
+    [HideInInspector] public UnitManager UnitManagerP;
 
     private float _crosshairSize;
     private readonly float _crosshairScale = 0.15f;    
 	
 	void Awake()
 	{        
-		_playerManager = GetComponentInChildren<UnitManager>();
-		_playerManager.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
+		UnitManagerP = GetComponentInChildren<UnitManager>();
+		UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
 	}
 
     // Start is called before the first frame update
@@ -66,29 +66,29 @@ public class PlayerController : MonoBehaviour
             DrawPath();
         }
 
-        if (_playerManager.IsDead)
+        if (UnitManagerP.IsDead)
         {
             _walkPath.startWidth = 0;
             _walkPath.endWidth = 0;
             _clickMarker.transform.localScale = Vector3.zero;
         }
 
-        if (!_playerManager.Target.IsDead)
+        if (!UnitManagerP.Target.IsDead)
         {
             // Dynamic _crosshair
             if (!_gameManager.InAction)
             {
-                _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.MoveSpeed 
-                    * _playerManager.SpreadMult * 1.5f, Time.deltaTime * 3);
+                _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + UnitManagerP.MoveSpeed 
+                    * UnitManagerP.SpreadMult * 1.5f, Time.deltaTime * 3);
             }
             else
             {
-                _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + _playerManager.Spread / 8, Time.deltaTime * 3);                
+                _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + UnitManagerP.Spread / 8, Time.deltaTime * 3);                
             }
             _crosshair.transform.localScale = _crosshairSize * Vector3.one;
 
             // Crosshair position
-            _crosshair.transform.position = _camMain.WorldToScreenPoint(_playerManager.Target.transform.position);
+            _crosshair.transform.position = _camMain.WorldToScreenPoint(UnitManagerP.Target.transform.position);
         }
         else
         {
@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour
             _clickMarker.transform.position = hit.point;
             _clickMarker.transform.localScale = Vector3.zero;
             _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.5f);
-            _playerManager.SetDestination(hit.point, PlayerAgent);
+            UnitManagerP.SetDestination(hit.point, PlayerAgent);
         }       
     }
 
@@ -136,14 +136,17 @@ public class PlayerController : MonoBehaviour
 
     public void Move()
     {
-        PlayerAgent.speed = _playerManager.MoveSpeed;   
-        _playerManager.UnitShield.TurnOnOff();
-        _playerManager.CoolingOverdrive();
+        if (UnitManagerP != null || !UnitManagerP.Target.IsDead)
+        {
+            PlayerAgent.speed = UnitManagerP.MoveSpeed;   
+            UnitManagerP.UnitShield.TurnOnOff();
+            UnitManagerP.CoolingOverdrive();
+        }
     }
 
     public void EndMove()
     {
-        _playerManager.MoveSpeed = 0.1f;        
-        _playerManager.EndMove();
+        UnitManagerP.MoveSpeed = 0.1f;        
+        UnitManagerP.EndMove();
     }
 }
