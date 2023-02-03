@@ -29,7 +29,7 @@ public class UnitManager : MonoBehaviour
     private readonly float _rotSpeed = 1f;
     [HideInInspector] public float SpreadMult = 0.1f;
 
-    [HideInInspector] public List<WPNManager> WeaponList;
+    [HideInInspector] public List<WPNManager> WeaponList = new List<WPNManager>();
     [HideInInspector] public int WeaponCount = 0, CoolingDownTimer, CoreDownTimer;
     private WeaponUI _weaponUI;
 
@@ -44,7 +44,7 @@ public class UnitManager : MonoBehaviour
         public string ModeName;
         public float Cooling;
     }
-    public List<CoolingModes> CoolingModesP; 
+    public List<CoolingModes> CoolingModesP = new List<CoolingModes>(); 
     
     [System.Serializable]
     public class CoreParameters

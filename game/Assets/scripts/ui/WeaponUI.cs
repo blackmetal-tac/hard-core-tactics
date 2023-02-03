@@ -22,14 +22,13 @@ public class WeaponUI : MonoBehaviour
         }
     }
 
-    private List<WeaponButton> _weaponButtons;    
+    private List<WeaponButton> _weaponButtons = new List<WeaponButton>();    
 
     // Start is called before the first frame update
     void Start()
     {
         /* Fill the list of all weapon slots (ORDER: rigth arm, left arm, rigth top,
-              left top, rigth shoulder, left shoulder) */
-        _weaponButtons = new List<WeaponButton>();
+              left top, rigth shoulder, left shoulder) */        
         _weaponButtons.Add(new WeaponButton(GameObject.Find("RightArmUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightArmUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightArmUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
         _weaponButtons.Add(new WeaponButton(GameObject.Find("LeftArmUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("LeftArmUI").GetComponentInChildren<SliderScr>(), GameObject.Find("LeftArmUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
         _weaponButtons.Add(new WeaponButton(GameObject.Find("RightTopUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("RightTopUI").GetComponentInChildren<SliderScr>(), GameObject.Find("RightTopUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));

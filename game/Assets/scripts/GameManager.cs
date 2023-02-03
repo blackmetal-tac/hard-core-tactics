@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     private GameObject _executeButton, _buttonBorder, _enemy, _actionMask, 
         _clickMarker, _projectileOBJ, _playerSquad, _enemySquad;
     private PlayerController _playerController;
-    private List<AIController> _AIControllersPlayer, _AIControllersEnemy;    
+    private List<AIController> _AIControllersPlayer = new List<AIController>(), _AIControllersEnemy = new List<AIController>();    
     private WeaponUI _weaponUI;
     private CoreButton _coreButton;
 
@@ -34,6 +34,14 @@ public class GameManager : MonoBehaviour
     private float _timeValue;
     public float TurnTime;
     [HideInInspector] public bool InAction = false;
+
+    [System.Serializable]
+    public class Formation
+    {
+        public string FormationName;
+        public Vector3[] Positions;
+    }
+    public List<Formation> UnitsFormations = new List<Formation>(); 
 
     void OnEnable()
     {
@@ -58,7 +66,7 @@ public class GameManager : MonoBehaviour
         _playerSquad = GameObject.Find("PlayerSquad");
         _enemySquad = GameObject.Find("EnemySquad");
         _playerController = _playerSquad.GetComponentInChildren<PlayerController>(); 
-
+        
         for (int i = 1; i < _playerSquad.transform.childCount - 1; i++)
         {            
             _AIControllersPlayer.Add(_playerSquad.transform.GetChild(i).GetComponent<AIController>());

@@ -49,6 +49,31 @@ MonoBehaviour:
   LoadTime: 2
   TurnTime: 8
   InAction: 0
+  UnitsFormations:
+  - FormationName: Line
+    Positions:
+    - {x: -5, y: 0, z: 0}
+    - {x: 5, y: 0, z: 0}
+    - {x: -10, y: 0, z: 0}
+    - {x: 10, y: 0, z: 0}
+  - FormationName: Arrow
+    Positions:
+    - {x: -5, y: 0, z: -1}
+    - {x: 5, y: 0, z: -1}
+    - {x: -10, y: 0, z: -2}
+    - {x: 10, y: 0, z: -2}
+  - FormationName: Wedge
+    Positions:
+    - {x: -5, y: 0, z: 1}
+    - {x: 5, y: 0, z: 1}
+    - {x: -10, y: 0, z: 2}
+    - {x: 10, y: 0, z: 2}
+  - FormationName: Staggered
+    Positions:
+    - {x: -5, y: 0, z: -1}
+    - {x: 5, y: 0, z: -1}
+    - {x: -10, y: 0, z: 1}
+    - {x: 10, y: 0, z: 1}
 --- !u!1 &648605811298458055
 GameObject:
   m_ObjectHideFlags: 0

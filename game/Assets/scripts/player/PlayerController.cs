@@ -5,6 +5,8 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 { 
+    public enum Formation { Line, Arrow, Wedge, Staggered }
+    public Formation UnitsFormation;
 	[SerializeField] private LayerMask _ignoreLayers;
     private Camera _camMain;    
 	

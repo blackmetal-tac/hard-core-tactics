@@ -1,11 +1,17 @@
 using UnityEngine;
 using UnityEngine.AI;
+using static GameManager;
 
 public class AIController : MonoBehaviour
 {	
-    private NavMeshAgent _unitAgent;
+    public enum FormationsList { Line, Arrow, Wedge, Staggered }
+    public FormationsList UnitsFormation;
+    [HideInInspector] public NavMeshAgent UnitAgent;
     [HideInInspector] public UnitManager UnitManagerP;
     private GameManager _gameManager;
+    private Vector3 _formationPos;
+    private PlayerController _playerController;
+    private AIController _enemyController;
 
     // Move parameters
     private readonly int _moveOffset = 15;
@@ -15,6 +21,7 @@ public class AIController : MonoBehaviour
     void Awake()
     {
         UnitManagerP = GetComponentInChildren<UnitManager>();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         // Set target to shoot
         if (transform.name == "Enemy")
@@ -23,19 +30,22 @@ public class AIController : MonoBehaviour
         }
         else if (transform.parent.name == "EnemySquad")
         {
+            _enemyController = transform.parent.Find("Enemy").GetComponent<AIController>(); 
             UnitManagerP.Target = GameObject.Find("PlayerSquad").transform.Find(transform.name).GetComponentInChildren<UnitManager>();
+            SetUnitsPos();
         }		
         else if (transform.parent.name == "PlayerSquad")
         {
+            _playerController = transform.parent.Find("Player").GetComponent<PlayerController>();
             UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find(transform.name).GetComponentInChildren<UnitManager>();
+            SetUnitsPos();
         }
     }
 
     // Start is called before the first frame update
     void Start()
-    {
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        _unitAgent = GetComponent<NavMeshAgent>();        
+    {        
+        UnitAgent = GetComponent<NavMeshAgent>();        
         UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);            
     }   
 
@@ -89,8 +99,16 @@ public class AIController : MonoBehaviour
     {   
         if (UnitManagerP != null || !UnitManagerP.Target.IsDead)
         {
-            SetPath();
-            _unitAgent.speed = UnitManagerP.MoveSpeed;        
+            if (transform.name == "Enemy")
+            {
+                SetPath();
+            }
+            else
+            {
+                KeepFormation();
+            }
+
+            UnitAgent.speed = UnitManagerP.MoveSpeed;        
             UnitManagerP.UnitShield.TurnOnOff();   
             UnitManagerP.CoreOverdrive();             
 
@@ -135,33 +153,65 @@ public class AIController : MonoBehaviour
     public void SetPath()
     {
         // Get distance between Target to avoid collision
-        float targetDistance = Vector3.Distance(_unitAgent.destination, UnitManagerP.Target.transform.position);
+        float targetDistance = Vector3.Distance(UnitAgent.destination, UnitManagerP.Target.transform.position);
 
         if (targetDistance > 10 && UnitManagerP.WalkDistance > 0) // ??? effective range
         {       
-            _unitAgent.stoppingDistance = 0f;
+            UnitAgent.stoppingDistance = 0f;
             NavMeshPath path = new NavMeshPath();
             while (UnitManagerP.GetPathLength(path) < 0.5f && UnitManagerP.WalkDistance > 0.5f) // ??? movement behavior
             {
-                _unitAgent.SetDestination(new Vector3(
+                UnitAgent.SetDestination(new Vector3(
                     UnitManagerP.Target.transform.position.x + Random.Range(-_moveOffset, _moveOffset),
                     UnitManagerP.Target.transform.position.y + Random.Range(-_moveOffset, _moveOffset),
                     UnitManagerP.Target.transform.position.z));
-                NavMesh.CalculatePath(_unitAgent.transform.position, _unitAgent.destination, NavMesh.AllAreas, path);                
+                NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
             }
-            UnitManagerP.SetDestination(_unitAgent.destination, _unitAgent);                        
+            UnitManagerP.SetDestination(UnitAgent.destination, UnitAgent);                        
         }
         else if (UnitManagerP.WalkDistance > 0)
         {        
-            _unitAgent.stoppingDistance = 1f;      
+            UnitAgent.stoppingDistance = 1f;      
             NavMeshPath path = new NavMeshPath();
             while (UnitManagerP.GetPathLength(path) < 0.5f && UnitManagerP.WalkDistance > 0.5f) // ??? movement behavior
             {
-                _unitAgent.SetDestination(RandomNavmeshLocation(UnitManagerP.WalkDistance));
-                NavMesh.CalculatePath(_unitAgent.transform.position, _unitAgent.destination, NavMesh.AllAreas, path);                
+                UnitAgent.SetDestination(RandomNavmeshLocation(UnitManagerP.WalkDistance));
+                NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
             }
             UnitManagerP.MoveSpeed = UnitManagerP.GetPathLength(path) / _gameManager.TurnTime;             
         }
+    }
+
+    public void KeepFormation()
+    {        
+        if (_playerController != null && UnitManagerP.WalkDistance > 0)
+        {       
+            //Debug.Log(transform.name);
+            UnitAgent.stoppingDistance = 0f;
+            NavMeshPath path = new NavMeshPath();
+
+            UnitAgent.SetDestination(new Vector3(
+                _playerController.PlayerAgent.destination.x + _formationPos.x, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _playerController.PlayerAgent.destination.y + _formationPos.y, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _formationPos.z));
+            NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
+
+            UnitManagerP.SetDestination(UnitAgent.destination, UnitAgent);                        
+        } 
+
+        if (_enemyController != null && UnitManagerP.WalkDistance > 0)
+        {       
+            UnitAgent.stoppingDistance = 0f;
+            NavMeshPath path = new NavMeshPath();
+
+            UnitAgent.SetDestination(new Vector3(
+                _enemyController.UnitAgent.destination.x + _formationPos.x, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _enemyController.UnitAgent.destination.y + _formationPos.y, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _formationPos.z));
+            NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
+
+            UnitManagerP.SetDestination(UnitAgent.destination, UnitAgent);                        
+        } 
     }
 
     private Vector3 RandomNavmeshLocation(int radius) 
@@ -175,6 +225,36 @@ public class AIController : MonoBehaviour
             finalPosition = hit.position;            
         }
         return finalPosition;
+    }
+
+    private void SetUnitsPos()
+    {
+        if (transform.name == "Bravo")
+        {
+            DefineFormation(0);            
+        }
+        if (transform.name == "Charlie")
+        {
+            DefineFormation(1);
+        }
+    }
+
+    private void DefineFormation(int index)
+    {   
+        foreach (Formation formation in _gameManager.UnitsFormations)
+        {
+            if (_playerController != null && formation.FormationName == _playerController.UnitsFormation.ToString())
+            {
+                _formationPos = formation.Positions[index];
+                transform.position = _playerController.transform.position + _formationPos;
+            }
+
+            if (_enemyController != null && formation.FormationName == _enemyController.UnitsFormation.ToString())
+            {
+                _formationPos = formation.Positions[index];
+                transform.position = _enemyController.transform.position + _formationPos;
+            }
+        }
     }
     
     public void EndMove()

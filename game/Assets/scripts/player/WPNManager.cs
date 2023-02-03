@@ -27,10 +27,10 @@ public class WPNManager : MonoBehaviour
         public string ModeName;
         public int FireMode;
     }
-    public List<WeaponModes> WeaponModesP;
+    public List<WeaponModes> WeaponModesP = new List<WeaponModes>();
 
     private Transform _tubesContainer;
-    private List<Transform> _tubes;
+    private List<Transform> _tubes = new List<Transform>();
 
     [HideInInspector] public GameObject FirePoint, TargetAMS;
     private CrosshairAMS _crosshairAMS;
@@ -101,8 +101,7 @@ public class WPNManager : MonoBehaviour
         if (ProjectileTypeP == ProjectileType.Missile)
         {
             // Count tubes to fire missile from each
-            _tubesContainer = transform.Find("Tubes");       
-            _tubes = new List<Transform>();     
+            _tubesContainer = transform.Find("Tubes");
             for (int i = 0; i < _tubesContainer.childCount; i++)
             {
                 _tubes.Add(_tubesContainer.GetChild(i));
