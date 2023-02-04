@@ -1,15 +1,17 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 using static GameManager;
 
 public class AIController : MonoBehaviour
 {	
-    public enum FormationsList { Line, Arrow, Wedge, Staggered }
-    public FormationsList UnitsFormation;
+    public enum FormationType { Line, Arrow, Wedge, Staggered }
+    public FormationType UnitsFormation;
     [HideInInspector] public NavMeshAgent UnitAgent;
     [HideInInspector] public UnitManager UnitManagerP;
-    private GameManager _gameManager;
-    private Vector3 _formationPos;
+    [HideInInspector] public List<Transform> SquadPositions = new List<Transform>();
+    private Transform _formationPos;
+    private GameManager _gameManager;    
     private PlayerController _playerController;
     private AIController _enemyController;
 
@@ -27,18 +29,17 @@ public class AIController : MonoBehaviour
         if (transform.name == "Enemy")
         {
             UnitManagerP.Target = GameObject.Find("PlayerSquad").transform.Find("Player").GetComponentInChildren<UnitManager>();
+            DefineFormation();
         }
         else if (transform.parent.name == "EnemySquad")
         {
             _enemyController = transform.parent.Find("Enemy").GetComponent<AIController>(); 
             UnitManagerP.Target = GameObject.Find("PlayerSquad").transform.Find(transform.name).GetComponentInChildren<UnitManager>();
-            SetUnitsPos();
         }		
         else if (transform.parent.name == "PlayerSquad")
         {
             _playerController = transform.parent.Find("Player").GetComponent<PlayerController>();
-            UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find(transform.name).GetComponentInChildren<UnitManager>();
-            SetUnitsPos();
+            UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find(transform.name).GetComponentInChildren<UnitManager>(); 
         }
     }
 
@@ -46,7 +47,12 @@ public class AIController : MonoBehaviour
     void Start()
     {        
         UnitAgent = GetComponent<NavMeshAgent>();        
-        UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);            
+        UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);     
+
+        if(transform.name != "Enemy")
+        {
+            SetUnitsPos();
+        }       
     }   
 
     void Update()
@@ -191,9 +197,9 @@ public class AIController : MonoBehaviour
             NavMeshPath path = new NavMeshPath();
 
             UnitAgent.SetDestination(new Vector3(
-                _playerController.PlayerAgent.destination.x + _formationPos.x, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
-                _playerController.PlayerAgent.destination.y + _formationPos.y, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
-                _formationPos.z));
+                _playerController.PlayerAgent.destination.x + _formationPos.position.x, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _playerController.PlayerAgent.destination.y + _formationPos.position.y, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _formationPos.position.z));
             NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
 
             UnitManagerP.SetDestination(UnitAgent.destination, UnitAgent);                        
@@ -205,9 +211,9 @@ public class AIController : MonoBehaviour
             NavMeshPath path = new NavMeshPath();
 
             UnitAgent.SetDestination(new Vector3(
-                _enemyController.UnitAgent.destination.x + _formationPos.x, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
-                _enemyController.UnitAgent.destination.y + _formationPos.y, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
-                _formationPos.z));
+                _enemyController.UnitAgent.destination.x + _formationPos.position.x, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _enemyController.UnitAgent.destination.y + _formationPos.position.y, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _formationPos.position.z));
             NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
 
             UnitManagerP.SetDestination(UnitAgent.destination, UnitAgent);                        
@@ -229,30 +235,48 @@ public class AIController : MonoBehaviour
 
     private void SetUnitsPos()
     {
-        if (transform.name == "Bravo")
-        {
-            DefineFormation(0);            
+        if (_playerController != null)
+        {  
+            foreach (Transform position in _playerController.SquadPositions)
+            {               
+                if (transform.name == position.name)
+                {                    
+                    _formationPos = position;
+                    transform.position = _formationPos.position;
+                }
+            }
         }
-        if (transform.name == "Charlie")
-        {
-            DefineFormation(1);
+
+        if (_enemyController != null)
+        {  
+            foreach (Transform position in _enemyController.SquadPositions)
+            {               
+                if (transform.name == position.name)
+                {                    
+                    _formationPos = position;
+                    transform.position = _formationPos.position;
+                }
+            }
         }
     }
 
-    private void DefineFormation(int index)
-    {   
+    private void DefineFormation()
+    {
+        // Get squad positions
+        SquadPositions.Add(transform.Find("Bravo").transform);
+        SquadPositions.Add(transform.Find("Charlie").transform);
+        SquadPositions.Add(transform.Find("Delta").transform);
+        SquadPositions.Add(transform.Find("Echo").transform);
+
         foreach (Formation formation in _gameManager.UnitsFormations)
         {
-            if (_playerController != null && formation.FormationName == _playerController.UnitsFormation.ToString())
-            {
-                _formationPos = formation.Positions[index];
-                transform.position = _playerController.transform.position + _formationPos;
-            }
-
-            if (_enemyController != null && formation.FormationName == _enemyController.UnitsFormation.ToString())
-            {
-                _formationPos = formation.Positions[index];
-                transform.position = _enemyController.transform.position + _formationPos;
+            if (formation.FormationName == UnitsFormation.ToString())
+            {              
+                for (int i = 0; i < formation.Positions.Length; i++)
+                {
+                    SquadPositions[i].SetParent(UnitManagerP.transform);
+                    SquadPositions[i].localPosition = formation.Positions[i];
+                }                
             }
         }
     }

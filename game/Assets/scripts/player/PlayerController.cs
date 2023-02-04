@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 using DG.Tweening;
+using static GameManager;
 
 public class PlayerController : MonoBehaviour
 { 
-    public enum Formation { Line, Arrow, Wedge, Staggered }
-    public Formation UnitsFormation;
+    public enum FormationType { Line, Arrow, Wedge, Staggered }
+    public FormationType UnitsFormation;
 	[SerializeField] private LayerMask _ignoreLayers;
     private Camera _camMain;    
 	
@@ -18,20 +20,22 @@ public class PlayerController : MonoBehaviour
 	private GameManager _gameManager;
     private GameObject _clickMarker, _crosshair;
     [HideInInspector] public UnitManager UnitManagerP;
+    [HideInInspector] public List<Transform> SquadPositions = new List<Transform>();
 
     private float _crosshairSize;
     private readonly float _crosshairScale = 0.15f;    
 	
 	void Awake()
 	{        
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		UnitManagerP = GetComponentInChildren<UnitManager>();
 		UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
+        DefineFormation();
 	}
 
     // Start is called before the first frame update
     void Start()
-    {
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    {        
         _camMain = Camera.main;
         _crosshair = GameObject.Find("Crosshair");		
 
@@ -44,7 +48,7 @@ public class PlayerController : MonoBehaviour
         _clickMarker = GameObject.Find("ClickMarker");   
         _walkPath.startWidth = 0.02f;
         _walkPath.endWidth = 0.02f;
-        _walkPath.positionCount = 0;       
+        _walkPath.positionCount = 0;
     }
 
     // Update is called once per frame
@@ -134,6 +138,27 @@ public class PlayerController : MonoBehaviour
             Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, PlayerAgent.destination) * 4);
         }
         _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));        
+    }
+
+    private void DefineFormation()
+    {
+        // Get squad positions
+        SquadPositions.Add(transform.Find("Bravo").transform);
+        SquadPositions.Add(transform.Find("Charlie").transform);
+        SquadPositions.Add(transform.Find("Delta").transform);
+        SquadPositions.Add(transform.Find("Echo").transform);
+
+        foreach (Formation formation in _gameManager.UnitsFormations)
+        {
+            if (formation.FormationName == UnitsFormation.ToString())
+            {              
+                for (int i = 0; i < formation.Positions.Length; i++)
+                {
+                    SquadPositions[i].SetParent(UnitManagerP.transform);
+                    SquadPositions[i].localPosition = formation.Positions[i];
+                }                
+            }
+        }
     }
 
     public void Move()
