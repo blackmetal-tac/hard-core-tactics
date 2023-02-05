@@ -74,6 +74,12 @@ MonoBehaviour:
     - {x: 5, y: 0, z: -1}
     - {x: -10, y: 0, z: 1}
     - {x: 10, y: 0, z: 1}
+  - FormationName: Free
+    Positions:
+    - {x: -5, y: 0, z: -1}
+    - {x: 5, y: 0, z: -1}
+    - {x: -10, y: 0, z: 1}
+    - {x: 10, y: 0, z: 1}
 --- !u!1 &648605811298458055
 GameObject:
   m_ObjectHideFlags: 0

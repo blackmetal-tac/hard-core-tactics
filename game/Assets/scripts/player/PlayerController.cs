@@ -7,7 +7,7 @@ using static GameManager;
 
 public class PlayerController : MonoBehaviour
 { 
-    public enum FormationType { Line, Arrow, Wedge, Staggered }
+    public enum FormationType { Line, Arrow, Wedge, Staggered, Free }
     public FormationType UnitsFormation;
 	[SerializeField] private LayerMask _ignoreLayers;
     private Camera _camMain;    

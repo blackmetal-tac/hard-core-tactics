@@ -5,7 +5,7 @@ using static GameManager;
 
 public class AIController : MonoBehaviour
 {	
-    public enum FormationType { Line, Arrow, Wedge, Staggered }
+    public enum FormationType { Line, Arrow, Wedge, Staggered, Free }
     public FormationType UnitsFormation;
     [HideInInspector] public NavMeshAgent UnitAgent;
     [HideInInspector] public UnitManager UnitManagerP;
@@ -34,12 +34,14 @@ public class AIController : MonoBehaviour
         else if (transform.parent.name == "EnemySquad")
         {
             _enemyController = transform.parent.Find("Enemy").GetComponent<AIController>(); 
-            UnitManagerP.Target = GameObject.Find("PlayerSquad").transform.Find(transform.name).GetComponentInChildren<UnitManager>();
+            UnitsFormation = _enemyController.UnitsFormation;
+            SetTargets("PlayerSquad");        
         }		
         else if (transform.parent.name == "PlayerSquad")
         {
             _playerController = transform.parent.Find("Player").GetComponent<PlayerController>();
-            UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find(transform.name).GetComponentInChildren<UnitManager>(); 
+            UnitsFormation = (FormationType)_playerController.UnitsFormation;
+            SetTargets("EnemySquad");
         }
     }
 
@@ -105,15 +107,10 @@ public class AIController : MonoBehaviour
     {   
         if (UnitManagerP != null || !UnitManagerP.Target.IsDead)
         {
-            if (transform.name == "Enemy")
+            if (transform.name == "Enemy" || UnitsFormation == FormationType.Free)
             {
                 SetPath();
             }
-            else
-            {
-                KeepFormation();
-            }
-
             UnitAgent.speed = UnitManagerP.MoveSpeed;        
             UnitManagerP.UnitShield.TurnOnOff();   
             UnitManagerP.CoreOverdrive();             
@@ -156,6 +153,15 @@ public class AIController : MonoBehaviour
         } 
     }
 
+    public void StartAction()
+    {
+        if (transform.name != "Enemy" || UnitsFormation != FormationType.Free)
+        {
+            KeepFormation();
+        }
+        UnitManagerP.StartAction();
+    }
+
     public void SetPath()
     {
         // Get distance between Target to avoid collision
@@ -190,33 +196,16 @@ public class AIController : MonoBehaviour
 
     public void KeepFormation()
     {        
-        if (_playerController != null && UnitManagerP.WalkDistance > 0)
-        {       
-            //Debug.Log(transform.name);
-            UnitAgent.stoppingDistance = 0f;
-            NavMeshPath path = new NavMeshPath();
-
+        if (transform.name != "Enemy" && UnitManagerP.WalkDistance > 0)
+        {  
+            UnitAgent.stoppingDistance = 0f;            
             UnitAgent.SetDestination(new Vector3(
-                _playerController.PlayerAgent.destination.x + _formationPos.position.x, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
-                _playerController.PlayerAgent.destination.y + _formationPos.position.y, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
+                _formationPos.position.x + Random.Range(-1, 1),
+                _formationPos.position.y + Random.Range(-1, 1),
                 _formationPos.position.z));
-            NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
 
-            UnitManagerP.SetDestination(UnitAgent.destination, UnitAgent);                        
-        } 
-
-        if (_enemyController != null && UnitManagerP.WalkDistance > 0)
-        {       
-            UnitAgent.stoppingDistance = 0f;
-            NavMeshPath path = new NavMeshPath();
-
-            UnitAgent.SetDestination(new Vector3(
-                _enemyController.UnitAgent.destination.x + _formationPos.position.x, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
-                _enemyController.UnitAgent.destination.y + _formationPos.position.y, //+ Random.Range(-_moveOffset / 10, _moveOffset / 10),
-                _formationPos.position.z));
-            NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
-
-            UnitManagerP.SetDestination(UnitAgent.destination, UnitAgent);                        
+            UnitManagerP.MoveSpeed = 2 * UnitManagerP.GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
+            UnitAgent.speed = UnitManagerP.MoveSpeed;                                   
         } 
     }
 
@@ -258,6 +247,26 @@ public class AIController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void SetTargets(string enemyTeam)
+    {
+        if (transform.name == "Bravo")
+        {
+            UnitManagerP.Target = GameObject.Find(enemyTeam).transform.Find("Charlie").GetComponentInChildren<UnitManager>();
+        }
+        if (transform.name == "Charlie")
+        {
+            UnitManagerP.Target = GameObject.Find(enemyTeam).transform.Find("Bravo").GetComponentInChildren<UnitManager>();
+        }
+        if (transform.name == "Delta")
+        {
+            UnitManagerP.Target = GameObject.Find(enemyTeam).transform.Find("Echo").GetComponentInChildren<UnitManager>();
+        }
+        if (transform.name == "Echo")
+        {
+            UnitManagerP.Target = GameObject.Find(enemyTeam).transform.Find("Delta").GetComponentInChildren<UnitManager>();
+        }         
     }
 
     private void DefineFormation()

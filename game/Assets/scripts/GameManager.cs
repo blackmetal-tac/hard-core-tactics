@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     // Turn timer
     private static TextMeshProUGUI _timer;    
-    private float _timeValue;
+    public float TimeValue;
     public float TurnTime;
     [HideInInspector] public bool InAction = false;
 
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         _enemySquad = GameObject.Find("EnemySquad");
         _playerController = _playerSquad.GetComponentInChildren<PlayerController>(); 
         
-        for (int i = 1; i < _playerSquad.transform.childCount - 1; i++)
+        for (int i = 1; i < _playerSquad.transform.childCount; i++)
         {            
             _AIControllersPlayer.Add(_playerSquad.transform.GetChild(i).GetComponent<AIController>());
         }
@@ -99,8 +99,8 @@ public class GameManager : MonoBehaviour
        
         // Turn timer
         _timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();
-        _timeValue = TurnTime;
-        _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
+        TimeValue = TurnTime;
+        _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(TimeValue).ToString("ss\\'ff");
 
         // Set target ???        
         _enemy = GameObject.Find("Enemy").transform.GetChild(0).gameObject;
@@ -155,8 +155,8 @@ public class GameManager : MonoBehaviour
         // Action phase
         this.Progress(TurnTime, () => {
             
-            _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
-            _timeValue -= Time.deltaTime;
+            _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(TimeValue).ToString("ss\\'ff");
+            TimeValue -= Time.deltaTime;
 
             // Player actions
             if (!_playerController.UnitManagerP.IsDead)
@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviour
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
-                    controller.UnitManagerP.StartAction();
+                    controller.StartAction();
                 }
             }
 
@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
-                    controller.UnitManagerP.StartAction();
+                    controller.StartAction();
                 }
             }       
         });
@@ -189,8 +189,8 @@ public class GameManager : MonoBehaviour
 
             // Enable buttons
             _actionMask.transform.localScale = Vector3.zero;
-            _timeValue = TurnTime;
-            _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(_timeValue).ToString("ss\\'ff");
+            TimeValue = TurnTime;
+            _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(TimeValue).ToString("ss\\'ff");
             InAction = false;
 
             // Player actions end
