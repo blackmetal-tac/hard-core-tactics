@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private Camera _camMain;    
 	
 	// NavMesh
-    [HideInInspector] public NavMeshAgent PlayerAgent;
+    [HideInInspector] public NavMeshAgent UnitAgent;
     private LineRenderer _walkPath;
 
     // Objects
@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
         _crosshair = GameObject.Find("Crosshair");		
 
         // Navmesh setup        
-        PlayerAgent = GetComponent<NavMeshAgent>();
+        UnitAgent = GetComponent<NavMeshAgent>();
         NavMesh.avoidancePredictionTime = 5;
 		_walkPath = GetComponent<LineRenderer>();
 
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Draw player path
-        if (PlayerAgent.hasPath)
+        if (UnitAgent.hasPath)
         {
             DrawPath();
         }
@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
             _clickMarker.transform.position = hit.point;
             _clickMarker.transform.localScale = Vector3.zero;
             _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.5f);
-            UnitManagerP.SetDestination(hit.point, PlayerAgent);
+            UnitManagerP.SetDestination(hit.point, UnitAgent);
         }       
     }
 
@@ -121,21 +121,21 @@ public class PlayerController : MonoBehaviour
     {
         _walkPath.startWidth = 0.02f;
         _walkPath.endWidth = 0.02f;
-        _walkPath.positionCount = PlayerAgent.path.corners.Length;
+        _walkPath.positionCount = UnitAgent.path.corners.Length;
         _walkPath.SetPosition(0, transform.position);
 
-        if (PlayerAgent.path.corners.Length < 2)
+        if (UnitAgent.path.corners.Length < 2)
         {
             return;
         } 
 
-        for (int i = 1; i < PlayerAgent.path.corners.Length; i++)
+        for (int i = 1; i < UnitAgent.path.corners.Length; i++)
         {
-            Vector3 pointPosition = new(PlayerAgent.path.corners[i].x, PlayerAgent.path.corners[i].y,
-                    PlayerAgent.path.corners[i].z);
+            Vector3 pointPosition = new(UnitAgent.path.corners[i].x, UnitAgent.path.corners[i].y,
+                    UnitAgent.path.corners[i].z);
             _walkPath.SetPosition(i, pointPosition);
-            _clickMarker.transform.position = Vector3.MoveTowards(_clickMarker.transform.position, PlayerAgent.destination, 
-            Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, PlayerAgent.destination) * 4);
+            _clickMarker.transform.position = Vector3.MoveTowards(_clickMarker.transform.position, UnitAgent.destination, 
+            Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, UnitAgent.destination) * 4);
         }
         _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));        
     }
@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviour
     {
         if (UnitManagerP != null || !UnitManagerP.Target.IsDead)
         {
-            PlayerAgent.speed = UnitManagerP.MoveSpeed;   
+            UnitAgent.speed = UnitManagerP.MoveSpeed;   
             UnitManagerP.UnitShield.TurnOnOff();
             UnitManagerP.CoolingOverdrive();
         }

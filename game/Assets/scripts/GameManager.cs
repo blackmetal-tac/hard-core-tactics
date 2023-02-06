@@ -8,12 +8,13 @@ using OWS.ObjectPooling;
 
 public class GameManager : MonoBehaviour
 {
-    private GameObject _executeButton, _buttonBorder, _enemy, _actionMask, 
-        _clickMarker, _projectileOBJ, _playerSquad, _enemySquad;
+    private GameObject _executeBorder, _actionMask, _switchBorder, _switchMask, _enemy, _clickMarker, _projectileOBJ,
+        _playerSquad, _enemySquad, _cameraFocus;
     private PlayerController _playerController;
     private List<AIController> _AIControllersPlayer = new List<AIController>(), _AIControllersEnemy = new List<AIController>();    
     private WeaponUI _weaponUI;
     private CoreButton _coreButton;
+    private int _currentUnit;
 
     public ObjectPool<PoolObject> BulletsPool, MissilesPool, AmsPool, ExplosionPool;
 
@@ -31,8 +32,8 @@ public class GameManager : MonoBehaviour
 
     // Turn timer
     private static TextMeshProUGUI _timer;    
-    public float TimeValue;
-    public float TurnTime;
+    public float TimeValue, TurnTime;
+
     [HideInInspector] public bool InAction = false;
 
     [System.Serializable]
@@ -65,7 +66,8 @@ public class GameManager : MonoBehaviour
         DOTween.SetTweensCapacity(800, 50);
         _playerSquad = GameObject.Find("PlayerSquad");
         _enemySquad = GameObject.Find("EnemySquad");
-        _playerController = _playerSquad.GetComponentInChildren<PlayerController>(); 
+        _cameraFocus = GameObject.Find("CameraFocus");
+        _playerController = _playerSquad.GetComponentInChildren<PlayerController>();        
         
         for (int i = 1; i < _playerSquad.transform.childCount; i++)
         {            
@@ -89,11 +91,12 @@ public class GameManager : MonoBehaviour
 
         // UI
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
-        _clickMarker = GameObject.Find("ClickMarker");
-        _executeButton = GameObject.Find("ExecuteButton");
-        _actionMask = _executeButton.transform.parent.Find("ActionMask").gameObject;
-        _audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();
-        _buttonBorder = _executeButton.transform.Find("ButtonBorder").gameObject;
+        _clickMarker = GameObject.Find("ClickMarker");        
+        _actionMask = GameObject.Find("ExecuteButton").transform.parent.Find("ActionMask").gameObject;
+        _executeBorder = GameObject.Find("ExecuteButton").transform.Find("ButtonBorder").gameObject;
+        _switchMask = GameObject.Find("SwitchButton").transform.parent.Find("ActionMask").gameObject;
+        _switchBorder = GameObject.Find("SwitchButton").transform.Find("ButtonBorder").gameObject;
+        _audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();        
         _buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
         _coreButton = GameObject.Find("CoreButton").GetComponent<CoreButton>();
        
@@ -127,17 +130,18 @@ public class GameManager : MonoBehaviour
     public void ExecuteOrder()
     {
         _audioUI.PlayOneShot(_buttonClick);
-        _buttonBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
+        _executeBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
 
         this.Wait(MainMenu.ButtonDelay, () => 
         {
-            _buttonBorder.transform.DOScaleX(1f, 0.1f);
+            _executeBorder.transform.DOScaleX(1f, 0.1f);
         });
 
         InAction = true;
 
         // Disable buttons
         _actionMask.transform.localScale = Vector3.one;
+        _switchMask.transform.localScale = Vector3.one;
 
         // Player actions
         _playerController.Move();
@@ -189,6 +193,8 @@ public class GameManager : MonoBehaviour
 
             // Enable buttons
             _actionMask.transform.localScale = Vector3.zero;
+            _switchMask.transform.localScale = Vector3.zero;
+
             TimeValue = TurnTime;
             _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(TimeValue).ToString("ss\\'ff");
             InAction = false;
@@ -219,5 +225,26 @@ public class GameManager : MonoBehaviour
             // Update player weapon counters
             _weaponUI.DecreaseCounter();
         });
+    }
+
+    public void SwitchUnit()
+    {
+        _cameraFocus.transform.position = _AIControllersPlayer[_currentUnit].transform.position;
+        if (_currentUnit <= _AIControllersPlayer.Count)
+        {
+            _currentUnit++;
+        }
+        else
+        {
+            _currentUnit = 0;
+        }            
+
+        _audioUI.PlayOneShot(_buttonClick);
+        _switchBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
+
+        this.Wait(MainMenu.ButtonDelay, () => 
+        {
+            _switchBorder.transform.DOScaleX(1f, 0.1f);
+        });       
     }
 }

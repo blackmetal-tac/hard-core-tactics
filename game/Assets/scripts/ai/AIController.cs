@@ -149,15 +149,23 @@ public class AIController : MonoBehaviour
                 UnitManagerP.UnitShield.TurnOnOff();
                 _oneTime = false;
                 _shieldEnable = false;
-            }  
+            } 
         } 
     }
 
     public void StartAction()
     {
-        if (transform.name != "Enemy" || UnitsFormation != FormationType.Free)
+        if (transform.name != "Enemy")
         {
-            KeepFormation();
+            if (UnitsFormation != FormationType.Free && _playerController != null && _playerController.UnitAgent.speed > 0.1f)
+            {
+                KeepFormation();
+            }
+
+            if (UnitsFormation != FormationType.Free && _enemyController != null && _enemyController.UnitAgent.speed > 0.1f)
+            {
+                KeepFormation();
+            }            
         }
         UnitManagerP.StartAction();
     }
@@ -200,8 +208,8 @@ public class AIController : MonoBehaviour
         {  
             UnitAgent.stoppingDistance = 0f;            
             UnitAgent.SetDestination(new Vector3(
-                _formationPos.position.x + Random.Range(-1, 1),
-                _formationPos.position.y + Random.Range(-1, 1),
+                _formationPos.position.x + Random.Range(-0.5f, 0.5f),
+                _formationPos.position.y + Random.Range(-0.5f, 0.5f),
                 _formationPos.position.z));
 
             UnitManagerP.MoveSpeed = 2 * UnitManagerP.GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            

@@ -115,7 +115,7 @@ public class WPNManager : MonoBehaviour
             _lineRenderer.endWidth = 0f;
             _projectileSpeed = 0;
             _recoil = 0;            
-        }
+        }        
     }
 
     void Update()
@@ -131,6 +131,12 @@ public class WPNManager : MonoBehaviour
     // Set spawning projectile, fire point, delay between bursts, number of shots, fire rate
     public void FireBurst(UnitManager target)
     {
+        if (!_oneTime)
+        {
+            LastBurstRandom(_fireDelay);
+            _oneTime = true;
+        }
+
         if (ProjectileTypeP == ProjectileType.Laser)
         {
             FireLaser(target);
@@ -155,24 +161,21 @@ public class WPNManager : MonoBehaviour
         {
             if (ProjectileTypeP == ProjectileType.Bullet)
             {
-                StartCoroutine(FireBulletCoroutine(target));
-                LastBurst = Time.time;
+                StartCoroutine(FireBulletCoroutine(target));                
             }
             else if (ProjectileTypeP == ProjectileType.Missile && !Homing)
             {
-                StartCoroutine(FireMissilesCoroutine(target));                
-                LastBurst = Time.time;
+                StartCoroutine(FireMissilesCoroutine(target));
             }
             else if (ProjectileTypeP == ProjectileType.Missile && Homing)
             {
-                StartCoroutine(FireHMissilesCoroutine(target));
-                LastBurst = Time.time;
+                StartCoroutine(FireHMissilesCoroutine(target));                
             }
             else if (ProjectileTypeP == ProjectileType.AMS && TargetAMS != null)
             {
-                StartCoroutine(FireAMSCoroutine());                
-                LastBurst = Time.time;
+                StartCoroutine(FireAMSCoroutine());
             }
+            LastBurstRandom(0);
         }
     }
 
@@ -192,12 +195,6 @@ public class WPNManager : MonoBehaviour
         if (_laserOn)
         {            
             DOTween.To(() => _laserWidth, x => _laserWidth = x, _damage * BurstSize, _fireDelay / 6);
-
-            if (!_oneTime)
-            {
-
-                _oneTime = true;
-            }
 
             // Deal laser damage            
             if (Physics.Raycast(FirePoint.transform.position, FirePoint.transform.forward,
@@ -227,7 +224,6 @@ public class WPNManager : MonoBehaviour
         else
         {
             DOTween.To(() => _laserWidth, x => _laserWidth = x, 0f, _fireDelay / 6);
-            _oneTime = false;
         }
 
         // Shoot laser  
@@ -240,8 +236,13 @@ public class WPNManager : MonoBehaviour
             {
                 _laserOn = false;
             });  
-            LastBurst = Time.time;
+            LastBurstRandom(0);
         }
+    }
+
+    private void LastBurstRandom(float delay)
+    {
+        LastBurst = Time.time - delay + Random.Range(0, 0.3f);
     }
     
     // Coroutine for separate bursts of bullets
@@ -363,5 +364,6 @@ public class WPNManager : MonoBehaviour
             TargetAMS = null;
             _crosshairAMS.transform.localScale = Vector3.zero;
         }
+        _oneTime = false;
     }
 }

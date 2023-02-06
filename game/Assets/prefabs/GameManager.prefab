@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CrosshairBars: 0.1
   LoadTime: 2
+  TimeValue: 0
   TurnTime: 8
   InAction: 0
   UnitsFormations:
@@ -58,28 +59,28 @@ MonoBehaviour:
     - {x: 10, y: 0, z: 0}
   - FormationName: Arrow
     Positions:
-    - {x: -5, y: 0, z: -1}
-    - {x: 5, y: 0, z: -1}
-    - {x: -10, y: 0, z: -2}
-    - {x: 10, y: 0, z: -2}
+    - {x: -5, y: 0, z: -2}
+    - {x: 5, y: 0, z: -2}
+    - {x: -10, y: 0, z: -4}
+    - {x: 10, y: 0, z: -4}
   - FormationName: Wedge
     Positions:
-    - {x: -5, y: 0, z: 1}
-    - {x: 5, y: 0, z: 1}
-    - {x: -10, y: 0, z: 2}
-    - {x: 10, y: 0, z: 2}
+    - {x: -5, y: 0, z: 2}
+    - {x: 5, y: 0, z: 2}
+    - {x: -10, y: 0, z: 4}
+    - {x: 10, y: 0, z: 4}
   - FormationName: Staggered
     Positions:
-    - {x: -5, y: 0, z: -1}
-    - {x: 5, y: 0, z: -1}
-    - {x: -10, y: 0, z: 1}
-    - {x: 10, y: 0, z: 1}
+    - {x: -5, y: 0, z: -2}
+    - {x: 5, y: 0, z: -2}
+    - {x: -10, y: 0, z: 2}
+    - {x: 10, y: 0, z: 2}
   - FormationName: Free
     Positions:
-    - {x: -5, y: 0, z: -1}
-    - {x: 5, y: 0, z: -1}
-    - {x: -10, y: 0, z: 1}
-    - {x: 10, y: 0, z: 1}
+    - {x: -5, y: 0, z: -2}
+    - {x: 5, y: 0, z: -2}
+    - {x: -10, y: 0, z: 2}
+    - {x: 10, y: 0, z: 2}
 --- !u!1 &648605811298458055
 GameObject:
   m_ObjectHideFlags: 0

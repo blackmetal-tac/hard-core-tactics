@@ -415,8 +415,7 @@ public class UnitManager : MonoBehaviour
         Vector3 spread = new(
                 Random.Range((-MoveSpeed * SpreadMult) - Spread, (MoveSpeed * SpreadMult) + Spread),
                 Random.Range((-MoveSpeed * SpreadMult) - Spread / 2, (MoveSpeed * SpreadMult) + Spread / 2),
-                Random.Range((-MoveSpeed * SpreadMult) - Spread, (MoveSpeed * SpreadMult) + Spread));
-        
+                Random.Range((-MoveSpeed * SpreadMult) - Spread, (MoveSpeed * SpreadMult) + Spread));        
         return spread;
     }
     
