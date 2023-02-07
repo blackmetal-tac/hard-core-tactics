@@ -1,34 +1,50 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using DG.Tweening;
 using static GameManager;
 
 public class AIController : MonoBehaviour
 {	
+    // Units formation
     public enum FormationType { Line, Arrow, Wedge, Staggered, Free }
     public FormationType UnitsFormation;
-    [HideInInspector] public NavMeshAgent UnitAgent;
-    [HideInInspector] public UnitManager UnitManagerP;
     [HideInInspector] public List<Transform> SquadPositions = new List<Transform>();
-    private Transform _formationPos;
+    private Transform _formationPos;    
+
+    [HideInInspector] public NavMeshAgent UnitAgent;
+    [HideInInspector] public UnitManager UnitManagerP;    
+    
     private GameManager _gameManager;    
-    private PlayerController _playerController;
-    private AIController _enemyController;
+    private Camera _camMain; 
+    private AIController _playerController, _enemyController;
 
     // Move parameters
+    private GameObject _clickMarker, _crosshair;  
+    [SerializeField] private LayerMask _ignoreLayers;
+    private LineRenderer _walkPath;  
     private readonly int _moveOffset = 15;
     private bool _oneTime, _shieldEnable;
-    private static float _shieldTreshold = 0.25f;
+
+    private float _crosshairSize;
+    private readonly float _crosshairScale = 0.15f;
+    private static float _shieldTreshold = 0.25f;    
 
     void Awake()
     {
-        UnitManagerP = GetComponentInChildren<UnitManager>();
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        UnitManagerP = GetComponentInChildren<UnitManager>();        
 
         // Set target to shoot
         if (transform.name == "Enemy")
         {
             UnitManagerP.Target = GameObject.Find("PlayerSquad").transform.Find("Player").GetComponentInChildren<UnitManager>();
+            DefineFormation();
+        }
+        else if (transform.name == "Player")
+        {
+            UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
             DefineFormation();
         }
         else if (transform.parent.name == "EnemySquad")
@@ -39,7 +55,7 @@ public class AIController : MonoBehaviour
         }		
         else if (transform.parent.name == "PlayerSquad")
         {
-            _playerController = transform.parent.Find("Player").GetComponent<PlayerController>();
+            _playerController = transform.parent.Find("Player").GetComponent<AIController>();
             UnitsFormation = (FormationType)_playerController.UnitsFormation;
             SetTargets("EnemySquad");
         }
@@ -48,6 +64,20 @@ public class AIController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {        
+        if (transform.name == "Player")
+        {
+            _camMain = Camera.main;
+            _crosshair = GameObject.Find("Crosshair");
+            _walkPath = GetComponent<LineRenderer>();
+            NavMesh.avoidancePredictionTime = 5;	
+
+            // Path
+            _clickMarker = GameObject.Find("ClickMarker");   
+            _walkPath.startWidth = 0.02f;
+            _walkPath.endWidth = 0.02f;
+            _walkPath.positionCount = 0;	
+        }
+
         UnitAgent = GetComponent<NavMeshAgent>();        
         UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);     
 
@@ -59,6 +89,56 @@ public class AIController : MonoBehaviour
 
     void Update()
     {
+        if (transform.name == "Player")
+        {
+            // Mouse click
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (EventSystem.current.IsPointerOverGameObject())
+                    return;                
+
+                if (!_gameManager.InAction)
+                {
+                    MoveToClick();
+                }
+            }
+
+            // Draw player path
+            if (UnitAgent.hasPath)
+            {
+                DrawPath();
+            }
+
+            if (UnitManagerP.IsDead)
+            {
+                _walkPath.startWidth = 0;
+                _walkPath.endWidth = 0;
+                _clickMarker.transform.localScale = Vector3.zero;
+            }
+
+            if (!UnitManagerP.Target.IsDead)
+            {
+                // Dynamic _crosshair
+                if (!_gameManager.InAction)
+                {
+                    _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + UnitManagerP.MoveSpeed 
+                        * UnitManagerP.SpreadMult * 1.5f, Time.deltaTime * 3);
+                }
+                else
+                {
+                    _crosshairSize = Mathf.Lerp(_crosshairSize, _crosshairScale + UnitManagerP.Spread / 8, Time.deltaTime * 3);                
+                }
+                _crosshair.transform.localScale = _crosshairSize * Vector3.one;
+
+                // Crosshair position
+                _crosshair.transform.position = _camMain.WorldToScreenPoint(UnitManagerP.Target.transform.position);
+            }
+            else
+            {
+                _crosshair.transform.localScale = Vector3.zero;
+            }
+        }
+
         if (UnitManagerP.UnitShield.HP < _shieldTreshold && Time.time > _gameManager.LoadTime && !_oneTime
             && UnitManagerP.UnitShield.DownTimer <= 0)
         {      
@@ -102,53 +182,95 @@ public class AIController : MonoBehaviour
         }
     }
 
+    private void MoveToClick()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~_ignoreLayers);        
+
+        if (isHit)
+        {   
+            _clickMarker.transform.position = hit.point;
+            _clickMarker.transform.localScale = Vector3.zero;
+            _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.5f);
+            UnitManagerP.SetDestination(hit.point, UnitAgent);
+        }       
+    }
+
+    // Draw player path
+    public void DrawPath()
+    {
+        _walkPath.startWidth = 0.02f;
+        _walkPath.endWidth = 0.02f;
+        _walkPath.positionCount = UnitAgent.path.corners.Length;
+        _walkPath.SetPosition(0, transform.position);
+
+        if (UnitAgent.path.corners.Length < 2)
+        {
+            return;
+        } 
+
+        for (int i = 1; i < UnitAgent.path.corners.Length; i++)
+        {
+            Vector3 pointPosition = new(UnitAgent.path.corners[i].x, UnitAgent.path.corners[i].y,
+                    UnitAgent.path.corners[i].z);
+            _walkPath.SetPosition(i, pointPosition);
+            _clickMarker.transform.position = Vector3.MoveTowards(_clickMarker.transform.position, UnitAgent.destination, 
+            Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, UnitAgent.destination) * 4);
+        }
+        _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));        
+    }
+
     // Action phase
     public void Move()
     {   
         if (UnitManagerP != null || !UnitManagerP.Target.IsDead)
         {
-            if (transform.name == "Enemy" || UnitsFormation == FormationType.Free)
-            {
-                SetPath();
-            }
             UnitAgent.speed = UnitManagerP.MoveSpeed;        
             UnitManagerP.UnitShield.TurnOnOff();   
-            UnitManagerP.CoreOverdrive();             
+            UnitManagerP.CoreOverdrive();  
 
-            // Change fire modes depending on heat or enable weapon after overheat
-            foreach (WPNManager weapon in UnitManagerP.WeaponList)
+            if (transform.name != "Player")    
             {
-                if (weapon != null && UnitManagerP.CoolingDownTimer > 3)
+                if (transform.name == "Enemy" || UnitsFormation == FormationType.Free)
                 {
-                    weapon.BurstSize = weapon.WeaponModesP[2].FireMode;
-                }
-                else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
-                {
-                    int changeMode = Random.Range(1, weapon.WeaponModesP.Count);
-                    weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
-                }
-                else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold)
-                {
-                    int changeMode = Random.Range(0, weapon.WeaponModesP.Count - 1);
-                    weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
-                }
-            }        
+                    SetPath();
+                }      
 
-            // Shield management
-            if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold
-                && UnitManagerP.UnitShield.HP > _shieldTreshold)
-            {    
-                UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[2]);
-                UnitManagerP.UnitShield.TurnOnOff();
-                _oneTime = false;
-                _shieldEnable = false;
-            }
-            else if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.HP > _shieldTreshold)
-            { 
-                UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
-                UnitManagerP.UnitShield.TurnOnOff();
-                _oneTime = false;
-                _shieldEnable = false;
+                // Change fire modes depending on heat or enable weapon after overheat
+                foreach (WPNManager weapon in UnitManagerP.WeaponList)
+                {
+                    if (weapon != null && UnitManagerP.CoolingDownTimer > 3)
+                    {
+                        weapon.BurstSize = weapon.WeaponModesP[2].FireMode;
+                    }
+                    else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
+                    {
+                        int changeMode = Random.Range(1, weapon.WeaponModesP.Count);
+                        weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
+                    }
+                    else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold)
+                    {
+                        int changeMode = Random.Range(0, weapon.WeaponModesP.Count - 1);
+                        weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
+                    }
+                }        
+
+                // Shield management
+                if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold
+                    && UnitManagerP.UnitShield.HP > _shieldTreshold)
+                {    
+                    UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[2]);
+                    UnitManagerP.UnitShield.TurnOnOff();
+                    _oneTime = false;
+                    _shieldEnable = false;
+                }
+                else if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.HP > _shieldTreshold)
+                { 
+                    UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
+                    UnitManagerP.UnitShield.TurnOnOff();
+                    _oneTime = false;
+                    _shieldEnable = false;
+                } 
             } 
         } 
     }

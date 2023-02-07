@@ -7,6 +7,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private int _mapSize;
     private GameManager _gameManager;
     private GameObject _cameraFocus, _player;
+    [HideInInspector] public GameObject Destination;
     private PlayerInput _playerInput;
     private InputAction _move, _look, _rightClick, _middleClick, _rotate, _scrollWheel, _altAction;    
     private float _rotation, _angle;
@@ -24,7 +25,7 @@ public class CameraMovement : MonoBehaviour
     void Start()
     {
         _player = GameObject.Find("Player");
-        _cameraFocus.transform.position = _player.transform.position;
+        _cameraFocus.transform.position = _player.transform.position;        
     }
 
     void OnEnable()
@@ -81,11 +82,23 @@ public class CameraMovement : MonoBehaviour
             {
                 Rotate();
             }            
-        }               
+        }     
+        
+        if (Destination != null)
+        {
+            _cameraFocus.transform.position = Vector3.Slerp(_cameraFocus.transform.position, Destination.transform.position, Time.deltaTime * 3);
+            if (_cameraFocus.transform.position == Destination.transform.position)
+            {
+                Destination = null;
+            }
+        }          
     }
 
     public void Move()
     {
+        // Stop following
+        Destination = null;
+
         if (_move.IsPressed())
         {
             Vector2 moveDirection = _move.ReadValue<Vector2>();

@@ -9,11 +9,11 @@ using OWS.ObjectPooling;
 public class GameManager : MonoBehaviour
 {
     private GameObject _executeBorder, _actionMask, _switchBorder, _switchMask, _enemy, _clickMarker, _projectileOBJ,
-        _playerSquad, _enemySquad, _cameraFocus;
-    private PlayerController _playerController;
+        _playerSquad, _enemySquad;    
     private List<AIController> _AIControllersPlayer = new List<AIController>(), _AIControllersEnemy = new List<AIController>();    
     private WeaponUI _weaponUI;
     private CoreButton _coreButton;
+    private CameraMovement _cameraMov;
     private int _currentUnit;
 
     public ObjectPool<PoolObject> BulletsPool, MissilesPool, AmsPool, ExplosionPool;
@@ -66,10 +66,9 @@ public class GameManager : MonoBehaviour
         DOTween.SetTweensCapacity(800, 50);
         _playerSquad = GameObject.Find("PlayerSquad");
         _enemySquad = GameObject.Find("EnemySquad");
-        _cameraFocus = GameObject.Find("CameraFocus");
-        _playerController = _playerSquad.GetComponentInChildren<PlayerController>();        
+        _cameraMov = Camera.main.GetComponent<CameraMovement>();
         
-        for (int i = 1; i < _playerSquad.transform.childCount; i++)
+        for (int i = 0; i < _playerSquad.transform.childCount; i++)
         {            
             _AIControllersPlayer.Add(_playerSquad.transform.GetChild(i).GetComponent<AIController>());
         }
@@ -143,8 +142,7 @@ public class GameManager : MonoBehaviour
         _actionMask.transform.localScale = Vector3.one;
         _switchMask.transform.localScale = Vector3.one;
 
-        // Player actions
-        _playerController.Move();
+        // Player actions        
         foreach (AIController controller in _AIControllersPlayer)
         {
             controller.Move();
@@ -163,11 +161,6 @@ public class GameManager : MonoBehaviour
             TimeValue -= Time.deltaTime;
 
             // Player actions
-            if (!_playerController.UnitManagerP.IsDead)
-            {
-                _playerController.UnitManagerP.StartAction();
-            }
-
             foreach (AIController controller in _AIControllersPlayer)
             {
                 if (!controller.UnitManagerP.IsDead)
@@ -200,11 +193,6 @@ public class GameManager : MonoBehaviour
             InAction = false;
 
             // Player actions end
-            if (!_playerController.UnitManagerP.IsDead)
-            {
-                _playerController.EndMove();
-            }
-
             foreach (AIController controller in _AIControllersPlayer)
             {
                 if (!controller.UnitManagerP.IsDead)
@@ -228,16 +216,20 @@ public class GameManager : MonoBehaviour
     }
 
     public void SwitchUnit()
-    {
-        _cameraFocus.transform.position = _AIControllersPlayer[_currentUnit].transform.position;
-        if (_currentUnit <= _AIControllersPlayer.Count)
+    {        
+        if (_currentUnit < _AIControllersPlayer.Count - 1)
         {
             _currentUnit++;
         }
         else
         {
             _currentUnit = 0;
-        }            
+        }
+
+        Debug.Log(_AIControllersPlayer.Count);
+        Debug.Log(_currentUnit);
+
+        _cameraMov.Destination = _AIControllersPlayer[_currentUnit].gameObject;   
 
         _audioUI.PlayOneShot(_buttonClick);
         _switchBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
