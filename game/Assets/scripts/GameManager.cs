@@ -226,10 +226,17 @@ public class GameManager : MonoBehaviour
             _currentUnit = 0;
         }
 
-        Debug.Log(_AIControllersPlayer.Count);
-        Debug.Log(_currentUnit);
+        // Move camera to next unit
+        _cameraMov.Destination = _AIControllersPlayer[_currentUnit].gameObject; 
 
-        _cameraMov.Destination = _AIControllersPlayer[_currentUnit].gameObject;   
+        // Swap units parens
+        _AIControllersPlayer[_currentUnit - 1].UnitManagerP.transform.SetParent(_AIControllersPlayer[_currentUnit].transform);
+        _AIControllersPlayer[_currentUnit - 1].UnitManagerP.ShrinkBar.ToggleUI();
+        _AIControllersPlayer[_currentUnit].UnitManagerP.transform.SetParent(_AIControllersPlayer[_currentUnit - 1].transform);
+        _AIControllersPlayer[_currentUnit].UnitManagerP.ShrinkBar.ToggleUI();
+
+        // Update UI for new unit
+        _weaponUI.UpdateUI();
 
         _audioUI.PlayOneShot(_buttonClick);
         _switchBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);

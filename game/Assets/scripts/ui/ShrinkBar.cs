@@ -42,30 +42,29 @@ public class ShrinkBar : MonoBehaviour
         _camMain = Camera.main;
         _shrinkSpeed = 0.5f;
 
-        // Disable secondary bars for active unit
+        // Player shield
+        _shieldCanvasGroup = GameObject.Find("ShieldIndicator").GetComponent<CanvasGroup>();
+        _shieldImageInd = GameObject.Find("ShieldIndicator").transform.Find("Health").GetComponent<Image>();
+        _shieldDmgImageInd = GameObject.Find("ShieldIndicator").transform.Find("Damage").GetComponent<Image>();            
+        
+        // Player health
+        _healthCanvasGroup = GameObject.Find("HealthIndicator").GetComponent<CanvasGroup>();
+        _healthImageInd = GameObject.Find("HealthIndicator").transform.Find("Health").GetComponent<Image>();
+        _healthDmgImageInd = GameObject.Find("HealthIndicator").transform.Find("Damage").GetComponent<Image>();            
+
+        // Player heat
+        _heatImageInd = GameObject.Find("HeatIndicator").transform.Find("Health").GetComponent<Image>();
+        _heatCalculation = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<Image>();
+        _heatThreshold = GameObject.Find("HeatIndicator").transform.Find("Threshold").GetComponent<Image>();    
+        _heatThreshold.fillAmount = 1 - _unitManager.HeatTreshold; 
+
+        // Player stability 
+        _stabCanvasGroup = GameObject.Find("Stability").GetComponent<CanvasGroup>();
+        _stabImageInd = GameObject.Find("Stability").transform.Find("Health").GetComponent<Image>();   
+        
         if (_unitManager.transform.parent.name == "Player")
         {
-            _unitUI.GetComponent<ScaleUI>().Player = true;
-
-            // Player shield
-            _shieldCanvasGroup = GameObject.Find("ShieldIndicator").GetComponent<CanvasGroup>();
-            _shieldImageInd = GameObject.Find("ShieldIndicator").transform.Find("Health").GetComponent<Image>();
-            _shieldDmgImageInd = GameObject.Find("ShieldIndicator").transform.Find("Damage").GetComponent<Image>();            
-        
-            // Player health
-            _healthCanvasGroup = GameObject.Find("HealthIndicator").GetComponent<CanvasGroup>();
-            _healthImageInd = GameObject.Find("HealthIndicator").transform.Find("Health").GetComponent<Image>();
-            _healthDmgImageInd = GameObject.Find("HealthIndicator").transform.Find("Damage").GetComponent<Image>();            
-
-            // Player heat
-            _heatImageInd = GameObject.Find("HeatIndicator").transform.Find("Health").GetComponent<Image>();
-            _heatCalculation = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<Image>();
-            _heatThreshold = GameObject.Find("HeatIndicator").transform.Find("Threshold").GetComponent<Image>();    
-            _heatThreshold.fillAmount = 1 - _unitManager.HeatTreshold; 
-
-            // Player stability 
-            _stabCanvasGroup = GameObject.Find("Stability").GetComponent<CanvasGroup>();
-            _stabImageInd = GameObject.Find("Stability").transform.Find("Health").GetComponent<Image>();   
+            ToggleUI();
         }
     }
 
@@ -95,7 +94,7 @@ public class ShrinkBar : MonoBehaviour
         _unitShieldGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _shieldImage.fillAmount) * 0.6f);
 
         // Player UI
-        if (_unitManager.transform.parent.name == "Player")
+        if (_unitManager.transform.parent.name == "Player" && _shieldCanvasGroup != null)
         {
             _shieldCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _shieldImage.fillAmount) * 0.6f);
             Shrink(_shieldImageInd, _shieldDmgImageInd, _unitManager.UnitShield.HP, true);
@@ -108,7 +107,7 @@ public class ShrinkBar : MonoBehaviour
         _unitHealthGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _healthImage.fillAmount) * 0.6f);
 
         // Player UI
-        if (_unitManager.transform.parent.name == "Player")
+        if (_unitManager.transform.parent.name == "Player" && _healthCanvasGroup != null)
         {
             _healthCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _healthImage.fillAmount) * 0.6f);
             Shrink(_healthImageInd, _healthDmgImageInd, _unitManager.HP, false);
@@ -134,6 +133,20 @@ public class ShrinkBar : MonoBehaviour
             float stab = _unitManager.Spread * 0.5f + _unitManager.MoveSpeed * (0.2f + _unitManager.SpreadMult);
             _stabCanvasGroup.alpha = _gameManager.CrosshairBars + stab;
             _stabImageInd.fillAmount = 1 - stab;
+        }
+    }
+
+    public void ToggleUI()
+    {
+        // Disable secondary bars for active unit
+        _unitUI.GetComponent<ScaleUI>().Player = !_unitUI.GetComponent<ScaleUI>().Player;
+        if (_unitUI.GetComponent<ScaleUI>().Player)
+        {
+            _unitUI.transform.localScale = Vector3.zero;
+        }
+        else
+        {
+            _unitUI.transform.localScale = Vector3.one;
         }
     }
 

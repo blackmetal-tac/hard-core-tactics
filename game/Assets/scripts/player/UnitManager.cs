@@ -23,7 +23,7 @@ public class UnitManager : MonoBehaviour
     [Range(0, 20)] public int WalkDistance;
 
 	private GameManager _gameManager;
-    private ShrinkBar _shrinkBar;
+    [HideInInspector] public ShrinkBar ShrinkBar;
     private NavMeshAgent _navMeshAgent;
     private Vector3 _direction; // Rotate body to the enemy
     private readonly float _rotSpeed = 1f;
@@ -85,7 +85,7 @@ public class UnitManager : MonoBehaviour
         _clickMarker = GameObject.Find("ClickMarker"); 
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
-        _shrinkBar = GetComponentInChildren<ShrinkBar>();        
+        ShrinkBar = GetComponentInChildren<ShrinkBar>();        
         UnitShield.ShieldID = transform.parent.name;
         UnitShield.UnitManagerP = this;       
         Cooling = CoolingModesP[0].Cooling;
@@ -132,10 +132,10 @@ public class UnitManager : MonoBehaviour
             {
                 Heat = 0;
             }
-            _shrinkBar.UpdateHeat();
+            ShrinkBar.UpdateHeat();
         });
 
-        _shrinkBar.UpdateStability();
+        ShrinkBar.UpdateStability();
 
         // Aim at the enemy ???
         foreach (WPNManager weapon in WeaponList)
@@ -149,13 +149,13 @@ public class UnitManager : MonoBehaviour
 
     void Update()
     {
-        _shrinkBar.UpdateShield();
-        _shrinkBar.UpdateHealth();
+        ShrinkBar.UpdateShield();
+        ShrinkBar.UpdateHealth();
 
         if (Spread > 0)
         {
             Spread -= Time.deltaTime;
-            _shrinkBar.UpdateStability();
+            ShrinkBar.UpdateStability();
         }                  
       
         if (MissileLockTimer > 0)
@@ -190,7 +190,7 @@ public class UnitManager : MonoBehaviour
             if (Heat > 0)
             {
                 Heat -= Time.deltaTime * Cooling;                
-                _shrinkBar.UpdateHeat();
+                ShrinkBar.UpdateHeat();
 
                 // Roll Heat penalty
                 if (Heat > HeatTreshold && Time.time > _lastCheck + _heatCheckTime) 
@@ -239,14 +239,14 @@ public class UnitManager : MonoBehaviour
             {
                 navAgent.SetDestination(movePoint);
                 MoveSpeed = pathLenght / _gameManager.TurnTime;      
-                _shrinkBar.UpdateStability();                       
+                ShrinkBar.UpdateStability();                       
             }
             else
             {
                 Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * WalkDistance);
                 navAgent.SetDestination(finalPoint);
                 MoveSpeed = WalkDistance / _gameManager.TurnTime;     
-                _shrinkBar.UpdateStability();                        
+                ShrinkBar.UpdateStability();                        
                 break;
             }
         }
