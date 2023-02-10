@@ -216,24 +216,20 @@ public class GameManager : MonoBehaviour
     }
 
     public void SwitchUnit()
-    {        
+    {
         if (_currentUnit < _AIControllersPlayer.Count - 1)
         {
             _currentUnit++;
+            SetControllers(_currentUnit);
         }
         else
         {
             _currentUnit = 0;
+            SetControllers(_AIControllersPlayer.Count);
         }
 
         // Move camera to next unit
-        _cameraMov.Destination = _AIControllersPlayer[_currentUnit].gameObject; 
-
-        // Swap units parens
-        _AIControllersPlayer[_currentUnit - 1].UnitManagerP.transform.SetParent(_AIControllersPlayer[_currentUnit].transform);
-        _AIControllersPlayer[_currentUnit - 1].UnitManagerP.ShrinkBar.ToggleUI();
-        _AIControllersPlayer[_currentUnit].UnitManagerP.transform.SetParent(_AIControllersPlayer[_currentUnit - 1].transform);
-        _AIControllersPlayer[_currentUnit].UnitManagerP.ShrinkBar.ToggleUI();
+        _cameraMov.Destination = _AIControllersPlayer[_currentUnit].gameObject;
 
         // Update UI for new unit
         _weaponUI.UpdateUI();
@@ -245,5 +241,17 @@ public class GameManager : MonoBehaviour
         {
             _switchBorder.transform.DOScaleX(1f, 0.1f);
         });       
+    }
+
+    private void SetControllers(int index)
+    {
+        _AIControllersPlayer[index - 1].name = _AIControllersPlayer[_currentUnit].name;
+        _AIControllersPlayer[_currentUnit].name = "Player";
+        _AIControllersPlayer[index - 1].UpdateManager();
+        _AIControllersPlayer[_currentUnit].UpdateManager();
+        _AIControllersPlayer[index - 1].SetUnitsPos();
+        _AIControllersPlayer[_currentUnit].SetUnitsPos();
+        _AIControllersPlayer[index - 1].UnitManagerP.ShrinkBar.ToggleUI();
+        _AIControllersPlayer[_currentUnit].UnitManagerP.ShrinkBar.ToggleUI();
     }
 }

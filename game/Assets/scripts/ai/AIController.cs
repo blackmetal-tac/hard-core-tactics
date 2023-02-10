@@ -34,37 +34,14 @@ public class AIController : MonoBehaviour
     void Awake()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        UnitManagerP = GetComponentInChildren<UnitManager>();        
-
-        // Set target to shoot
-        if (transform.name == "Enemy")
-        {
-            UnitManagerP.Target = GameObject.Find("PlayerSquad").transform.Find("Player").GetComponentInChildren<UnitManager>();
-            DefineFormation();
-        }
-        else if (transform.name == "Player")
-        {
-            UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
-            DefineFormation();
-        }
-        else if (transform.parent.name == "EnemySquad")
-        {
-            _enemyController = transform.parent.Find("Enemy").GetComponent<AIController>(); 
-            UnitsFormation = _enemyController.UnitsFormation;
-            SetTargets("PlayerSquad");        
-        }		
-        else if (transform.parent.name == "PlayerSquad")
-        {
-            _playerController = transform.parent.Find("Player").GetComponent<AIController>();
-            UnitsFormation = (FormationType)_playerController.UnitsFormation;
-            SetTargets("EnemySquad");
-        }
+        UnitManagerP = GetComponentInChildren<UnitManager>();
+        UpdateManager();
     }
 
     // Start is called before the first frame update
     void Start()
     {        
-        if (transform.name == "Player")
+        if (transform.parent.name == "PlayerSquad")
         {
             _camMain = Camera.main;
             _crosshair = GameObject.Find("Crosshair");
@@ -81,9 +58,10 @@ public class AIController : MonoBehaviour
         UnitAgent = GetComponent<NavMeshAgent>();        
         UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);     
 
-        if(transform.name != "Enemy")
-        {
-            SetUnitsPos();
+        SetUnitsPos();
+        if(_formationPos != null)
+        {            
+            transform.position = _formationPos.position;
         }       
     }   
 
@@ -326,9 +304,8 @@ public class AIController : MonoBehaviour
 
     public void KeepFormation()
     {        
-        if (transform.name != "Enemy" && UnitManagerP.WalkDistance > 0)
+        if (_formationPos != null && UnitManagerP.WalkDistance > 0)
         {  
-            UnitAgent.stoppingDistance = 0f;            
             UnitAgent.SetDestination(new Vector3(
                 _formationPos.position.x + Random.Range(-0.5f, 0.5f),
                 _formationPos.position.y + Random.Range(-0.5f, 0.5f),
@@ -352,7 +329,7 @@ public class AIController : MonoBehaviour
         return finalPosition;
     }
 
-    private void SetUnitsPos()
+    public void SetUnitsPos()
     {
         if (_playerController != null)
         {  
@@ -360,8 +337,7 @@ public class AIController : MonoBehaviour
             {               
                 if (transform.name == position.name)
                 {                    
-                    _formationPos = position;
-                    transform.position = _formationPos.position;
+                    _formationPos = position;                    
                 }
             }
         }
@@ -372,10 +348,14 @@ public class AIController : MonoBehaviour
             {               
                 if (transform.name == position.name)
                 {                    
-                    _formationPos = position;
-                    transform.position = _formationPos.position;
-                }
+                    _formationPos = position;                    
+                }               
             }
+        }
+
+        if (transform.name == "Player" || transform.name == "Enemy")
+        {
+            _formationPos = null;     
         }
     }
 
@@ -401,11 +381,14 @@ public class AIController : MonoBehaviour
 
     private void DefineFormation()
     {
-        // Get squad positions
-        SquadPositions.Add(transform.Find("Bravo").transform);
-        SquadPositions.Add(transform.Find("Charlie").transform);
-        SquadPositions.Add(transform.Find("Delta").transform);
-        SquadPositions.Add(transform.Find("Echo").transform);
+        if (SquadPositions.Count == 0)
+        {
+            // Get squad positions
+            SquadPositions.Add(transform.Find("Bravo").transform);
+            SquadPositions.Add(transform.Find("Charlie").transform);
+            SquadPositions.Add(transform.Find("Delta").transform);
+            SquadPositions.Add(transform.Find("Echo").transform);
+        }
 
         foreach (Formation formation in _gameManager.UnitsFormations)
         {
@@ -418,6 +401,32 @@ public class AIController : MonoBehaviour
                 }                
             }
         }
+    }
+
+    public void UpdateManager()
+    { 
+        // Set target to shoot
+        if (transform.name == "Enemy")
+        {
+            UnitManagerP.Target = GameObject.Find("PlayerSquad").transform.Find("Player").GetComponentInChildren<UnitManager>();
+        }
+        else if (transform.name == "Player")
+        {
+            UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
+        }
+        else if (transform.parent.name == "EnemySquad")
+        {
+            _enemyController = transform.parent.Find("Enemy").GetComponent<AIController>(); 
+            UnitsFormation = _enemyController.UnitsFormation;
+            SetTargets("PlayerSquad");        
+        }		
+        else if (transform.parent.name == "PlayerSquad")
+        {
+            _playerController = transform.parent.Find("Player").GetComponent<AIController>();
+            UnitsFormation = (FormationType)_playerController.UnitsFormation;
+            SetTargets("EnemySquad");
+        }
+        DefineFormation();
     }
     
     public void EndMove()
