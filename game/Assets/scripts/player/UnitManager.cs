@@ -12,6 +12,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private UnitClass _unitClass;
 	[HideInInspector] public UnitManager Target;
     private GameObject _clickMarker;
+    private AIController _unitController;
     [HideInInspector] public Shield UnitShield;
 	
     // Stats    
@@ -24,7 +25,6 @@ public class UnitManager : MonoBehaviour
 
 	private GameManager _gameManager;
     [HideInInspector] public ShrinkBar ShrinkBar;
-    private NavMeshAgent _navMeshAgent;
     private Vector3 _direction; // Rotate body to the enemy
     private readonly float _rotSpeed = 1f;
     [HideInInspector] public float SpreadMult = 0.1f;
@@ -84,7 +84,7 @@ public class UnitManager : MonoBehaviour
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _clickMarker = GameObject.Find("ClickMarker"); 
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
-        _navMeshAgent = transform.GetComponentInParent<NavMeshAgent>();
+        _unitController = transform.GetComponentInParent<AIController>();
         ShrinkBar = GetComponentInChildren<ShrinkBar>();        
         UnitShield.ShieldID = transform.parent.name;
         UnitShield.UnitManagerP = this;       
@@ -176,8 +176,6 @@ public class UnitManager : MonoBehaviour
     {
         if (!IsDead)
         {
-            // For tests
-            // if (!Target.IsDead && transform.parent.name == "Player")
             if (!Target.IsDead)
             {
                 StartShoot();
@@ -222,45 +220,7 @@ public class UnitManager : MonoBehaviour
             }
         }
         _weaponUI.CoreButtonP.UpdateStatus();
-    }
-
-    // Set move position to maximum move distance (speed)
-    public void SetDestination(Vector3 movePoint, NavMeshAgent navAgent)
-    {
-        NavMeshPath path = new NavMeshPath();
-        navAgent.speed = 0;
-        
-        NavMesh.CalculatePath(transform.position, movePoint, NavMesh.AllAreas, path);
-        float pathLenght = GetPathLength(path);        
-        for (int i = 0; i < path.corners.Length - 1; i++)
-        {            
-           
-            if (pathLenght <= WalkDistance)
-            {
-                navAgent.SetDestination(movePoint);
-                MoveSpeed = pathLenght / _gameManager.TurnTime;      
-                ShrinkBar.UpdateStability();                       
-            }
-            else
-            {
-                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * WalkDistance);
-                navAgent.SetDestination(finalPoint);
-                MoveSpeed = WalkDistance / _gameManager.TurnTime;     
-                ShrinkBar.UpdateStability();                        
-                break;
-            }
-        }
-    }
-
-    public float GetPathLength(NavMeshPath path)
-    {
-        float lenght = 0;       
-        for (int i = 1; i < path.corners.Length; ++i)
-        {
-            lenght += Vector3.Distance(path.corners[i - 1], path.corners[i]);
-        }
-        return lenght;
-    }
+    }    
 
     // Take damage
     public void TakeDamage(float damage)
@@ -275,8 +235,7 @@ public class UnitManager : MonoBehaviour
         // Death
         if (HP <= 0)
         {
-            IsDead = true;            
-            _navMeshAgent.enabled = false;
+            IsDead = true;
             GetComponent<Collider>().enabled = false;
             transform.localScale = Vector3.zero;
         }
@@ -393,7 +352,7 @@ public class UnitManager : MonoBehaviour
 
             if (transform.parent.name == "Player")
             {                
-                SetDestination(_clickMarker.transform.position, _navMeshAgent);
+                _unitController.SetAgentDestination(_clickMarker.transform.position);
             }                
         }        
     }

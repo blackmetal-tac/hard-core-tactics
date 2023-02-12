@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using DG.Tweening;
 using static GameManager;
@@ -12,6 +13,9 @@ public class AIController : MonoBehaviour
     public FormationType UnitsFormation;
     [HideInInspector] public List<Transform> SquadPositions = new List<Transform>();
     private Transform _formationPos;    
+
+    private PlayerInput _playerInput;
+    private InputAction _leftClick;
 
     [HideInInspector] public NavMeshAgent UnitAgent;
     [HideInInspector] public UnitManager UnitManagerP;    
@@ -34,8 +38,20 @@ public class AIController : MonoBehaviour
     void Awake()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _playerInput = new PlayerInput();
         UnitManagerP = GetComponentInChildren<UnitManager>();
         UpdateManager();
+    }
+
+    void OnEnable()
+    {
+        _leftClick = _playerInput.UI.LeftClick;
+        _leftClick.Enable();
+    }
+
+    void OnDisable()
+    {
+        _leftClick.Disable();
     }
 
     // Start is called before the first frame update
@@ -70,7 +86,7 @@ public class AIController : MonoBehaviour
         if (transform.name == "Player")
         {
             // Mouse click
-            if (Input.GetMouseButtonDown(0))
+            if (_leftClick.WasPressedThisFrame())
             {
                 if (EventSystem.current.IsPointerOverGameObject())
                     return;                
@@ -82,15 +98,10 @@ public class AIController : MonoBehaviour
             }
 
             // Draw player path
-            if (UnitAgent.hasPath)
-            {
-                DrawPath();
-            }
+            DrawPath();
 
             if (UnitManagerP.IsDead)
             {
-                _walkPath.startWidth = 0;
-                _walkPath.endWidth = 0;
                 _clickMarker.transform.localScale = Vector3.zero;
             }
 
@@ -116,47 +127,49 @@ public class AIController : MonoBehaviour
                 _crosshair.transform.localScale = Vector3.zero;
             }
         }
-
-        if (UnitManagerP.UnitShield.HP < _shieldTreshold && Time.time > _gameManager.LoadTime && !_oneTime
-            && UnitManagerP.UnitShield.DownTimer <= 0)
-        {      
-            UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[0]);
-            UnitManagerP.UnitShield.TurnOnOff();
-            _oneTime = true;
-        }
-
-        if (UnitManagerP.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
-            && UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.Regeneration == 0
-            && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
-        {           
-            UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
-            UnitManagerP.UnitShield.TurnOnOff();
-            _shieldEnable = true;
-        }
-        else if (UnitManagerP.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
-            && UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.Regeneration == 0
-            && UnitManagerP.Heat >= UnitManagerP.HeatTreshold)
-        {            
-            UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
-            UnitManagerP.UnitShield.TurnOnOff();
-            _shieldEnable = true;
-        }
-
-        if (UnitManagerP.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
-            && UnitManagerP.UnitShield.DownTimer <= 0
-            && UnitManagerP.Heat >= UnitManagerP.HeatTreshold)
-        {         
-            UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
-            UnitManagerP.UnitShield.TurnOnOff();
-            _shieldEnable = true;
-        }
-
-        // Cooling overdrive
-        if (UnitManagerP.CoolingDownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold 
-        && _gameManager.InAction)
+        else
         {
-            UnitManagerP.Cooling = UnitManagerP.CoolingModesP[1].Cooling; 
-            UnitManagerP.CoolingOverdrive();
+            if (UnitManagerP.UnitShield.HP < _shieldTreshold && Time.time > _gameManager.LoadTime && !_oneTime
+                && UnitManagerP.UnitShield.DownTimer <= 0)
+            {      
+                UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[0]);
+                UnitManagerP.UnitShield.TurnOnOff();
+                _oneTime = true;
+            }
+
+            if (UnitManagerP.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
+                && UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.Regeneration == 0
+                && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
+            {           
+                UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
+                UnitManagerP.UnitShield.TurnOnOff();
+                _shieldEnable = true;
+            }
+            else if (UnitManagerP.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
+                && UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.Regeneration == 0
+                && UnitManagerP.Heat >= UnitManagerP.HeatTreshold)
+            {            
+                UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
+                UnitManagerP.UnitShield.TurnOnOff();
+                _shieldEnable = true;
+            }
+
+            if (UnitManagerP.UnitShield.HP > 0.5f && Time.time > _gameManager.LoadTime && !_shieldEnable
+                && UnitManagerP.UnitShield.DownTimer <= 0
+                && UnitManagerP.Heat >= UnitManagerP.HeatTreshold)
+            {         
+                UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
+                UnitManagerP.UnitShield.TurnOnOff();
+                _shieldEnable = true;
+            }
+
+            // Cooling overdrive
+            if (UnitManagerP.CoolingDownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold 
+            && _gameManager.InAction)
+            {
+                UnitManagerP.Cooling = UnitManagerP.CoolingModesP[1].Cooling; 
+                UnitManagerP.CoolingOverdrive();
+            }
         }
     }
 
@@ -170,32 +183,76 @@ public class AIController : MonoBehaviour
             _clickMarker.transform.position = hit.point;
             _clickMarker.transform.localScale = Vector3.zero;
             _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.5f);
-            UnitManagerP.SetDestination(hit.point, UnitAgent);
+            SetAgentDestination(hit.point);
         }       
+    }
+
+    // Set move position to maximum move distance (speed)
+    public void SetAgentDestination(Vector3 movePoint)
+    {        
+        UnitAgent.speed = 0; 
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, movePoint, NavMesh.AllAreas, path);
+        float pathLenght = GetPathLength(path);        
+        for (int i = 0; i < path.corners.Length - 1; i++)
+        {          
+            if (pathLenght <= UnitManagerP.WalkDistance)
+            {
+                UnitAgent.SetDestination(movePoint);
+                UnitManagerP.MoveSpeed = pathLenght / _gameManager.TurnTime;
+                UnitManagerP.ShrinkBar.UpdateStability();                                      
+            }
+            else
+            {
+                Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * UnitManagerP.WalkDistance);
+                UnitAgent.SetDestination(finalPoint);
+                UnitManagerP.MoveSpeed = UnitManagerP.WalkDistance / _gameManager.TurnTime;
+                UnitManagerP.ShrinkBar.UpdateStability();
+                break;
+            }
+        }
+    }
+
+    public float GetPathLength(NavMeshPath path)
+    {
+        float lenght = 0;       
+        for (int i = 1; i < path.corners.Length; ++i)
+        {
+            lenght += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+        }
+        return lenght;
     }
 
     // Draw player path
     public void DrawPath()
     {
-        _walkPath.startWidth = 0.02f;
-        _walkPath.endWidth = 0.02f;
-        _walkPath.positionCount = UnitAgent.path.corners.Length;
-        _walkPath.SetPosition(0, transform.position);
-
-        if (UnitAgent.path.corners.Length < 2)
+        if (UnitAgent.hasPath)
         {
-            return;
-        } 
+            _walkPath.startWidth = 0.02f;
+            _walkPath.endWidth = 0.02f;
+            _walkPath.positionCount = UnitAgent.path.corners.Length;
+            _walkPath.SetPosition(0, transform.position);
 
-        for (int i = 1; i < UnitAgent.path.corners.Length; i++)
-        {
-            Vector3 pointPosition = new(UnitAgent.path.corners[i].x, UnitAgent.path.corners[i].y,
-                    UnitAgent.path.corners[i].z);
-            _walkPath.SetPosition(i, pointPosition);
-            _clickMarker.transform.position = Vector3.MoveTowards(_clickMarker.transform.position, UnitAgent.destination, 
-            Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, UnitAgent.destination) * 4);
+            if (UnitAgent.path.corners.Length < 2)
+            {
+                return;
+            } 
+
+            for (int i = 1; i < UnitAgent.path.corners.Length; i++)
+            {
+                Vector3 pointPosition = new(UnitAgent.path.corners[i].x, UnitAgent.path.corners[i].y,
+                        UnitAgent.path.corners[i].z);
+                _walkPath.SetPosition(i, pointPosition);
+                _clickMarker.transform.position = Vector3.MoveTowards(_clickMarker.transform.position, UnitAgent.destination, 
+                Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, UnitAgent.destination) * 4);
+            }
+            _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
         }
-        _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));        
+        else
+        {
+            _walkPath.startWidth = 0;
+            _walkPath.endWidth = 0;
+        }        
     }
 
     // Action phase
@@ -203,16 +260,17 @@ public class AIController : MonoBehaviour
     {   
         if (UnitManagerP != null || !UnitManagerP.Target.IsDead)
         {
-            UnitAgent.speed = UnitManagerP.MoveSpeed;        
-            UnitManagerP.UnitShield.TurnOnOff();   
-            UnitManagerP.CoreOverdrive();  
+            UnitAgent.speed = UnitManagerP.MoveSpeed;                   
+            UnitManagerP.UnitShield.TurnOnOff();
 
             if (transform.name != "Player")    
             {
                 if (transform.name == "Enemy" || UnitsFormation == FormationType.Free)
                 {
-                    SetPath();
+                    SetPath();                                    
                 }      
+
+                UnitManagerP.CoreOverdrive();
 
                 // Change fire modes depending on heat or enable weapon after overheat
                 foreach (WPNManager weapon in UnitManagerP.WeaponList)
@@ -249,57 +307,68 @@ public class AIController : MonoBehaviour
                     _oneTime = false;
                     _shieldEnable = false;
                 } 
-            } 
+            }
         } 
     }
 
     public void StartAction()
     {
-        if (transform.name != "Enemy")
+        if (UnitsFormation != FormationType.Free && _playerController != null && _playerController.UnitAgent.speed > 0.1f)
         {
-            if (UnitsFormation != FormationType.Free && _playerController != null && _playerController.UnitAgent.speed > 0.1f)
-            {
-                KeepFormation();
-            }
-
-            if (UnitsFormation != FormationType.Free && _enemyController != null && _enemyController.UnitAgent.speed > 0.1f)
-            {
-                KeepFormation();
-            }            
+            KeepFormation();
         }
+
+        if (UnitsFormation != FormationType.Free && _enemyController != null && _enemyController.UnitAgent.speed > 0.1f)
+        {
+            KeepFormation();
+        }            
         UnitManagerP.StartAction();
     }
 
     public void SetPath()
-    {
+    {        
         // Get distance between Target to avoid collision
-        float targetDistance = Vector3.Distance(UnitAgent.destination, UnitManagerP.Target.transform.position);
-
+        float targetDistance = Vector3.Distance(UnitAgent.destination, UnitManagerP.Target.transform.position);        
+        
         if (targetDistance > 10 && UnitManagerP.WalkDistance > 0) // ??? effective range
         {       
             UnitAgent.stoppingDistance = 0f;
             NavMeshPath path = new NavMeshPath();
-            while (UnitManagerP.GetPathLength(path) < 0.5f && UnitManagerP.WalkDistance > 0.5f) // ??? movement behavior
-            {
-                UnitAgent.SetDestination(new Vector3(
+            Vector3 destination = Vector3.zero;
+            
+            // Min movement range
+            while (GetPathLength(path) < 0.5f && UnitManagerP.WalkDistance > 0.5f) // ??? movement behavior
+            {           
+                destination = new Vector3(
                     UnitManagerP.Target.transform.position.x + Random.Range(-_moveOffset, _moveOffset),
-                    UnitManagerP.Target.transform.position.y + Random.Range(-_moveOffset, _moveOffset),
-                    UnitManagerP.Target.transform.position.z));
-                NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
-            }
-            UnitManagerP.SetDestination(UnitAgent.destination, UnitAgent);                        
+                    UnitManagerP.Target.transform.position.y + Random.Range(-_moveOffset, _moveOffset), 
+                    UnitManagerP.Target.transform.position.z);
+                NavMesh.CalculatePath(UnitAgent.transform.position, destination, NavMesh.AllAreas, path);                                   
+            }  
+            SetAgentDestination(destination);
+            UnitAgent.speed = UnitManagerP.MoveSpeed;                                    
         }
         else if (UnitManagerP.WalkDistance > 0)
         {        
-            UnitAgent.stoppingDistance = 1f;      
-            NavMeshPath path = new NavMeshPath();
-            while (UnitManagerP.GetPathLength(path) < 0.5f && UnitManagerP.WalkDistance > 0.5f) // ??? movement behavior
-            {
-                UnitAgent.SetDestination(RandomNavmeshLocation(UnitManagerP.WalkDistance));
-                NavMesh.CalculatePath(UnitAgent.transform.position, UnitAgent.destination, NavMesh.AllAreas, path);                
-            }
-            UnitManagerP.MoveSpeed = UnitManagerP.GetPathLength(path) / _gameManager.TurnTime;             
+            UnitAgent.stoppingDistance = 1f;
+            SetAgentDestination(RandomDirection(RandomNavmeshLocation(UnitManagerP.WalkDistance))); 
+            UnitAgent.speed = UnitManagerP.MoveSpeed;                       
         }
+    }
+
+    private Vector3 RandomDirection(Vector3 target)
+    {
+        NavMeshPath path = new NavMeshPath();
+        Vector3 destination = Vector3.zero;
+
+        // Min movement range
+        while (GetPathLength(path) < 0.5f && UnitManagerP.WalkDistance > 0.5f) // ??? movement behavior
+        {               
+            destination = new Vector3(target.x + Random.Range(-_moveOffset, _moveOffset),
+            target.y + Random.Range(-_moveOffset, _moveOffset), target.z);
+            NavMesh.CalculatePath(UnitAgent.transform.position, destination, NavMesh.AllAreas, path);                
+        }  
+        return destination;
     }
 
     public void KeepFormation()
@@ -311,7 +380,7 @@ public class AIController : MonoBehaviour
                 _formationPos.position.y + Random.Range(-0.5f, 0.5f),
                 _formationPos.position.z));
 
-            UnitManagerP.MoveSpeed = 2 * UnitManagerP.GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
+            UnitManagerP.MoveSpeed = 2 * GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
             UnitAgent.speed = UnitManagerP.MoveSpeed;                                   
         } 
     }
@@ -359,7 +428,7 @@ public class AIController : MonoBehaviour
         }
     }
 
-    private void SetTargets(string enemyTeam)
+    public void SetTargets(string enemyTeam)
     {
         if (transform.name == "Bravo")
         {
@@ -431,7 +500,8 @@ public class AIController : MonoBehaviour
     
     public void EndMove()
     {
-        UnitManagerP.MoveSpeed = 0.1f;        
+        UnitManagerP.MoveSpeed = 0.1f;
+        UnitAgent.ResetPath();        
         UnitManagerP.EndMove();
     }
 }

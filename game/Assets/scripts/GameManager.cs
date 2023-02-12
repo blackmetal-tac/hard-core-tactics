@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Stop game
-        if (_pause.triggered)
+        if (_pause.WasPressedThisFrame())
         {
             _paused = !_paused;
             if (_paused)
@@ -253,5 +253,15 @@ public class GameManager : MonoBehaviour
         _AIControllersPlayer[_currentUnit].SetUnitsPos();
         _AIControllersPlayer[index - 1].UnitManagerP.ShrinkBar.ToggleUI();
         _AIControllersPlayer[_currentUnit].UnitManagerP.ShrinkBar.ToggleUI();
+
+        foreach (AIController controller in _AIControllersPlayer)
+        {
+            //controller.SetTargets("EnemySquad"); 
+        }
+
+        foreach (AIController controller in _AIControllersEnemy)
+        {
+            //controller.SetTargets("PlayerSquad"); 
+        }
     }
 }
