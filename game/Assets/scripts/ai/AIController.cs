@@ -51,7 +51,7 @@ public class AIController : MonoBehaviour
 
     void OnDisable()
     {
-        _leftClick.Disable();
+        _leftClick.Disable();        
     }
 
     // Start is called before the first frame update
@@ -83,7 +83,7 @@ public class AIController : MonoBehaviour
 
     void Update()
     {
-        if (transform.name == "Player")
+        if (transform.name == "Player" && Time.time > _gameManager.LoadTime)
         {
             // Mouse click
             if (_leftClick.WasPressedThisFrame())
@@ -176,7 +176,7 @@ public class AIController : MonoBehaviour
     private void MoveToClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~_ignoreLayers);        
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 100, ~_ignoreLayers);               
 
         if (isHit)
         {   
@@ -252,7 +252,16 @@ public class AIController : MonoBehaviour
         {
             _walkPath.startWidth = 0;
             _walkPath.endWidth = 0;
+            _clickMarker.transform.localScale = Vector3.zero;
         }        
+    }
+
+    public void ClearPath()
+    {
+        UnitAgent.ResetPath();
+        _walkPath.startWidth = 0;
+        _walkPath.endWidth = 0;
+        _clickMarker.transform.localScale = Vector3.zero;
     }
 
     // Action phase
@@ -351,24 +360,9 @@ public class AIController : MonoBehaviour
         else if (UnitManagerP.WalkDistance > 0)
         {        
             UnitAgent.stoppingDistance = 1f;
-            SetAgentDestination(RandomDirection(RandomNavmeshLocation(UnitManagerP.WalkDistance))); 
+            SetAgentDestination(RandomNavmeshLocation(UnitManagerP.WalkDistance)); 
             UnitAgent.speed = UnitManagerP.MoveSpeed;                       
         }
-    }
-
-    private Vector3 RandomDirection(Vector3 target)
-    {
-        NavMeshPath path = new NavMeshPath();
-        Vector3 destination = Vector3.zero;
-
-        // Min movement range
-        while (GetPathLength(path) < 0.5f && UnitManagerP.WalkDistance > 0.5f) // ??? movement behavior
-        {               
-            destination = new Vector3(target.x + Random.Range(-_moveOffset, _moveOffset),
-            target.y + Random.Range(-_moveOffset, _moveOffset), target.z);
-            NavMesh.CalculatePath(UnitAgent.transform.position, destination, NavMesh.AllAreas, path);                
-        }  
-        return destination;
     }
 
     public void KeepFormation()
@@ -500,8 +494,8 @@ public class AIController : MonoBehaviour
     
     public void EndMove()
     {
-        UnitManagerP.MoveSpeed = 0.1f;
-        UnitAgent.ResetPath();        
+        UnitManagerP.MoveSpeed = 0.1f;               
         UnitManagerP.EndMove();
+        ClearPath();
     }
 }

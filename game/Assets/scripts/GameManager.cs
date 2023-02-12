@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     // Control keys    
     private PlayerInput _playerInput;
-    private InputAction _pause;
+    private InputAction _pause, _switchUnit;
     private bool _paused;
 
     // UI settings
@@ -48,11 +48,15 @@ public class GameManager : MonoBehaviour
     {
         _pause = _playerInput.UI.Pause;
         _pause.Enable();
+
+        _switchUnit = _playerInput.Player.Switch;
+        _switchUnit.Enable();
     }
 
     void OnDisable()
     {
         _pause.Disable();
+        _switchUnit.Disable();
     }
 
     void Awake()
@@ -112,7 +116,7 @@ public class GameManager : MonoBehaviour
     {
         // Stop game
         if (_pause.WasPressedThisFrame())
-        {
+        {            
             _paused = !_paused;
             if (_paused)
             {
@@ -122,6 +126,11 @@ public class GameManager : MonoBehaviour
             {
                 Time.timeScale = 1;
             }
+        }
+
+        if (Time.time > LoadTime && !InAction && _switchUnit.WasPressedThisFrame())
+        {
+            SwitchUnit();
         }
     }
 
@@ -217,6 +226,7 @@ public class GameManager : MonoBehaviour
 
     public void SwitchUnit()
     {
+        _AIControllersPlayer[_currentUnit].ClearPath();
         if (_currentUnit < _AIControllersPlayer.Count - 1)
         {
             _currentUnit++;
@@ -226,7 +236,7 @@ public class GameManager : MonoBehaviour
         {
             _currentUnit = 0;
             SetControllers(_AIControllersPlayer.Count);
-        }
+        }        
 
         // Move camera to next unit
         _cameraMov.Destination = _AIControllersPlayer[_currentUnit].gameObject;
@@ -256,12 +266,12 @@ public class GameManager : MonoBehaviour
 
         foreach (AIController controller in _AIControllersPlayer)
         {
-            //controller.SetTargets("EnemySquad"); 
+            controller.SetTargets("EnemySquad"); 
         }
 
         foreach (AIController controller in _AIControllersEnemy)
         {
-            //controller.SetTargets("PlayerSquad"); 
+            controller.SetTargets("PlayerSquad"); 
         }
     }
 }
