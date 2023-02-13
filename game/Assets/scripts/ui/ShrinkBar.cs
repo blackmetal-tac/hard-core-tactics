@@ -12,7 +12,8 @@ public class ShrinkBar : MonoBehaviour
         _unitHeatGroup, _stabCanvasGroup;
     private GameManager _gameManager;    
     private int _trasparencyMult = 5;
-    private float _shrinkSpeed;    
+    private float _shrinkSpeed; 
+    private bool _player;   
 
     void Awake()
     {
@@ -33,7 +34,12 @@ public class ShrinkBar : MonoBehaviour
         // Unit heat
         _heatImage = _unitUI.transform.Find("Heat").Find("Background").Find("Health").GetComponent<Image>();
         _heatCanvasGroup = GameObject.Find("HeatIndicator").GetComponent<CanvasGroup>();    
-        _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>();   
+        _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>(); 
+
+        if (_unitManager.transform.parent.name == "Player")
+        {            
+            ToggleUI();
+        }  
     }
     
     // Start is called before the first frame update
@@ -41,7 +47,7 @@ public class ShrinkBar : MonoBehaviour
     {
         _camMain = Camera.main;
         _shrinkSpeed = 0.5f;
-
+        
         // Set references for UI
         if (_unitManager.transform.parent.parent.name == "PlayerSquad")
         {
@@ -64,32 +70,21 @@ public class ShrinkBar : MonoBehaviour
             // Player stability 
             _stabCanvasGroup = GameObject.Find("Stability").GetComponent<CanvasGroup>();
             _stabImageInd = GameObject.Find("Stability").transform.Find("Health").GetComponent<Image>();  
-        } 
-        
-        if (_unitManager.transform.parent.name == "Player")
-        {
-            ToggleUI();
         }
     }
 
     void Update()
     {
-        if (_unitManager.transform.parent.name != "Player")
+        _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);
+        if (_unitManager.transform.parent.name == "Player" && !_gameManager.InAction)
         {
-            _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);        
+            _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount, _unitManager.HeatCalc, Time.deltaTime * 2); 
+            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);                     
         }
-        else
+        else if (_unitManager.transform.parent.name == "Player")
         {
-            if (!_gameManager.InAction)
-            {
-                _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount, _unitManager.HeatCalc, Time.deltaTime * 2); 
-                _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);                     
-            }
-            else
-            {
-                _heatCalculation.fillAmount = 0;                
-            }   
-        }               
+            _heatCalculation.fillAmount = 0;                
+        }                         
     }
 
     public void UpdateShield()
@@ -142,9 +137,9 @@ public class ShrinkBar : MonoBehaviour
 
     public void ToggleUI()
     {
-        // Disable secondary bars for active unit
-        _unitUI.GetComponent<ScaleUI>().Player = !_unitUI.GetComponent<ScaleUI>().Player;
-        if (_unitUI.GetComponent<ScaleUI>().Player)
+        // Disable secondary bars for active unit        
+        _player = !_player;
+        if (_player)
         {
             _unitUI.transform.localScale = Vector3.zero;
         }

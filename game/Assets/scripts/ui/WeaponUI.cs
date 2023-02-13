@@ -41,13 +41,13 @@ public class WeaponUI : MonoBehaviour
         _weaponButtons.Add(new WeaponButton(GameObject.Find("CoolingUI").transform.Find("Weapon").GetComponent<TextMeshProUGUI>(), GameObject.Find("CoolingUI").GetComponentInChildren<SliderScr>(), GameObject.Find("CoolingUI").transform.parent.Find("ActionMask").GetComponent<ActionMask>()));
         
         CoreButtonP = GameObject.Find("CoreButton").GetComponent<CoreButton>();
-        UpdateUI();
+        UpdateUI("Player");
     }
 
     // Update weapon UI when changing active unit
-    public void UpdateUI()
+    public void UpdateUI(string unitName)
     {
-        _playerManager = GameObject.Find("Player").GetComponentInChildren<UnitManager>();
+        _playerManager = GameObject.Find("PlayerSquad").transform.Find(unitName).GetComponentInChildren<UnitManager>();
         CoreButtonP.PlayerManager = _playerManager;        
 
         // Shield controls

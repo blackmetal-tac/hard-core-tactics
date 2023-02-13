@@ -558,7 +558,6 @@ MonoBehaviour:
   _time: 1
   _delay: 3
   _playSound: 1
-  Player: 0
 --- !u!1 &163405827
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,7 +656,6 @@ MonoBehaviour:
   _time: 1
   _delay: 0
   _playSound: 1
-  Player: 0
 --- !u!1 &176498711
 GameObject:
   m_ObjectHideFlags: 0
@@ -1869,7 +1867,6 @@ MonoBehaviour:
   _time: 1
   _delay: 3
   _playSound: 0
-  Player: 0
 --- !u!114 &442331021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3412,7 +3409,6 @@ MonoBehaviour:
   _time: 1
   _delay: 2
   _playSound: 1
-  Player: 0
 --- !u!1 &751363116
 GameObject:
   m_ObjectHideFlags: 0
@@ -3675,7 +3671,6 @@ MonoBehaviour:
   _time: 1
   _delay: 8
   _playSound: 1
-  Player: 0
 --- !u!114 &774559798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6184,7 +6179,7 @@ PrefabInstance:
     - target: {fileID: 7450830651845092006, guid: 82e37113de5bf6e478648129f18092d3,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7450830651845092006, guid: 82e37113de5bf6e478648129f18092d3,
         type: 3}
@@ -6466,7 +6461,6 @@ MonoBehaviour:
   _time: 1
   _delay: 9
   _playSound: 1
-  Player: 0
 --- !u!1 &1164519845
 GameObject:
   m_ObjectHideFlags: 0
@@ -7776,7 +7770,7 @@ PrefabInstance:
     - target: {fileID: 7450830651845092006, guid: 82e37113de5bf6e478648129f18092d3,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7450830651845092006, guid: 82e37113de5bf6e478648129f18092d3,
         type: 3}
@@ -12035,6 +12029,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1905710875}
     m_Modifications:
+    - target: {fileID: 5427134761656201011, guid: e338a5a6eb4d4a64392add1cbe4d5e71,
+        type: 3}
+      propertyPath: Player
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5427134761656201011, guid: e338a5a6eb4d4a64392add1cbe4d5e71,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5427134761752657011, guid: e338a5a6eb4d4a64392add1cbe4d5e71,
         type: 3}
       propertyPath: m_RootOrder
@@ -12118,7 +12122,6 @@ MonoBehaviour:
   _time: 1
   _delay: 1
   _playSound: 1
-  Player: 0
 --- !u!114 &6201401810111353250
 MonoBehaviour:
   m_ObjectHideFlags: 0

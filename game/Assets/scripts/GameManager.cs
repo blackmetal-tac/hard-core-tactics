@@ -10,11 +10,11 @@ public class GameManager : MonoBehaviour
 {
     private GameObject _executeBorder, _actionMask, _switchBorder, _switchMask, _enemy, _clickMarker, _projectileOBJ,
         _playerSquad, _enemySquad;    
-    private List<AIController> _AIControllersPlayer = new List<AIController>(), _AIControllersEnemy = new List<AIController>();    
+    [HideInInspector] public List<AIController> AIControllersPlayer = new List<AIController>(), AIControllersEnemy = new List<AIController>();    
     private WeaponUI _weaponUI;
     private CoreButton _coreButton;
     private CameraMovement _cameraMov;
-    private int _currentUnit;
+    public int CurrentUnit;
 
     public ObjectPool<PoolObject> BulletsPool, MissilesPool, AmsPool, ExplosionPool;
 
@@ -74,12 +74,12 @@ public class GameManager : MonoBehaviour
         
         for (int i = 0; i < _playerSquad.transform.childCount; i++)
         {            
-            _AIControllersPlayer.Add(_playerSquad.transform.GetChild(i).GetComponent<AIController>());
+            AIControllersPlayer.Add(_playerSquad.transform.GetChild(i).GetComponent<AIController>());
         }
 
         for (int i = 0; i < _enemySquad.transform.childCount; i++)
         {            
-            _AIControllersEnemy.Add(_enemySquad.transform.GetChild(i).GetComponent<AIController>());
+            AIControllersEnemy.Add(_enemySquad.transform.GetChild(i).GetComponent<AIController>());
         }
 
         // Find projectiles and create pools
@@ -152,13 +152,14 @@ public class GameManager : MonoBehaviour
         _switchMask.transform.localScale = Vector3.one;
 
         // Player actions        
-        foreach (AIController controller in _AIControllersPlayer)
+        //ApplyPositions();
+        foreach (AIController controller in AIControllersPlayer)
         {
             controller.Move();
         }
 
         // Enemy actions
-        foreach (AIController controller in _AIControllersEnemy)
+        foreach (AIController controller in AIControllersEnemy)
         {
             controller.Move();
         }      
@@ -170,7 +171,7 @@ public class GameManager : MonoBehaviour
             TimeValue -= Time.deltaTime;
 
             // Player actions
-            foreach (AIController controller in _AIControllersPlayer)
+            foreach (AIController controller in AIControllersPlayer)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -179,7 +180,7 @@ public class GameManager : MonoBehaviour
             }
 
             // Enemy actions
-            foreach (AIController controller in _AIControllersEnemy)
+            foreach (AIController controller in AIControllersEnemy)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -202,7 +203,7 @@ public class GameManager : MonoBehaviour
             InAction = false;
 
             // Player actions end
-            foreach (AIController controller in _AIControllersPlayer)
+            foreach (AIController controller in AIControllersPlayer)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -211,7 +212,7 @@ public class GameManager : MonoBehaviour
             }
 
             // Enemy actions ens
-            foreach (AIController controller in _AIControllersEnemy)
+            foreach (AIController controller in AIControllersEnemy)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -226,23 +227,25 @@ public class GameManager : MonoBehaviour
 
     public void SwitchUnit()
     {
-        _AIControllersPlayer[_currentUnit].ClearPath();
-        if (_currentUnit < _AIControllersPlayer.Count - 1)
+        AIControllersPlayer[CurrentUnit].ClearPath();
+        if (CurrentUnit < AIControllersPlayer.Count - 1)
         {
-            _currentUnit++;
-            SetControllers(_currentUnit);
+            CurrentUnit++;
+            AIControllersPlayer[CurrentUnit - 1].UnitManagerP.ShrinkBar.ToggleUI();
+            AIControllersPlayer[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
         }
         else
         {
-            _currentUnit = 0;
-            SetControllers(_AIControllersPlayer.Count);
+            CurrentUnit = 0;
+            AIControllersPlayer[AIControllersPlayer.Count - 1].UnitManagerP.ShrinkBar.ToggleUI();
+            AIControllersPlayer[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
         }        
 
         // Move camera to next unit
-        _cameraMov.Destination = _AIControllersPlayer[_currentUnit].gameObject;
+        _cameraMov.Destination = AIControllersPlayer[CurrentUnit].gameObject;
 
         // Update UI for new unit
-        _weaponUI.UpdateUI();
+        _weaponUI.UpdateUI(AIControllersPlayer[CurrentUnit].name);
 
         _audioUI.PlayOneShot(_buttonClick);
         _switchBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
@@ -253,23 +256,33 @@ public class GameManager : MonoBehaviour
         });       
     }
 
+    private void ApplyPositions()
+    {
+        if (CurrentUnit < AIControllersPlayer.Count - 1)
+        {
+            SetControllers(CurrentUnit);
+        }
+        else
+        {            
+            SetControllers(AIControllersPlayer.Count);  
+        }   
+    }
+
     private void SetControllers(int index)
     {
-        _AIControllersPlayer[index - 1].name = _AIControllersPlayer[_currentUnit].name;
-        _AIControllersPlayer[_currentUnit].name = "Player";
-        _AIControllersPlayer[index - 1].UpdateManager();
-        _AIControllersPlayer[_currentUnit].UpdateManager();
-        _AIControllersPlayer[index - 1].SetUnitsPos();
-        _AIControllersPlayer[_currentUnit].SetUnitsPos();
-        _AIControllersPlayer[index - 1].UnitManagerP.ShrinkBar.ToggleUI();
-        _AIControllersPlayer[_currentUnit].UnitManagerP.ShrinkBar.ToggleUI();
+        AIControllersPlayer[index - 1].name = AIControllersPlayer[CurrentUnit].name;
+        AIControllersPlayer[CurrentUnit].name = "Player";
+        AIControllersPlayer[index - 1].UpdateManager();
+        AIControllersPlayer[CurrentUnit].UpdateManager();
+        AIControllersPlayer[index - 1].SetUnitsPos();
+        AIControllersPlayer[CurrentUnit].SetUnitsPos();
 
-        foreach (AIController controller in _AIControllersPlayer)
+        foreach (AIController controller in AIControllersPlayer)
         {
             controller.SetTargets("EnemySquad"); 
         }
 
-        foreach (AIController controller in _AIControllersEnemy)
+        foreach (AIController controller in AIControllersEnemy)
         {
             controller.SetTargets("PlayerSquad"); 
         }

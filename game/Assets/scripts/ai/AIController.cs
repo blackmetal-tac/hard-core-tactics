@@ -83,7 +83,8 @@ public class AIController : MonoBehaviour
 
     void Update()
     {
-        if (transform.name == "Player" && Time.time > _gameManager.LoadTime)
+        if (transform.parent.name == "PlayerSquad" && transform.name == _gameManager.AIControllersPlayer[_gameManager.CurrentUnit].name 
+            && Time.time > _gameManager.LoadTime)
         {
             // Mouse click
             if (_leftClick.WasPressedThisFrame())
@@ -250,9 +251,9 @@ public class AIController : MonoBehaviour
         }
         else
         {
-            _walkPath.startWidth = 0;
-            _walkPath.endWidth = 0;
-            _clickMarker.transform.localScale = Vector3.zero;
+            //_walkPath.startWidth = 0;
+            //_walkPath.endWidth = 0;
+            //_clickMarker.transform.localScale = Vector3.zero;
         }        
     }
 
@@ -481,7 +482,7 @@ public class AIController : MonoBehaviour
         {
             _enemyController = transform.parent.Find("Enemy").GetComponent<AIController>(); 
             UnitsFormation = _enemyController.UnitsFormation;
-            SetTargets("PlayerSquad");        
+            SetTargets("PlayerSquad");                    
         }		
         else if (transform.parent.name == "PlayerSquad")
         {
@@ -496,6 +497,10 @@ public class AIController : MonoBehaviour
     {
         UnitManagerP.MoveSpeed = 0.1f;               
         UnitManagerP.EndMove();
-        ClearPath();
+
+        if (transform.parent.name == "PlayerSquad")
+        {
+            ClearPath();
+        }        
     }
 }
