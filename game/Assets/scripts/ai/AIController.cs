@@ -21,6 +21,7 @@ public class AIController : MonoBehaviour
     [HideInInspector] public UnitManager UnitManagerP;    
     
     private GameManager _gameManager;    
+    private SquadManager _squadManager;
     private Camera _camMain; 
     private AIController _playerController, _enemyController;
 
@@ -38,9 +39,11 @@ public class AIController : MonoBehaviour
     void Awake()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _squadManager = transform.GetComponentInParent<SquadManager>();
         _playerInput = new PlayerInput();
         UnitManagerP = GetComponentInChildren<UnitManager>();
         UpdateManager();
+        DefineFormation();
     }
 
     void OnEnable()
@@ -83,7 +86,7 @@ public class AIController : MonoBehaviour
 
     void Update()
     {
-        if (transform.parent.name == "PlayerSquad" && transform.name == _gameManager.AIControllersPlayer[_gameManager.CurrentUnit].name 
+        if (transform.parent.name == "PlayerSquad" && transform.name == _squadManager.AIControllers[_squadManager.CurrentUnit].name 
             && Time.time > _gameManager.LoadTime)
         {
             // Mouse click
@@ -487,10 +490,9 @@ public class AIController : MonoBehaviour
         else if (transform.parent.name == "PlayerSquad")
         {
             _playerController = transform.parent.Find("Player").GetComponent<AIController>();
-            UnitsFormation = (FormationType)_playerController.UnitsFormation;
+            UnitsFormation = _playerController.UnitsFormation;
             SetTargets("EnemySquad");
-        }
-        DefineFormation();
+        }        
     }
     
     public void EndMove()

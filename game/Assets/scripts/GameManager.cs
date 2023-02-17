@@ -8,13 +8,9 @@ using OWS.ObjectPooling;
 
 public class GameManager : MonoBehaviour
 {
-    private GameObject _executeBorder, _actionMask, _switchBorder, _switchMask, _enemy, _clickMarker, _projectileOBJ,
-        _playerSquad, _enemySquad;    
-    [HideInInspector] public List<AIController> AIControllersPlayer = new List<AIController>(), AIControllersEnemy = new List<AIController>();    
+    private GameObject _executeBorder, _actionMask, _switchBorder, _switchMask, _enemy, _clickMarker, _projectileOBJ;    
     private WeaponUI _weaponUI;
-    private CoreButton _coreButton;
-    private CameraMovement _cameraMov;
-    public int CurrentUnit;
+    private CoreButton _coreButton;    
 
     public ObjectPool<PoolObject> BulletsPool, MissilesPool, AmsPool, ExplosionPool;
 
@@ -43,6 +39,7 @@ public class GameManager : MonoBehaviour
         public Vector3[] Positions;
     }
     public List<Formation> UnitsFormations = new List<Formation>(); 
+    private SquadManager _playerSquad, _enemySquad;
 
     void OnEnable()
     {
@@ -68,19 +65,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         DOTween.SetTweensCapacity(800, 50);
-        _playerSquad = GameObject.Find("PlayerSquad");
-        _enemySquad = GameObject.Find("EnemySquad");
-        _cameraMov = Camera.main.GetComponent<CameraMovement>();
-        
-        for (int i = 0; i < _playerSquad.transform.childCount; i++)
-        {            
-            AIControllersPlayer.Add(_playerSquad.transform.GetChild(i).GetComponent<AIController>());
-        }
-
-        for (int i = 0; i < _enemySquad.transform.childCount; i++)
-        {            
-            AIControllersEnemy.Add(_enemySquad.transform.GetChild(i).GetComponent<AIController>());
-        }
+        _playerSquad = GameObject.Find("PlayerSquad").GetComponent<SquadManager>();
+        _enemySquad = GameObject.Find("EnemySquad").GetComponent<SquadManager>();        
 
         // Find projectiles and create pools
         _projectileOBJ = transform.Find("Projectiles").Find("Bullet").gameObject;
@@ -152,14 +138,14 @@ public class GameManager : MonoBehaviour
         _switchMask.transform.localScale = Vector3.one;
 
         // Player actions        
-        //ApplyPositions();
-        foreach (AIController controller in AIControllersPlayer)
+        _playerSquad.ApplyPositions();
+        foreach (AIController controller in _playerSquad.AIControllers)
         {
             controller.Move();
         }
 
         // Enemy actions
-        foreach (AIController controller in AIControllersEnemy)
+        foreach (AIController controller in _enemySquad.AIControllers)
         {
             controller.Move();
         }      
@@ -171,7 +157,7 @@ public class GameManager : MonoBehaviour
             TimeValue -= Time.deltaTime;
 
             // Player actions
-            foreach (AIController controller in AIControllersPlayer)
+            foreach (AIController controller in _playerSquad.AIControllers)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -180,7 +166,7 @@ public class GameManager : MonoBehaviour
             }
 
             // Enemy actions
-            foreach (AIController controller in AIControllersEnemy)
+            foreach (AIController controller in _enemySquad.AIControllers)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -203,7 +189,7 @@ public class GameManager : MonoBehaviour
             InAction = false;
 
             // Player actions end
-            foreach (AIController controller in AIControllersPlayer)
+            foreach (AIController controller in _playerSquad.AIControllers)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -212,7 +198,7 @@ public class GameManager : MonoBehaviour
             }
 
             // Enemy actions ens
-            foreach (AIController controller in AIControllersEnemy)
+            foreach (AIController controller in _playerSquad.AIControllers)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -227,25 +213,7 @@ public class GameManager : MonoBehaviour
 
     public void SwitchUnit()
     {
-        AIControllersPlayer[CurrentUnit].ClearPath();
-        if (CurrentUnit < AIControllersPlayer.Count - 1)
-        {
-            CurrentUnit++;
-            AIControllersPlayer[CurrentUnit - 1].UnitManagerP.ShrinkBar.ToggleUI();
-            AIControllersPlayer[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
-        }
-        else
-        {
-            CurrentUnit = 0;
-            AIControllersPlayer[AIControllersPlayer.Count - 1].UnitManagerP.ShrinkBar.ToggleUI();
-            AIControllersPlayer[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
-        }        
-
-        // Move camera to next unit
-        _cameraMov.Destination = AIControllersPlayer[CurrentUnit].gameObject;
-
-        // Update UI for new unit
-        _weaponUI.UpdateUI(AIControllersPlayer[CurrentUnit].name);
+        _playerSquad.SwitchUnit();
 
         _audioUI.PlayOneShot(_buttonClick);
         _switchBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);
@@ -254,37 +222,5 @@ public class GameManager : MonoBehaviour
         {
             _switchBorder.transform.DOScaleX(1f, 0.1f);
         });       
-    }
-
-    private void ApplyPositions()
-    {
-        if (CurrentUnit < AIControllersPlayer.Count - 1)
-        {
-            SetControllers(CurrentUnit);
-        }
-        else
-        {            
-            SetControllers(AIControllersPlayer.Count);  
-        }   
-    }
-
-    private void SetControllers(int index)
-    {
-        AIControllersPlayer[index - 1].name = AIControllersPlayer[CurrentUnit].name;
-        AIControllersPlayer[CurrentUnit].name = "Player";
-        AIControllersPlayer[index - 1].UpdateManager();
-        AIControllersPlayer[CurrentUnit].UpdateManager();
-        AIControllersPlayer[index - 1].SetUnitsPos();
-        AIControllersPlayer[CurrentUnit].SetUnitsPos();
-
-        foreach (AIController controller in AIControllersPlayer)
-        {
-            controller.SetTargets("EnemySquad"); 
-        }
-
-        foreach (AIController controller in AIControllersEnemy)
-        {
-            controller.SetTargets("PlayerSquad"); 
-        }
     }
 }
