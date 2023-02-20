@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     private static TextMeshProUGUI _timer;    
     public float TimeValue, TurnTime;
 
-    [HideInInspector] public bool InAction = false;
+    [HideInInspector] public bool InAction, UpdateTargets;
 
     [System.Serializable]
     public class Formation
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
         public Vector3[] Positions;
     }
     public List<Formation> UnitsFormations = new List<Formation>(); 
-    private SquadManager _playerSquad, _enemySquad;
+    [HideInInspector] public SquadManager PlayerSquad, EnemySquad;
 
     void OnEnable()
     {
@@ -65,8 +65,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         DOTween.SetTweensCapacity(800, 50);
-        _playerSquad = GameObject.Find("PlayerSquad").GetComponent<SquadManager>();
-        _enemySquad = GameObject.Find("EnemySquad").GetComponent<SquadManager>();        
+        PlayerSquad = GameObject.Find("PlayerSquad").GetComponent<SquadManager>();
+        EnemySquad = GameObject.Find("EnemySquad").GetComponent<SquadManager>();        
 
         // Find projectiles and create pools
         _projectileOBJ = transform.Find("Projectiles").Find("Bullet").gameObject;
@@ -138,15 +138,23 @@ public class GameManager : MonoBehaviour
         _switchMask.transform.localScale = Vector3.one;
 
         // Player actions        
-        _playerSquad.ApplyPositions();
-        foreach (AIController controller in _playerSquad.AIControllers)
+        PlayerSquad.ApplyPositions();
+        foreach (AIController controller in PlayerSquad.AIControllers)
         {
+            if (UpdateTargets)
+            {
+                controller.UpdateManager();
+            }            
             controller.Move();
         }
 
         // Enemy actions
-        foreach (AIController controller in _enemySquad.AIControllers)
+        foreach (AIController controller in EnemySquad.AIControllers)
         {
+            if (UpdateTargets)
+            {
+                controller.UpdateManager();
+            }   
             controller.Move();
         }      
 
@@ -157,7 +165,7 @@ public class GameManager : MonoBehaviour
             TimeValue -= Time.deltaTime;
 
             // Player actions
-            foreach (AIController controller in _playerSquad.AIControllers)
+            foreach (AIController controller in PlayerSquad.AIControllers)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -166,7 +174,7 @@ public class GameManager : MonoBehaviour
             }
 
             // Enemy actions
-            foreach (AIController controller in _enemySquad.AIControllers)
+            foreach (AIController controller in EnemySquad.AIControllers)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -179,6 +187,7 @@ public class GameManager : MonoBehaviour
         this.Wait(TurnTime, () =>
         { 
             _clickMarker.transform.localScale = Vector3.zero;
+            UpdateTargets = false;
 
             // Enable buttons
             _actionMask.transform.localScale = Vector3.zero;
@@ -189,7 +198,7 @@ public class GameManager : MonoBehaviour
             InAction = false;
 
             // Player actions end
-            foreach (AIController controller in _playerSquad.AIControllers)
+            foreach (AIController controller in PlayerSquad.AIControllers)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -198,7 +207,7 @@ public class GameManager : MonoBehaviour
             }
 
             // Enemy actions ens
-            foreach (AIController controller in _playerSquad.AIControllers)
+            foreach (AIController controller in EnemySquad.AIControllers)
             {
                 if (!controller.UnitManagerP.IsDead)
                 {
@@ -213,7 +222,7 @@ public class GameManager : MonoBehaviour
 
     public void SwitchUnit()
     {
-        _playerSquad.SwitchUnit();
+        PlayerSquad.SwitchUnit();
 
         _audioUI.PlayOneShot(_buttonClick);
         _switchBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);

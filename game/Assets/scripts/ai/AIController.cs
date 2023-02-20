@@ -345,7 +345,7 @@ public class AIController : MonoBehaviour
         
         if (targetDistance > 10 && UnitManagerP.WalkDistance > 0) // ??? effective range
         {       
-            UnitAgent.stoppingDistance = 0f;
+            UnitAgent.stoppingDistance = 0.1f;
             NavMeshPath path = new NavMeshPath();
             Vector3 destination = Vector3.zero;
             
@@ -372,13 +372,10 @@ public class AIController : MonoBehaviour
     public void KeepFormation()
     {        
         if (_formationPos != null && UnitManagerP.WalkDistance > 0)
-        {  
-            UnitAgent.SetDestination(new Vector3(
-                _formationPos.position.x + Random.Range(-0.5f, 0.5f),
-                _formationPos.position.y + Random.Range(-0.5f, 0.5f),
-                _formationPos.position.z));
-
-            UnitManagerP.MoveSpeed = 2 * GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
+        {              
+            UnitAgent.stoppingDistance = 0.1f;
+            UnitAgent.SetDestination( _formationPos.position);
+            UnitManagerP.MoveSpeed = 1.1f * GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
             UnitAgent.speed = UnitManagerP.MoveSpeed;                                   
         } 
     }

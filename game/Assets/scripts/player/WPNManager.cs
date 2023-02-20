@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 
 public class WPNManager : MonoBehaviour
 {
@@ -194,8 +193,7 @@ public class WPNManager : MonoBehaviour
         // Laser animation
         if (_laserOn)
         {          
-            _laserWidth = Mathf.Lerp(_laserWidth, _damage * BurstSize, Time.deltaTime * _fireDelay / 0.3f);  
-            //DOTween.To(() => _laserWidth, x => _laserWidth = x, _damage * BurstSize, _fireDelay / 6);
+            _laserWidth = Mathf.Lerp(_laserWidth, _damage * BurstSize, Time.deltaTime * _fireDelay / 0.3f);             
 
             // Deal laser damage            
             if (Physics.Raycast(FirePoint.transform.position, FirePoint.transform.forward,
@@ -224,8 +222,7 @@ public class WPNManager : MonoBehaviour
         }
         else
         {
-            _laserWidth = Mathf.Lerp(_laserWidth, 0f, Time.deltaTime * _fireDelay / 0.3f);
-            //DOTween.To(() => _laserWidth, x => _laserWidth = x, 0f, _fireDelay / 6);
+            _laserWidth = Mathf.Lerp(_laserWidth, 0f, Time.deltaTime * _fireDelay / 0.3f);            
         }
 
         // Shoot laser  
@@ -355,9 +352,9 @@ public class WPNManager : MonoBehaviour
         {
             _laserOn = false; 
             this.Progress(1, () => {
-                _lineRenderer.startWidth = 0;
-                _lineRenderer.endWidth = 0; 
-                //_laserWidth = Mathf.Lerp(_laserWidth, 0f, Time.deltaTime * _fireDelay / 0.1f);            
+                _lineRenderer.startWidth = _laserWidth;
+                _lineRenderer.endWidth = _laserWidth; 
+                _laserWidth = Mathf.Lerp(_laserWidth, 0f, Time.deltaTime * _fireDelay / 0.3f);         
             });
         }
 

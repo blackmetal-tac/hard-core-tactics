@@ -5,6 +5,7 @@ public class SquadManager : MonoBehaviour
 {
     [HideInInspector] public List<AIController> AIControllers = new List<AIController>(); 
     [HideInInspector] public int CurrentUnit;
+    private GameManager _gameManager;
     private CameraMovement _cameraMov;
     private WeaponUI _weaponUI;
     private int _prevUnit;   
@@ -12,6 +13,7 @@ public class SquadManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _cameraMov = Camera.main.GetComponent<CameraMovement>();
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         for (int i = 0; i < transform.childCount; i++)
@@ -54,16 +56,7 @@ public class SquadManager : MonoBehaviour
             AIControllers[_prevUnit].SetUnitsPos();
             AIControllers[CurrentUnit].SetUnitsPos();
             _prevUnit = CurrentUnit;
-
-            foreach (AIController controller in AIControllers)
-            {
-                controller.UpdateManager(); 
-            }
-
-            foreach (AIController controller in AIControllers)
-            {
-                controller.UpdateManager(); 
-            }
+            _gameManager.UpdateTargets = true;
         }
     }
 }
