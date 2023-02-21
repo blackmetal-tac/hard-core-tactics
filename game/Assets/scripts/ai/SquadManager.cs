@@ -8,7 +8,8 @@ public class SquadManager : MonoBehaviour
     private GameManager _gameManager;
     private CameraMovement _cameraMov;
     private WeaponUI _weaponUI;
-    private int _prevUnit;   
+    private int _prevUnit; 
+    [HideInInspector] public int SwitchCooldown; 
     
     // Start is called before the first frame update
     void Start()
@@ -47,16 +48,21 @@ public class SquadManager : MonoBehaviour
 
     public void ApplyPositions()
     {
-        if (CurrentUnit != _prevUnit)
+        if (CurrentUnit != _prevUnit && SwitchCooldown <= 0)
         {  
+            string prevUnit = AIControllers[_prevUnit].name;
             AIControllers[_prevUnit].name = AIControllers[CurrentUnit].name;
-            AIControllers[CurrentUnit].name = "Player";
-            AIControllers[_prevUnit].UpdateManager();
-            AIControllers[CurrentUnit].UpdateManager();
-            AIControllers[_prevUnit].SetUnitsPos();
-            AIControllers[CurrentUnit].SetUnitsPos();
+            AIControllers[CurrentUnit].name = prevUnit;
+
+            foreach (AIController controller in AIControllers)
+            {
+                controller.UpdateManager();
+                controller.SetUnitsPos();
+            }
+
             _prevUnit = CurrentUnit;
             _gameManager.UpdateTargets = true;
+            SwitchCooldown = 2;
         }
     }
 }

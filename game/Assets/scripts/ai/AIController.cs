@@ -251,13 +251,7 @@ public class AIController : MonoBehaviour
                 Time.deltaTime * Vector3.Distance(_clickMarker.transform.position, UnitAgent.destination) * 4);
             }
             _clickMarker.transform.Rotate(new Vector3(0, 0, 50 * -Time.deltaTime));
-        }
-        else
-        {
-            //_walkPath.startWidth = 0;
-            //_walkPath.endWidth = 0;
-            //_clickMarker.transform.localScale = Vector3.zero;
-        }        
+        }      
     }
 
     public void ClearPath()
@@ -276,13 +270,19 @@ public class AIController : MonoBehaviour
             UnitAgent.speed = UnitManagerP.MoveSpeed;                   
             UnitManagerP.UnitShield.TurnOnOff();
 
+            // AI behavior
             if (transform.name != "Player")    
             {
                 if (transform.name == "Enemy" || UnitsFormation == FormationType.Free)
                 {
+                    // Swap random units ???
+                    if (_squadManager.SwitchCooldown <= 0)
+                    {
+                        _squadManager.CurrentUnit = Random.Range(0, _squadManager.AIControllers.Count);                    
+                        _squadManager.ApplyPositions();
+                    }
                     SetPath();                                    
                 }      
-
                 UnitManagerP.CoreOverdrive();
 
                 // Change fire modes depending on heat or enable weapon after overheat

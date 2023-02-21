@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     private AudioClip _buttonClick;
 
     // Turn timer
-    private static TextMeshProUGUI _timer;    
+    private static TextMeshProUGUI _timer, _switchButton;    
     public float TimeValue, TurnTime;
 
     [HideInInspector] public bool InAction, UpdateTargets;
@@ -83,6 +83,7 @@ public class GameManager : MonoBehaviour
         _clickMarker = GameObject.Find("ClickMarker");        
         _actionMask = GameObject.Find("ExecuteButton").transform.parent.Find("ActionMask").gameObject;
         _executeBorder = GameObject.Find("ExecuteButton").transform.Find("ButtonBorder").gameObject;
+        _switchButton = GameObject.Find("SwitchButton").GetComponentInChildren<TextMeshProUGUI>();
         _switchMask = GameObject.Find("SwitchButton").transform.parent.Find("ActionMask").gameObject;
         _switchBorder = GameObject.Find("SwitchButton").transform.Find("ButtonBorder").gameObject;
         _audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();        
@@ -133,10 +134,6 @@ public class GameManager : MonoBehaviour
 
         InAction = true;
 
-        // Disable buttons
-        _actionMask.transform.localScale = Vector3.one;
-        _switchMask.transform.localScale = Vector3.one;
-
         // Player actions        
         PlayerSquad.ApplyPositions();
         foreach (AIController controller in PlayerSquad.AIControllers)
@@ -147,6 +144,11 @@ public class GameManager : MonoBehaviour
             }            
             controller.Move();
         }
+
+        // Disable buttons
+        _actionMask.transform.localScale = Vector3.one;
+        _switchMask.transform.localScale = Vector3.one;
+        UpdateSwitchCounter();
 
         // Enemy actions
         foreach (AIController controller in EnemySquad.AIControllers)
@@ -190,8 +192,7 @@ public class GameManager : MonoBehaviour
             UpdateTargets = false;
 
             // Enable buttons
-            _actionMask.transform.localScale = Vector3.zero;
-            _switchMask.transform.localScale = Vector3.zero;
+            _actionMask.transform.localScale = Vector3.zero;        
 
             TimeValue = TurnTime;
             _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(TimeValue).ToString("ss\\'ff");
@@ -217,6 +218,9 @@ public class GameManager : MonoBehaviour
             
             // Update player weapon counters
             _weaponUI.DecreaseCounter();
+            PlayerSquad.SwitchCooldown --;
+            EnemySquad.SwitchCooldown --;
+            UpdateSwitchCounter();
         });
     }
 
@@ -231,5 +235,25 @@ public class GameManager : MonoBehaviour
         {
             _switchBorder.transform.DOScaleX(1f, 0.1f);
         });       
+    }
+
+    private void UpdateSwitchCounter()
+    {
+        if (PlayerSquad.SwitchCooldown > 0)
+        {
+            if (PlayerSquad.SwitchCooldown == 1)
+            {
+                _switchButton.text = PlayerSquad.SwitchCooldown + "<br> trn";
+            }
+            else
+            {
+                _switchButton.text = PlayerSquad.SwitchCooldown + "<br> trns";
+            }            
+        }
+        else
+        {
+            _switchButton.text = "Switch";
+            _switchMask.transform.localScale = Vector3.zero;
+        }
     }
 }
