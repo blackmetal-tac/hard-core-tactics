@@ -93,7 +93,9 @@ public class AIController : MonoBehaviour
             if (_leftClick.WasPressedThisFrame())
             {
                 if (EventSystem.current.IsPointerOverGameObject())
-                    return;                
+                {                     
+                    return;
+                }                                    
 
                 if (!_gameManager.InAction)
                 {
@@ -106,7 +108,11 @@ public class AIController : MonoBehaviour
 
             if (UnitManagerP.IsDead)
             {
-                _clickMarker.transform.localScale = Vector3.zero;
+                _clickMarker.transform.localScale = Vector3.zero;//???
+
+                // Emergent swap of a dead unit
+                _squadManager.SwitchUnit();
+                _squadManager.ApplyPositions();
             }
 
             if (!UnitManagerP.Target.IsDead)
@@ -131,8 +137,27 @@ public class AIController : MonoBehaviour
                 _crosshair.transform.localScale = Vector3.zero;
             }
         }
-        else
+        else 
         {
+            if (transform.name == "Enemy")
+            {
+                // Cooling overdrive
+                if (UnitManagerP.CoolingDownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold 
+                && _gameManager.InAction)
+                {
+                    UnitManagerP.Cooling = UnitManagerP.CoolingModesP[1].Cooling; 
+                    UnitManagerP.CoolingOverdrive();
+                }
+
+                if (UnitManagerP.IsDead)
+                {
+                    // Emergent swap of a dead unit
+                    _squadManager.SwitchUnit();
+                    _squadManager.ApplyPositions();
+                }
+            }
+
+            // Keep shield from overload ---
             if (UnitManagerP.UnitShield.HP < _shieldTreshold && Time.time > _gameManager.LoadTime && !_oneTime
                 && UnitManagerP.UnitShield.DownTimer <= 0)
             {      
@@ -166,16 +191,9 @@ public class AIController : MonoBehaviour
                 UnitManagerP.UnitShield.TurnOnOff();
                 _shieldEnable = true;
             }
-
-            // Cooling overdrive
-            if (UnitManagerP.CoolingDownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold 
-            && _gameManager.InAction)
-            {
-                UnitManagerP.Cooling = UnitManagerP.CoolingModesP[1].Cooling; 
-                UnitManagerP.CoolingOverdrive();
-            }
-        }
-    }
+            // ---
+        }        
+    }  
 
     private void MoveToClick()
     {
@@ -273,6 +291,7 @@ public class AIController : MonoBehaviour
             // AI behavior
             if (transform.name != "Player")    
             {
+                // Active enemy unit
                 if (transform.name == "Enemy" || UnitsFormation == FormationType.Free)
                 {
                     // Swap random units ???
@@ -281,45 +300,76 @@ public class AIController : MonoBehaviour
                         _squadManager.CurrentUnit = Random.Range(0, _squadManager.AIControllers.Count);                    
                         _squadManager.ApplyPositions();
                     }
-                    SetPath();                                    
-                }      
-                UnitManagerP.CoreOverdrive();
+                    SetPath();
 
-                // Change fire modes depending on heat or enable weapon after overheat
+                    // Shield management
+                    if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold
+                        && UnitManagerP.UnitShield.HP > _shieldTreshold)
+                    {    
+                        UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[2]);
+                        UnitManagerP.UnitShield.TurnOnOff();
+                        _oneTime = false;
+                        _shieldEnable = false;
+                    }
+                    else if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.HP > _shieldTreshold)
+                    { 
+                        UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
+                        UnitManagerP.UnitShield.TurnOnOff();
+                        _oneTime = false;
+                        _shieldEnable = false;
+                    }                        
+                    UnitManagerP.CoreOverdrive(); 
+
+                    // Change fire modes depending on heat or enable weapon after overheat
+                    foreach (WPNManager weapon in UnitManagerP.WeaponList)
+                    {
+                        if (weapon != null && UnitManagerP.CoolingDownTimer > 3)
+                        {
+                            weapon.BurstSize = weapon.WeaponModesP[2].FireMode;
+                        }
+                        else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
+                        {
+                            int changeMode = Random.Range(1, weapon.WeaponModesP.Count);
+                            weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
+                        }
+                        else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold)
+                        {
+                            int changeMode = Random.Range(0, weapon.WeaponModesP.Count - 1);
+                            weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
+                        }
+                    }            
+                } 
+
+                // Save your resources (passive units)
                 foreach (WPNManager weapon in UnitManagerP.WeaponList)
                 {
-                    if (weapon != null && UnitManagerP.CoolingDownTimer > 3)
-                    {
-                        weapon.BurstSize = weapon.WeaponModesP[2].FireMode;
+                    if (weapon != null && weapon.DownTimer <= 0 && weapon.ProjectileTypeP == WPNManager.ProjectileType.AMS)
+                    {                       
+                        weapon.BurstSize = weapon.WeaponModesP[weapon.WeaponModesP.Count - 1].FireMode;
                     }
-                    else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
-                    {
-                        int changeMode = Random.Range(1, weapon.WeaponModesP.Count);
-                        weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
-                    }
-                    else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold)
+                    else if (weapon != null && weapon.DownTimer <= 0)
                     {
                         int changeMode = Random.Range(0, weapon.WeaponModesP.Count - 1);
                         weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
                     }
-                }        
+                }
 
                 // Shield management
-                if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold
-                    && UnitManagerP.UnitShield.HP > _shieldTreshold)
+                if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.HP < 0.5f 
+                    && UnitManagerP.Heat < UnitManagerP.HeatTreshold / 2)
                 {    
                     UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[2]);
                     UnitManagerP.UnitShield.TurnOnOff();
                     _oneTime = false;
                     _shieldEnable = false;
                 }
-                else if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.HP > _shieldTreshold)
+                else if (UnitManagerP.UnitShield.DownTimer <= 0)
                 { 
                     UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
                     UnitManagerP.UnitShield.TurnOnOff();
                     _oneTime = false;
                     _shieldEnable = false;
-                } 
+                }                    
             }
         } 
     }
@@ -375,7 +425,7 @@ public class AIController : MonoBehaviour
         {              
             UnitAgent.stoppingDistance = 0.1f;
             UnitAgent.SetDestination( _formationPos.position);
-            UnitManagerP.MoveSpeed = 1.1f * GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
+            UnitManagerP.MoveSpeed = 1.3f * GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
             UnitAgent.speed = UnitManagerP.MoveSpeed;                                   
         } 
     }
@@ -440,7 +490,20 @@ public class AIController : MonoBehaviour
         if (transform.name == "Echo")
         {
             UnitManagerP.Target = GameObject.Find(enemyTeam).transform.Find("Delta").GetComponentInChildren<UnitManager>();
-        }         
+        }     
+
+        // If not enough units or target is dead
+        if (UnitManagerP.Target == null || UnitManagerP.Target.IsDead)
+        {
+            if (enemyTeam == "PlayerSquad")
+            {
+                UnitManagerP.Target = GameObject.Find(enemyTeam).transform.Find("Player").GetComponentInChildren<UnitManager>();
+            }
+            else
+            {
+                UnitManagerP.Target = GameObject.Find(enemyTeam).transform.Find("Enemy").GetComponentInChildren<UnitManager>();
+            }
+        }    
     }
 
     private void DefineFormation()
@@ -474,22 +537,25 @@ public class AIController : MonoBehaviour
         {
             UnitManagerP.Target = GameObject.Find("PlayerSquad").transform.Find("Player").GetComponentInChildren<UnitManager>();
         }
-        else if (transform.name == "Player")
+        
+        if (transform.name == "Player")
         {
             UnitManagerP.Target = GameObject.Find("EnemySquad").transform.Find("Enemy").GetComponentInChildren<UnitManager>();
         }
-        else if (transform.parent.name == "EnemySquad")
+        
+        if (transform.parent.name == "EnemySquad")
         {
             _enemyController = transform.parent.Find("Enemy").GetComponent<AIController>(); 
             UnitsFormation = _enemyController.UnitsFormation;
             SetTargets("PlayerSquad");                    
         }		
-        else if (transform.parent.name == "PlayerSquad")
+        
+        if (transform.parent.name == "PlayerSquad")
         {
             _playerController = transform.parent.Find("Player").GetComponent<AIController>();
             UnitsFormation = _playerController.UnitsFormation;
             SetTargets("EnemySquad");
-        }        
+        }   
     }
     
     public void EndMove()

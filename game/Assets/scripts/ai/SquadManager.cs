@@ -60,6 +60,21 @@ public class SquadManager : MonoBehaviour
                 controller.SetUnitsPos();
             }
 
+            if (transform.name == "PlayerSquad")
+            {                
+                foreach (AIController controller in _gameManager.EnemySquad.AIControllers)
+                {
+                    controller.UpdateManager();                    
+                }
+            }
+            else
+            {
+                foreach (AIController controller in _gameManager.PlayerSquad.AIControllers)
+                {
+                    controller.UpdateManager();                    
+                }
+            }
+
             _prevUnit = CurrentUnit;
             _gameManager.UpdateTargets = true;
             SwitchCooldown = 2;

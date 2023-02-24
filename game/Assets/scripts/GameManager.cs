@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (Time.time > LoadTime && !InAction && _switchUnit.WasPressedThisFrame())
+        if (Time.time > LoadTime && !InAction && _switchUnit.WasPressedThisFrame() && PlayerSquad.SwitchCooldown <= 0)
         {
             SwitchUnit();
         }
@@ -135,30 +135,23 @@ public class GameManager : MonoBehaviour
         InAction = true;
 
         // Player actions        
-        PlayerSquad.ApplyPositions();
+        PlayerSquad.ApplyPositions();        
         foreach (AIController controller in PlayerSquad.AIControllers)
-        {
-            if (UpdateTargets)
-            {
-                controller.UpdateManager();
-            }            
+        {       
             controller.Move();
         }
+
+        // Enemy actions 
+        EnemySquad.ApplyPositions();       
+        foreach (AIController controller in EnemySquad.AIControllers)
+        {
+            controller.Move();
+        }   
 
         // Disable buttons
         _actionMask.transform.localScale = Vector3.one;
         _switchMask.transform.localScale = Vector3.one;
-        UpdateSwitchCounter();
-
-        // Enemy actions
-        foreach (AIController controller in EnemySquad.AIControllers)
-        {
-            if (UpdateTargets)
-            {
-                controller.UpdateManager();
-            }   
-            controller.Move();
-        }      
+        UpdateSwitchCounter();   
 
         // Action phase
         this.Progress(TurnTime, () => {
