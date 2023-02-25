@@ -10,7 +10,8 @@ public class ShrinkBar : MonoBehaviour
     private GameObject _unitUI;
     private CanvasGroup _shieldCanvasGroup, _healthCanvasGroup, _heatCanvasGroup, _unitShieldGroup, _unitHealthGroup, 
         _unitHeatGroup, _stabCanvasGroup;
-    private GameManager _gameManager;    
+    private GameManager _gameManager;   
+    private SquadManager _playerSquad; 
     private int _trasparencyMult = 5;
     private float _shrinkSpeed; 
     private bool _player;   
@@ -19,7 +20,7 @@ public class ShrinkBar : MonoBehaviour
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _unitManager = transform.GetComponentInParent<UnitManager>();
-        _unitUI = transform.Find("UnitUI").gameObject;
+        _unitUI = transform.Find("UnitUI").gameObject;        
 
         // Unit shield
         _shieldImage = _unitUI.transform.Find("HP").Find("Shield").Find("Health").GetComponent<Image>();
@@ -37,7 +38,7 @@ public class ShrinkBar : MonoBehaviour
         _unitHeatGroup = _heatImage.GetComponentInParent<CanvasGroup>(); 
 
         if (_unitManager.transform.parent.name == "Player")
-        {            
+        {                        
             ToggleUI();
         }  
     }
@@ -51,6 +52,8 @@ public class ShrinkBar : MonoBehaviour
         // Set references for UI
         if (_unitManager.transform.parent.parent.name == "PlayerSquad")
         {
+            _playerSquad = _unitManager.transform.parent.GetComponentInParent<SquadManager>();
+
             // Player shield
             _shieldCanvasGroup = GameObject.Find("ShieldIndicator").GetComponent<CanvasGroup>();
             _shieldImageInd = GameObject.Find("ShieldIndicator").transform.Find("Health").GetComponent<Image>();
@@ -76,12 +79,13 @@ public class ShrinkBar : MonoBehaviour
     void Update()
     {
         _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);
-        if (_unitManager.transform.parent.name == "Player" && !_gameManager.InAction)
+        if (_playerSquad != null && !_gameManager.InAction)
         {
-            _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount, _unitManager.HeatCalc, Time.deltaTime * 2); 
+            _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount,
+                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.HeatCalc, Time.deltaTime * 2); 
             _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);                     
         }
-        else if (_unitManager.transform.parent.name == "Player")
+        else if (_playerSquad != null)
         {
             _heatCalculation.fillAmount = 0;                
         }                         
@@ -93,10 +97,11 @@ public class ShrinkBar : MonoBehaviour
         _unitShieldGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _shieldImage.fillAmount) * 0.6f);
 
         // Player UI
-        if (_unitManager.transform.parent.name == "Player")
+        if (_playerSquad != null)
         {
             _shieldCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _shieldImage.fillAmount) * 0.6f);
-            Shrink(_shieldImageInd, _shieldDmgImageInd, _unitManager.UnitShield.HP, true);
+            Shrink(_shieldImageInd, _shieldDmgImageInd, 
+                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.UnitShield.HP, true);
         }
     }
 
@@ -106,10 +111,11 @@ public class ShrinkBar : MonoBehaviour
         _unitHealthGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _healthImage.fillAmount) * 0.6f);
 
         // Player UI
-        if (_unitManager.transform.parent.name == "Player")
+        if (_playerSquad != null)
         {
             _healthCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _healthImage.fillAmount) * 0.6f);
-            Shrink(_healthImageInd, _healthDmgImageInd, _unitManager.HP, false);
+            Shrink(_healthImageInd, _healthDmgImageInd, 
+                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.HP, false);
         }
     }
 
@@ -118,18 +124,20 @@ public class ShrinkBar : MonoBehaviour
         _heatImage.fillAmount = _unitManager.Heat;    
         _unitHeatGroup.alpha = _gameManager.CrosshairBars + (_unitManager.Heat * 0.9f);    
 
-        if (_unitManager.transform.parent.name == "Player")
+        if (_playerSquad != null)
         {           
-            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_unitManager.Heat * 0.8f);
+            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (
+                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.Heat * 0.8f);
             _heatImageInd.fillAmount = _unitManager.Heat;
         }
     }
 
     public void UpdateStability()
     {
-        if (_unitManager.transform.parent.name == "Player")
+        if (_playerSquad != null)
         { 
-            float stab = _unitManager.Spread * 0.5f + _unitManager.MoveSpeed * (0.2f + _unitManager.SpreadMult);
+            float stab = _unitManager.Spread * 0.5f + _unitManager.MoveSpeed * (0.2f + 
+                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.SpreadMult);
             _stabCanvasGroup.alpha = _gameManager.CrosshairBars + stab;
             _stabImageInd.fillAmount = 1 - stab;
         }

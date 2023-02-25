@@ -11,16 +11,20 @@ public class SquadManager : MonoBehaviour
     private int _prevUnit; 
     [HideInInspector] public int SwitchCooldown; 
     
+    void Awake()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {            
+            AIControllers.Add(transform.GetChild(i).GetComponent<AIController>());
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _cameraMov = Camera.main.GetComponent<CameraMovement>();
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
-        for (int i = 0; i < transform.childCount; i++)
-        {            
-            AIControllers.Add(transform.GetChild(i).GetComponent<AIController>());
-        }
     } 
 
     public void SwitchUnit()

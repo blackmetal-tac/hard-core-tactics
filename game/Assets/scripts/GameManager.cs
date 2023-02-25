@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
 
     // Control keys    
     private PlayerInput _playerInput;
-    private InputAction _pause, _switchUnit;
-    private bool _paused;
+    private InputAction _slow, _pause, _switchUnit;
+    private bool _paused, _slowed;
 
     // UI settings
     public float CrosshairBars, LoadTime;
@@ -43,6 +43,9 @@ public class GameManager : MonoBehaviour
 
     void OnEnable()
     {
+        _slow = _playerInput.UI.Slow;
+        _slow.Enable();
+
         _pause = _playerInput.UI.Pause;
         _pause.Enable();
 
@@ -52,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     void OnDisable()
     {
+        _slow.Disable();
         _pause.Disable();
         _switchUnit.Disable();
     }
@@ -103,11 +107,27 @@ public class GameManager : MonoBehaviour
     {
         // Stop game
         if (_pause.WasPressedThisFrame())
-        {            
+        {        
+            _slowed = false;    
             _paused = !_paused;
             if (_paused)
             {
                 Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+        }
+
+        // Slow game
+        if (_slow.WasPressedThisFrame())
+        {            
+            _paused = false;
+            _slowed = !_slowed;
+            if (_slowed)
+            {
+                Time.timeScale = 0.5f;
             }
             else
             {
@@ -246,7 +266,10 @@ public class GameManager : MonoBehaviour
         else
         {
             _switchButton.text = "Switch";
-            _switchMask.transform.localScale = Vector3.zero;
+            if (!InAction)
+            {
+                _switchMask.transform.localScale = Vector3.zero;
+            }            
         }
     }
 }
