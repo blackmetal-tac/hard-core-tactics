@@ -58,27 +58,39 @@ public class CoreButton : MonoBehaviour
     }
 
     public void UpdateStatus() // ???
-    {
-        _actionMask.transform.localScale = Vector3.one;
+    {        
         if (PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer == 5)
         {
-            _switchText.text = "On" + "\n" + 2 + " trns";
+            _tweener.Play();           
+            _switchText.text = "On"; 
+            if (_gameManager.InAction)
+            {
+                _switchText.text = "On" + "\n" + 2 + " trns";
+                _actionMask.transform.localScale = Vector3.one;
+            }            
         }
         else if (PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer == 4)
         {
+            _tweener.Play();
             _switchText.text = "On" + "\n" + 1 + " turn";
+            _actionMask.transform.localScale = Vector3.one;
         }
         else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer > 1)
         {
             _tweener.Pause();
-            _switchText.text = "Off" + "\n" + PlayerManager.CoreDownTimer + " trns";        
+            _switchText.text = "Off" + "\n" + PlayerManager.CoreDownTimer + " trns";
+            _actionMask.transform.localScale = Vector3.one;        
         }
         else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer == 1)
         {
+            _tweener.Pause();
             _switchText.text = "Off" + "\n" + PlayerManager.CoreDownTimer + " turn"; 
+            _actionMask.transform.localScale = Vector3.one;
         }
-        else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer <= 0 && !_gameManager.InAction)
+        else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer <= 0 && !_gameManager.InAction 
+            && Time.time > _gameManager.LoadTime)
         {
+            _tweener.Pause();
             _actionMask.transform.localScale = Vector3.zero;
             _switchText.text = "Off";
         }       

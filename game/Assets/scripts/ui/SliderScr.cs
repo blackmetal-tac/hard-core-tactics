@@ -145,6 +145,40 @@ public class SliderScr : MonoBehaviour
         }
     }
 
+    public void UpdateUI()
+    {
+        if (_shieldUI != null)
+        {
+            for (int i= 0; i < PlayerManager.UnitShield.shieldModes.Count; i++)
+            {
+                if (PlayerManager.UnitShield.shieldModes[i].Regen == PlayerManager.UnitShield.Regeneration)
+                {
+                    SliderObject.value = i;
+                }                 
+            }            
+        }
+        else if (_coolingUI != null)
+        {
+            for (int i= 0; i < PlayerManager.CoolingModesP.Count; i++)
+            {
+                if (PlayerManager.CoolingModesP[i].Cooling == PlayerManager.Cooling)
+                {
+                    SliderObject.value = i;
+                }                 
+            }        
+        }  
+        else
+        {
+            for (int i= 0; i < Weapon.WeaponModesP.Count; i++)
+            {
+                if (Weapon.WeaponModesP[i].FireMode == Weapon.BurstSize)
+                {
+                    SliderObject.value = i;
+                }                 
+            }  
+        }     
+    }
+
     public void ChangeWPNmode()
     {
         if (_shieldUI != null)

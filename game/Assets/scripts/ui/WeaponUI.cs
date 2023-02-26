@@ -48,16 +48,19 @@ public class WeaponUI : MonoBehaviour
     public void UpdateUI(string unitName)
     {
         _playerManager = GameObject.Find("PlayerSquad").transform.Find(unitName).GetComponentInChildren<UnitManager>();
-        CoreButtonP.PlayerManager = _playerManager;        
+        CoreButtonP.PlayerManager = _playerManager;    
+        CoreButtonP.UpdateStatus();    
 
         // Shield controls
         _weaponButtons[6].WeaponName.text = _playerManager.UnitShield.name;
         _weaponButtons[6].Slider.PlayerManager = _playerManager;
+        _weaponButtons[6].Slider.UpdateUI();
         _weaponButtons[6].Slider.ChangeWPNmode();
 
         // Cooling controls
         _weaponButtons[7].WeaponName.text = "Cooling System";
         _weaponButtons[7].Slider.PlayerManager = _playerManager;
+        _weaponButtons[7].Slider.UpdateUI();
         _weaponButtons[7].Slider.ChangeWPNmode();
 
         // Weapons controls
@@ -67,6 +70,7 @@ public class WeaponUI : MonoBehaviour
             {
                 _weaponButtons[i].WeaponName.text = _playerManager.WeaponList[i].name;
                 _weaponButtons[i].Slider.Weapon = _playerManager.WeaponList[i];
+                _weaponButtons[i].Slider.UpdateUI();
                 _weaponButtons[i].Slider.ChangeWPNmode();             
             }
             else 
