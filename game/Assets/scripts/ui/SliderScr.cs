@@ -154,6 +154,7 @@ public class SliderScr : MonoBehaviour
                 if (PlayerManager.UnitShield.shieldModes[i].Regen == PlayerManager.UnitShield.Regeneration)
                 {
                     SliderObject.value = i;
+                    ChangeMask(PlayerManager.UnitShield.DownTimer);
                 }                 
             }            
         }
@@ -164,6 +165,7 @@ public class SliderScr : MonoBehaviour
                 if (PlayerManager.CoolingModesP[i].Cooling == PlayerManager.Cooling)
                 {
                     SliderObject.value = i;
+                    ChangeMask(PlayerManager.CoolingDownTimer);
                 }                 
             }        
         }  
@@ -174,9 +176,22 @@ public class SliderScr : MonoBehaviour
                 if (Weapon.WeaponModesP[i].FireMode == Weapon.BurstSize)
                 {
                     SliderObject.value = i;
+                    ChangeMask(Weapon.DownTimer);
                 }                 
             }  
         }     
+    }
+
+    private void ChangeMask(int timer)
+    {
+        if (Time.time > _gameManager.LoadTime && timer <= 0)
+        {
+            _actionMask.transform.localScale = Vector3.zero;
+        }
+        else
+        {
+            _actionMask.transform.localScale = Vector3.one;
+        }
     }
 
     public void ChangeWPNmode()

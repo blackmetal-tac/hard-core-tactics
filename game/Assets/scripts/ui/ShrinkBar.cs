@@ -79,13 +79,14 @@ public class ShrinkBar : MonoBehaviour
     void Update()
     {
         _unitUI.transform.position = _camMain.WorldToScreenPoint(transform.parent.transform.position);
-        if (_playerSquad != null && !_gameManager.InAction)
+        if (_playerSquad != null && _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP == _unitManager
+            && !_gameManager.InAction)
         {
             _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount,
-                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.HeatCalc, Time.deltaTime * 2); 
-            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);                     
+                _unitManager.HeatCalc, Time.deltaTime * 2); 
+            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);Debug.Log("HeatCalc - " + _unitManager.HeatCalc);                     
         }
-        else if (_playerSquad != null)
+        else if (_playerSquad != null && _gameManager.InAction)
         {
             _heatCalculation.fillAmount = 0;                
         }                         
@@ -97,11 +98,10 @@ public class ShrinkBar : MonoBehaviour
         _unitShieldGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _shieldImage.fillAmount) * 0.6f);
 
         // Player UI
-        if (_playerSquad != null)
+        if (_playerSquad != null && _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP == _unitManager)
         {
             _shieldCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _shieldImage.fillAmount) * 0.6f);
-            Shrink(_shieldImageInd, _shieldDmgImageInd, 
-                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.UnitShield.HP, true);
+            Shrink(_shieldImageInd, _shieldDmgImageInd, _unitManager.UnitShield.HP, true);
         }
     }
 
@@ -111,11 +111,10 @@ public class ShrinkBar : MonoBehaviour
         _unitHealthGroup.alpha = _gameManager.CrosshairBars * _trasparencyMult + ((1 - _healthImage.fillAmount) * 0.6f);
 
         // Player UI
-        if (_playerSquad != null)
+        if (_playerSquad != null && _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP == _unitManager)
         {
             _healthCanvasGroup.alpha = _gameManager.CrosshairBars + ((1 - _healthImage.fillAmount) * 0.6f);
-            Shrink(_healthImageInd, _healthDmgImageInd, 
-                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.HP, false);
+            Shrink(_healthImageInd, _healthDmgImageInd, _unitManager.HP, false);
         }
     }
 
@@ -124,17 +123,16 @@ public class ShrinkBar : MonoBehaviour
         _heatImage.fillAmount = _unitManager.Heat;    
         _unitHeatGroup.alpha = _gameManager.CrosshairBars + (_unitManager.Heat * 0.9f);    
 
-        if (_playerSquad != null)
-        {           
-            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (
-                _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.Heat * 0.8f);
-            _heatImageInd.fillAmount = _unitManager.Heat;
+        if (_playerSquad != null && _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP == _unitManager)
+        {
+            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_unitManager.Heat * 0.8f);
+            _heatImageInd.fillAmount = _unitManager.Heat;Debug.Log("Heat - " + _unitManager.Heat);
         }
     }
 
     public void UpdateStability()
     {
-        if (_playerSquad != null)
+        if (_playerSquad != null && _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP == _unitManager)
         { 
             float stab = _unitManager.Spread * 0.5f + _unitManager.MoveSpeed * (0.2f + 
                 _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP.SpreadMult);

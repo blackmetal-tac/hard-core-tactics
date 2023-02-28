@@ -143,7 +143,7 @@ public class AIController : MonoBehaviour
             {
                 // Cooling overdrive
                 if (UnitManagerP.CoolingDownTimer <= 0 && UnitManagerP.Heat >= UnitManagerP.HeatTreshold 
-                && _gameManager.InAction)
+                    && _gameManager.InAction)
                 {
                     UnitManagerP.Cooling = UnitManagerP.CoolingModesP[1].Cooling; 
                     UnitManagerP.CoolingOverdrive();
@@ -292,7 +292,7 @@ public class AIController : MonoBehaviour
             if (transform.name != "Player")    
             {
                 // Active enemy unit
-                if (transform.name == "Enemy" || UnitsFormation == FormationType.Free)
+                if (transform.name == "Enemy")
                 {
                     // Swap random units ???
                     if (_squadManager.SwitchCooldown <= 0)
@@ -339,6 +339,11 @@ public class AIController : MonoBehaviour
                         }
                     }            
                 } 
+
+                if (UnitsFormation == FormationType.Free)
+                {
+                    SetPath();
+                }
 
                 // Save your resources (passive units)
                 foreach (WPNManager weapon in UnitManagerP.WeaponList)
