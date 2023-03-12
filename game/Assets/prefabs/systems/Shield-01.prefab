@@ -239,7 +239,6 @@ MonoBehaviour:
   ShieldID: 
   DownTimer: 0
   UnitManagerP: {fileID: 0}
-  _size: 0.9
   ShieldColor: {r: 0, g: 0.6039216, b: 1.4980392, a: 0}
   shieldModes:
   - ModeName: off
@@ -247,11 +246,11 @@ MonoBehaviour:
     Heat: 0
     Intencity: 1
   - ModeName: on
-    Regen: 0.03
+    Regen: 3
     Heat: 0.01
     Intencity: 2
   - ModeName: over
-    Regen: 0.12
+    Regen: 12
     Heat: 0.12
     Intencity: 4
 --- !u!114 &6285176286650417637

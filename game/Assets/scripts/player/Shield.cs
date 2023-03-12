@@ -9,7 +9,7 @@ public class Shield : MonoBehaviour
     [HideInInspector] public string ShieldID;
     [HideInInspector] public int DownTimer;    
     [HideInInspector] public UnitManager UnitManagerP;    
-    [SerializeField] private float _size = 0.9f;
+    private float _size = 0.9f;
     private Collider _shieldCollider;
     private GameManager _gameManager;
     private bool _loading;
@@ -41,6 +41,27 @@ public class Shield : MonoBehaviour
 
     void Update()
     {  
+        if (_gameManager.InAction)
+        {     
+            // Shield regeneration                   
+            if (HP < 1)
+            {
+                if (Regeneration == 0)  
+                {
+                    HP += shieldModes[2].Regen * Time.deltaTime;                
+                }      
+                else 
+                {
+                    HP += Regeneration * Time.deltaTime;            
+                }  
+            }
+
+            if (UnitManagerP.Heat < 1)
+            {                
+                UnitManagerP.Heat += Heat * Time.deltaTime; 
+            }
+        }
+
         if (!_loading && DownTimer <= 0)
         {
             transform.localScale = (_size + Scale) * Vector3.one;
@@ -63,24 +84,7 @@ public class Shield : MonoBehaviour
         {
             UnitManagerP.DisableShield();
         }
-    }
-
-    public void Regenerate()
-    {
-        // Shield regeneration
-        if (HP < 1)
-        {
-            if (Regeneration == 0)  
-            {
-                HP += Time.deltaTime * (shieldModes[2].Regen);                
-            }      
-            else 
-            {
-                HP += Time.deltaTime * (Regeneration);
-            }  
-        }
-        UnitManagerP.Heat += Time.deltaTime * Heat;    
-    }
+    } 
 
     public void TurnOnOff()
     { 

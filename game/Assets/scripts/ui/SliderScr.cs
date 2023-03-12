@@ -245,7 +245,7 @@ public class SliderScr : MonoBehaviour
         }
         else
         {
-            Weapon.BurstSize = Weapon.WeaponModesP[(int)SliderObject.value].FireMode;
+            Weapon.BurstSize = Weapon.WeaponModesP[(int)SliderObject.value].FireMode;            
             ModeName.text = Weapon.WeaponModesP[(int)SliderObject.value].ModeName;
 
             if (Time.time > _gameManager.LoadTime)

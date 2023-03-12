@@ -84,7 +84,7 @@ public class ShrinkBar : MonoBehaviour
         {
             _heatCalculation.fillAmount = Mathf.Lerp(_heatCalculation.fillAmount,
                 _unitManager.HeatCalc, Time.deltaTime * 2); 
-            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);Debug.Log("HeatCalc - " + _unitManager.HeatCalc);                     
+            _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_heatCalculation.fillAmount * 0.8f);
         }
         else if (_playerSquad != null && _gameManager.InAction)
         {
@@ -126,7 +126,7 @@ public class ShrinkBar : MonoBehaviour
         if (_playerSquad != null && _playerSquad.AIControllers[_playerSquad.CurrentUnit].UnitManagerP == _unitManager)
         {
             _heatCanvasGroup.alpha = _gameManager.CrosshairBars + (_unitManager.Heat * 0.8f);
-            _heatImageInd.fillAmount = _unitManager.Heat;Debug.Log("Heat - " + _unitManager.Heat);
+            _heatImageInd.fillAmount = _unitManager.Heat;         
         }
     }
 

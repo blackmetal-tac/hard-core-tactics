@@ -139,6 +139,31 @@ public class GameManager : MonoBehaviour
         {
             SwitchUnit();
         }
+
+        // Action phase
+        if (InAction)
+        {
+            _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(TimeValue).ToString("ss\\'ff");
+            TimeValue -= Time.deltaTime;
+
+            // Player actions
+            foreach (AIController controller in PlayerSquad.AIControllers)
+            {
+                if (!controller.UnitManagerP.IsDead)
+                {
+                    controller.StartAction();
+                }
+            }
+
+            // Enemy actions
+            foreach (AIController controller in EnemySquad.AIControllers)
+            {
+                if (!controller.UnitManagerP.IsDead)
+                {
+                    controller.StartAction();
+                }
+            }  
+        }
     }
 
     // Start turn
@@ -171,32 +196,7 @@ public class GameManager : MonoBehaviour
         // Disable buttons
         _actionMask.transform.localScale = Vector3.one;
         _switchMask.transform.localScale = Vector3.one;
-        UpdateSwitchCounter();   
-
-        // Action phase
-        this.Progress(TurnTime, () => {
-            
-            _timer.text = "<mspace=0.6em>" + TimeSpan.FromSeconds(TimeValue).ToString("ss\\'ff");
-            TimeValue -= Time.deltaTime;
-
-            // Player actions
-            foreach (AIController controller in PlayerSquad.AIControllers)
-            {
-                if (!controller.UnitManagerP.IsDead)
-                {
-                    controller.StartAction();
-                }
-            }
-
-            // Enemy actions
-            foreach (AIController controller in EnemySquad.AIControllers)
-            {
-                if (!controller.UnitManagerP.IsDead)
-                {
-                    controller.StartAction();
-                }
-            }       
-        });
+        UpdateSwitchCounter();
 
         // At the end of turn
         this.Wait(TurnTime, () =>

@@ -285,8 +285,8 @@ public class AIController : MonoBehaviour
     {   
         if (UnitManagerP != null || !UnitManagerP.Target.IsDead)
         {
-            UnitAgent.speed = UnitManagerP.MoveSpeed;                   
             UnitManagerP.UnitShield.TurnOnOff();
+            UnitAgent.speed = UnitManagerP.MoveSpeed;
 
             // AI behavior
             if (transform.name != "Player")    
@@ -390,7 +390,7 @@ public class AIController : MonoBehaviour
         {
             KeepFormation();
         }            
-        UnitManagerP.StartAction();
+        
     }
 
     public void SetPath()

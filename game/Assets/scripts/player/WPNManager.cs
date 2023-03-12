@@ -19,6 +19,7 @@ public class WPNManager : MonoBehaviour
     [HideInInspector] public float LastBurst;
     private Vector3 _spreadVector, _laserPoint;
     private float _laserWidth;    
+    private int _modifierAMS;
 
     [System.Serializable]
     public class WeaponModes
@@ -136,7 +137,7 @@ public class WPNManager : MonoBehaviour
             _oneTime = true;
         }
 
-        if (ProjectileTypeP == ProjectileType.Laser)
+        if (ProjectileTypeP == ProjectileType.Laser && BurstSize > 0)
         {
             FireLaser(target);
         }  
@@ -152,7 +153,7 @@ public class WPNManager : MonoBehaviour
         // AMS heat generation
         if (ProjectileTypeP == ProjectileType.AMS && BurstSize > 0)
         {
-            UnitManagerP.Heat += Time.deltaTime * _heat * 5;
+            WeaponHeat(_modifierAMS); 
         }
 
         // Fire different projectiles
@@ -176,6 +177,11 @@ public class WPNManager : MonoBehaviour
             }
             LastBurstRandom(0);
         }
+    }
+
+    private void WeaponHeat(int modifier)
+    {
+        UnitManagerP.Heat += (_heat * modifier) * Time.deltaTime;
     }
 
     private void FireLaser(UnitManager target)
@@ -214,11 +220,7 @@ public class WPNManager : MonoBehaviour
                     hit.collider.GetComponent<Missile>().Explode();                                       
                 }
             }
-
-            if (UnitManagerP.Heat < 1)
-            {
-                UnitManagerP.Heat += _heat * _laserWidth;
-            }
+            WeaponHeat(1); 
         }
         else
         {
@@ -326,19 +328,19 @@ public class WPNManager : MonoBehaviour
         if (ProjectileTypeP != ProjectileType.Laser)
         {
             heat = _heat * BurstSize * _gameManager.TurnTime / _fireDelay;
-            //dmg = _damage * BurstSize * _gameManager.TurnTime / _fireDelay;
-            //shots = BurstSize * _gameManager.TurnTime / _fireDelay;            
+            //dmg = _damage * BurstSize * _gameManager.TurnTime / _fireDelay;  
+            //shots = BurstSize * _gameManager.TurnTime / _fireDelay;
         }
         else
         {
-            heat = _heat * BurstSize * _gameManager.TurnTime; 
+            heat = _heat * (BurstSize / 2) * _gameManager.TurnTime; 
             //dmg = _damage * BurstSize * _gameManager.TurnTime;
             //shots = _gameManager.TurnTime / _fireDelay;              
         }
 
-        if (ProjectileTypeP == ProjectileType.AMS)
+        if (ProjectileTypeP == ProjectileType.AMS && BurstSize > 0)
         {
-            heat += _heat * 5 * _gameManager.TurnTime;
+            heat += _heat * _modifierAMS * _gameManager.TurnTime;
         } 
         //Debug.Log(transform.name + " shots " + shots);
         //Debug.Log(transform.name + " dmg " + dmg);

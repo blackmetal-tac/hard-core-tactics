@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
@@ -133,7 +134,7 @@ public class UnitManager : MonoBehaviour
             }
             ShrinkBar.UpdateHeat();
         });
-
+        
         ShrinkBar.UpdateStability();
 
         // Aim at the enemy ???
@@ -148,6 +149,11 @@ public class UnitManager : MonoBehaviour
 
     void Update()
     {
+        if (_gameManager.InAction)
+        {
+            StartAction();
+        }
+
         ShrinkBar.UpdateShield();
         ShrinkBar.UpdateHealth();
 
@@ -171,22 +177,19 @@ public class UnitManager : MonoBehaviour
     }
 
     // Do actions in Update
-    public void StartAction()
+    private void StartAction()
     {
         if (!IsDead)
         {
             if (!Target.IsDead)
             {
                 StartShoot();
-            }            
-
-            // Shield regeneration
-            UnitShield.Regenerate();
+            } 
             
             // Heat dissipation
             if (Heat > 0)
             {
-                Heat -= Time.deltaTime * Cooling;                
+                Heat -= Cooling * Time.deltaTime;
                 ShrinkBar.UpdateHeat();
 
                 // Roll Heat penalty
@@ -380,38 +383,45 @@ public class UnitManager : MonoBehaviour
     // Preview the heat for turn
     public void CalculateHeat()
     {        
-        if (transform.parent.name == "Player")
-        {                
-            float heatCalculation = Heat;
-            foreach (WPNManager weapon in WeaponList)
-            {
-                if (weapon != null)
-                {                    
-                    heatCalculation += weapon.CalculateHeat();
-                }
-            } 
-            HeatCalc = Heat + heatCalculation + UnitShield.Heat * _gameManager.TurnTime - Cooling * _gameManager.TurnTime;
+        float heatCalculation = Heat; 
+        foreach (WPNManager weapon in WeaponList)
+        {
+            if (weapon != null)
+            {                    
+                heatCalculation += weapon.CalculateHeat();
+            }
+        } 
+        HeatCalc = heatCalculation - Cooling * _gameManager.TurnTime + UnitShield.Heat * _gameManager.TurnTime ;
+        CoolOverdrive = false;
+
+        // Calculate auto cooling  
+        if (Cooling == 0)
+        {
+            HeatCalc = heatCalculation + UnitShield.Heat * _gameManager.TurnTime 
+                - CoolingModesP[0].Cooling * _gameManager.TurnTime;
             CoolOverdrive = false;
 
-            // Calculate auto cooling  
-            if (Cooling == 0)
-            {
-                HeatCalc = Heat + heatCalculation + UnitShield.Heat * _gameManager.TurnTime 
-                        - CoolingModesP[0].Cooling * _gameManager.TurnTime;
-                CoolOverdrive = false;
-
-                if (HeatCalc >= HeatTreshold)
-                {                    
-                    HeatCalc = Heat + heatCalculation + UnitShield.Heat * _gameManager.TurnTime 
-                        - CoolingModesP[1].Cooling * _gameManager.TurnTime;
-                    CoolOverdrive = true;                        
-                }
-            }         
+            if (HeatCalc >= HeatTreshold)
+            {                    
+                HeatCalc = heatCalculation + UnitShield.Heat * _gameManager.TurnTime 
+                    - CoolingModesP[1].Cooling * _gameManager.TurnTime;
+                CoolOverdrive = true;                        
+            }
         }       
+                if(transform.parent.name == "Player")
+        {
+            //Debug.Log("Calc " + HeatCalc);
+            }   
     }
     
     public void EndMove()
     {                
+        if(transform.parent.name == "Player")
+        {
+            Debug.Log("heat " + Heat); 
+            }
+          
+
         UpdateOverheatTimer();        
         foreach (WPNManager weapon in WeaponList)
         {
@@ -420,6 +430,6 @@ public class UnitManager : MonoBehaviour
                 weapon.EndMove();
             }
         }  
-        CalculateHeat(); 
+        //CalculateHeat(); 
     }
 }
