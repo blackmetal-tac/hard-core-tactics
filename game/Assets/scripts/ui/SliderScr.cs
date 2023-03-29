@@ -10,8 +10,8 @@ public class SliderScr : MonoBehaviour
     [HideInInspector] public WPNManager Weapon;
     [HideInInspector] public TextMeshProUGUI ModeName;    
     [HideInInspector] public UnitManager PlayerManager;
-    private CanvasGroup _shieldUI, _coolingUI, _overheatUI, _heatCalc, _missileLockUI, _amsUI;
-    private ParametersUI _shieldParam, _coolingParam, _overheatParam, _heatCalcParam, _missileLockUIParam, _amsUIParam; 
+    private CanvasGroup _shieldUI, _shieldOverUI, _coolingUI, _overheatUI, _heatCalc, _missileLockUI, _amsUI;
+    private ParametersUI _shieldParam, _shieldOverParam, _coolingParam, _overheatParam, _heatCalcParam, _missileLockUIParam, _amsUIParam; 
 
     // Start is called before the first frame update
     void Start()
@@ -24,19 +24,21 @@ public class SliderScr : MonoBehaviour
         // Sliders UI indicators
         if (SliderObject.transform.parent.name == "ShieldUI")
         {
-            _shieldUI = GameObject.Find("ShieldOverdriveUI").GetComponent<CanvasGroup>();
-            _shieldParam = GameObject.Find("ShieldOverdriveUI").GetComponent<ParametersUI>();
+            _shieldUI = GameObject.Find("ShieldWarningUI").GetComponent<CanvasGroup>();
+            _shieldOverUI = GameObject.Find("ShieldOverdriveUI").GetComponent<CanvasGroup>();
+            _shieldParam = _shieldUI.GetComponent<ParametersUI>();
+            _shieldOverParam = _shieldOverUI.GetComponent<ParametersUI>();
         }
         else if (SliderObject.transform.parent.name == "CoolingUI")
         {
             _coolingUI = GameObject.Find("CoolingOverdriveUI").GetComponent<CanvasGroup>();
-            _coolingParam = GameObject.Find("CoolingOverdriveUI").GetComponent<ParametersUI>();
+            _coolingParam = _coolingUI.GetComponent<ParametersUI>();
             _overheatUI = GameObject.Find("OverheatUI").GetComponent<CanvasGroup>();
-            _overheatParam = GameObject.Find("OverheatUI").GetComponent<ParametersUI>();
+            _overheatParam = _overheatUI.GetComponent<ParametersUI>();
             _heatCalc = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<CanvasGroup>();
             _heatCalcParam = GameObject.Find("HeatIndicator").transform.Find("Calculation").GetComponent<ParametersUI>();
             _missileLockUI = GameObject.Find("MissileLockUI").GetComponent<CanvasGroup>();       
-            _missileLockUIParam = GameObject.Find("MissileLockUI").GetComponent<ParametersUI>();      
+            _missileLockUIParam = _missileLockUI.GetComponent<ParametersUI>();      
         }
         
         ModeName = transform.Find("Handle Slide Area").Find("Handle").GetComponentInChildren<TextMeshProUGUI>();
@@ -83,10 +85,17 @@ public class SliderScr : MonoBehaviour
 
         if (_shieldUI != null && SliderObject.value == 2)
         {
-            BounceUI(_shieldUI, _shieldParam);            
+            BounceUI(_shieldOverUI, _shieldOverParam);    
+            _shieldUI.alpha = 0;        
         }
+        else if (_shieldUI != null && SliderObject.value == 0)
+        {   
+            BounceUI(_shieldUI, _shieldParam);
+            _shieldOverUI.alpha = 0;
+        }  
         else if (_shieldUI != null)
         {
+            _shieldOverUI.alpha = 0;
             _shieldUI.alpha = 0;
         }        
         
@@ -247,7 +256,7 @@ public class SliderScr : MonoBehaviour
         {
             Weapon.BurstSize = Weapon.WeaponModesP[(int)SliderObject.value].FireMode;            
             ModeName.text = Weapon.WeaponModesP[(int)SliderObject.value].ModeName;
-
+            
             if (Time.time > _gameManager.LoadTime)
             {
                 Weapon.UnitManagerP.CalculateHeat();   

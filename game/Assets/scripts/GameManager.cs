@@ -9,8 +9,7 @@ using OWS.ObjectPooling;
 public class GameManager : MonoBehaviour
 {
     private GameObject _executeBorder, _actionMask, _switchBorder, _switchMask, _enemy, _clickMarker, _projectileOBJ;    
-    private WeaponUI _weaponUI;
-    private CoreButton _coreButton;    
+    private WeaponUI _weaponUI; 
 
     public ObjectPool<PoolObject> BulletsPool, MissilesPool, AmsPool, ExplosionPool;
 
@@ -91,8 +90,7 @@ public class GameManager : MonoBehaviour
         _switchMask = GameObject.Find("SwitchButton").transform.parent.Find("ActionMask").gameObject;
         _switchBorder = GameObject.Find("SwitchButton").transform.Find("ButtonBorder").gameObject;
         _audioUI = GameObject.Find("MainUI").GetComponent<AudioSource>();        
-        _buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;
-        _coreButton = GameObject.Find("CoreButton").GetComponent<CoreButton>();
+        _buttonClick = GameObject.Find("AudioManager").GetComponent<AudioSourcesUI>().ClickButton;        
        
         // Turn timer
         _timer = GameObject.Find("Timer").GetComponent<TextMeshProUGUI>();

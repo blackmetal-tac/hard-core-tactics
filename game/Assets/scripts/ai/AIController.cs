@@ -106,6 +106,7 @@ public class AIController : MonoBehaviour
             // Draw player path
             DrawPath();
 
+            // Swap dead unit
             if (UnitManagerP.IsDead)
             {
                 _clickMarker.transform.localScale = Vector3.zero;//???
@@ -149,11 +150,11 @@ public class AIController : MonoBehaviour
                     UnitManagerP.CoolingOverdrive();
                 }
 
+                // Swap dead unit
                 if (UnitManagerP.IsDead)
                 {
-                    // Emergent swap of a dead unit
-                    _squadManager.SwitchUnit();
-                    _squadManager.ApplyPositions();
+                    _squadManager.RemoveDeadUnit(this);
+                    UnitManagerP.IsDead = false;
                 }
             }
 
@@ -275,9 +276,13 @@ public class AIController : MonoBehaviour
     public void ClearPath()
     {
         UnitAgent.ResetPath();
-        _walkPath.startWidth = 0;
-        _walkPath.endWidth = 0;
-        _clickMarker.transform.localScale = Vector3.zero;
+
+        if (_walkPath != null)
+        {
+            _walkPath.startWidth = 0;
+            _walkPath.endWidth = 0;
+            _clickMarker.transform.localScale = Vector3.zero;
+        }        
     }
 
     // Action phase
@@ -285,6 +290,7 @@ public class AIController : MonoBehaviour
     {   
         if (UnitManagerP != null || !UnitManagerP.Target.IsDead)
         {
+
             UnitManagerP.UnitShield.TurnOnOff();
             UnitAgent.speed = UnitManagerP.MoveSpeed;
 

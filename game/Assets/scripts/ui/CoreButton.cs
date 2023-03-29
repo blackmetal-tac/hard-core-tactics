@@ -48,8 +48,7 @@ public class CoreButton : MonoBehaviour
             this.Wait(0.5f, () => {
                 _buttonBorder.transform.localScale = Vector3.one;
                 _tweener.Play();
-            });
-            
+            });            
         }
         else
         {
@@ -87,12 +86,19 @@ public class CoreButton : MonoBehaviour
             _switchText.text = "Off" + "\n" + PlayerManager.CoreDownTimer + " turn"; 
             _actionMask.transform.localScale = Vector3.one;
         }
+        else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer <= 0 && _gameManager.InAction 
+            && Time.time > _gameManager.LoadTime)
+        {
+            _tweener.Pause();
+            _actionMask.transform.localScale = Vector3.one;
+            _switchText.text = "Off";
+        }
         else if (!PlayerManager.CoreSwitch && PlayerManager.CoreDownTimer <= 0 && !_gameManager.InAction 
             && Time.time > _gameManager.LoadTime)
         {
             _tweener.Pause();
             _actionMask.transform.localScale = Vector3.zero;
             _switchText.text = "Off";
-        }       
+        }
     }
 }

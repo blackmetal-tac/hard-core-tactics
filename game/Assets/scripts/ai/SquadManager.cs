@@ -29,25 +29,28 @@ public class SquadManager : MonoBehaviour
 
     public void SwitchUnit()
     {
-        AIControllers[CurrentUnit].ClearPath();
-        if (CurrentUnit < AIControllers.Count - 1)
+        if (AIControllers.Count > 1)
         {
-            CurrentUnit++;
-            AIControllers[CurrentUnit - 1].UnitManagerP.ShrinkBar.ToggleUI();
-            AIControllers[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
+            AIControllers[CurrentUnit].ClearPath();
+            if (CurrentUnit < AIControllers.Count - 1)
+            {
+                CurrentUnit++;
+                AIControllers[CurrentUnit - 1].UnitManagerP.ShrinkBar.ToggleUI();
+                AIControllers[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
+            }
+            else
+            {
+                CurrentUnit = 0;
+                AIControllers[AIControllers.Count - 1].UnitManagerP.ShrinkBar.ToggleUI();
+                AIControllers[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
+            }        
+
+            // Move camera to next unit
+            _cameraMov.Destination = AIControllers[CurrentUnit].gameObject;
+
+            // Update UI for new unit
+            _weaponUI.UpdateUI(AIControllers[CurrentUnit].name);
         }
-        else
-        {
-            CurrentUnit = 0;
-            AIControllers[AIControllers.Count - 1].UnitManagerP.ShrinkBar.ToggleUI();
-            AIControllers[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
-        }        
-
-        // Move camera to next unit
-        _cameraMov.Destination = AIControllers[CurrentUnit].gameObject;
-
-        // Update UI for new unit
-        _weaponUI.UpdateUI(AIControllers[CurrentUnit].name);
     }
 
     public void ApplyPositions()
@@ -83,5 +86,16 @@ public class SquadManager : MonoBehaviour
             _gameManager.UpdateTargets = true;
             SwitchCooldown = 2;
         }
+    }
+
+    // Swap dead unit
+    public void RemoveDeadUnit(AIController _deadUnit)
+    {                   
+        if (AIControllers.Count > 1)
+        {
+            SwitchUnit();                    
+            ApplyPositions();                    
+            AIControllers.Remove(_deadUnit);   
+        }     
     }
 }

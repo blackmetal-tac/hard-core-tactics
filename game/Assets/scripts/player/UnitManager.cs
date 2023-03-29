@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class UnitManager : MonoBehaviour
@@ -237,9 +236,8 @@ public class UnitManager : MonoBehaviour
         // Death
         if (HP <= 0)
         {
-            IsDead = true;
-            GetComponent<Collider>().enabled = false;
-            transform.localScale = Vector3.zero;
+            IsDead = true;            
+            transform.localScale = Vector3.zero;            
         }
     }
 
@@ -392,7 +390,7 @@ public class UnitManager : MonoBehaviour
             }
         } 
         HeatCalc = heatCalculation - Cooling * _gameManager.TurnTime + UnitShield.Heat * _gameManager.TurnTime ;
-        CoolOverdrive = false;
+        CoolOverdrive = false;        
 
         // Calculate auto cooling  
         if (Cooling == 0)
@@ -408,20 +406,10 @@ public class UnitManager : MonoBehaviour
                 CoolOverdrive = true;                        
             }
         }       
-                if(transform.parent.name == "Player")
-        {
-            //Debug.Log("Calc " + HeatCalc);
-            }   
     }
     
     public void EndMove()
-    {                
-        if(transform.parent.name == "Player")
-        {
-            Debug.Log("heat " + Heat); 
-            }
-          
-
+    {
         UpdateOverheatTimer();        
         foreach (WPNManager weapon in WeaponList)
         {
@@ -430,6 +418,6 @@ public class UnitManager : MonoBehaviour
                 weapon.EndMove();
             }
         }  
-        //CalculateHeat(); 
+        CalculateHeat(); 
     }
 }

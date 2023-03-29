@@ -333,8 +333,8 @@ public class WPNManager : MonoBehaviour
         }
         else
         {
-            heat = _heat * (BurstSize / 2) * _gameManager.TurnTime; 
-            //dmg = _damage * BurstSize * _gameManager.TurnTime;
+            heat = _heat * ((float)BurstSize / 2) * _gameManager.TurnTime;            
+            //dmg = _damage * ((float)BurstSize / 2) * _gameManager.TurnTime;
             //shots = _gameManager.TurnTime / _fireDelay;              
         }
 
