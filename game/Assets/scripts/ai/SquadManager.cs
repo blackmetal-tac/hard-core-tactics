@@ -27,7 +27,7 @@ public class SquadManager : MonoBehaviour
         _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
     } 
 
-    public void SwitchUnit()
+    public void SwitchUnit(bool deadUnit)
     {
         if (AIControllers.Count > 1)
         {
@@ -46,18 +46,29 @@ public class SquadManager : MonoBehaviour
             }        
 
             // Move camera to next unit
-            _cameraMov.Destination = AIControllers[CurrentUnit].gameObject;
+            if (!deadUnit)
+            {
+                _cameraMov.Destination = AIControllers[CurrentUnit].gameObject;
+            }            
 
-            // Update UI for new unit
-            _weaponUI.UpdateUI(AIControllers[CurrentUnit].name);
+            // Update UI for next player unit
+            if (AIControllers[CurrentUnit].transform.parent.name == "PlayerSquad")
+            {                
+                _weaponUI.UpdateUI(AIControllers[CurrentUnit].name);
+            }
         }
     }
 
-    public void ApplyPositions()
+    public void ApplyPositions(bool deadUnit)
     {
-        if (CurrentUnit != _prevUnit && SwitchCooldown <= 0)
+        if (CurrentUnit != _prevUnit && SwitchCooldown <= 0 || deadUnit)
         {  
             string prevUnit = AIControllers[_prevUnit].name;
+
+            // Swap dead unit
+            AIControllers[CurrentUnit].UnitAgent.path = AIControllers[_prevUnit].UnitAgent.path;
+            AIControllers[CurrentUnit].SetSpeed();
+
             AIControllers[_prevUnit].name = AIControllers[CurrentUnit].name;
             AIControllers[CurrentUnit].name = prevUnit;
 
@@ -81,21 +92,43 @@ public class SquadManager : MonoBehaviour
                     controller.UpdateManager();                    
                 }
             }
-
+            
             _prevUnit = CurrentUnit;
-            _gameManager.UpdateTargets = true;
-            SwitchCooldown = 2;
+            if (!deadUnit)
+            {                
+                SwitchCooldown = 2;
+            }
         }
     }
 
     // Swap dead unit
     public void RemoveDeadUnit(AIController _deadUnit)
-    {                   
-        if (AIControllers.Count > 1)
-        {
-            SwitchUnit();                    
-            ApplyPositions();                    
-            AIControllers.Remove(_deadUnit);   
+    {
+        if (_deadUnit.name == "Player" && AIControllers.Count > 1 || _deadUnit.name == "Enemy" && AIControllers.Count > 1)
+        {                            
+            SwitchUnit(true);
+            ApplyPositions(true); 
+            AIControllers.Remove(_deadUnit);            
+            _deadUnit.UnitAgent.enabled = false;
+
+            if (CurrentUnit >= AIControllers.Count)
+            {
+                CurrentUnit = AIControllers.Count - 1;
+                _prevUnit = CurrentUnit;
+            } 
         }     
+        else if (AIControllers.Count > 1)
+        {
+            AIControllers.Remove(_deadUnit);  
+            _deadUnit.UnitAgent.enabled = false;         
+        }
+    }  
+
+    public void KillTarget()
+    {
+        if(_gameManager.InAction)
+        {
+            AIControllers[CurrentUnit].UnitManagerP.Target.TakeDamage(1);
+        }
     }
 }

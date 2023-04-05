@@ -30,7 +30,7 @@ public class AIController : MonoBehaviour
     [SerializeField] private LayerMask _ignoreLayers;
     private LineRenderer _walkPath;  
     private readonly int _moveOffset = 15;
-    private bool _oneTime, _shieldEnable;
+    private bool _oneTime, _shieldEnable, _deathTrigger;
 
     private float _crosshairSize;
     private readonly float _crosshairScale = 0.15f;
@@ -86,6 +86,7 @@ public class AIController : MonoBehaviour
 
     void Update()
     {
+        UnitDeathCheck();
         if (transform.parent.name == "PlayerSquad" && transform.name == _squadManager.AIControllers[_squadManager.CurrentUnit].name 
             && Time.time > _gameManager.LoadTime)
         {
@@ -107,14 +108,7 @@ public class AIController : MonoBehaviour
             DrawPath();
 
             // Swap dead unit
-            if (UnitManagerP.IsDead)
-            {
-                _clickMarker.transform.localScale = Vector3.zero;//???
-
-                // Emergent swap of a dead unit
-                _squadManager.SwitchUnit();
-                _squadManager.ApplyPositions();
-            }
+            UnitDeathCheck();
 
             if (!UnitManagerP.Target.IsDead)
             {
@@ -139,7 +133,7 @@ public class AIController : MonoBehaviour
             }
         }
         else 
-        {
+        {            
             if (transform.name == "Enemy")
             {
                 // Cooling overdrive
@@ -148,14 +142,7 @@ public class AIController : MonoBehaviour
                 {
                     UnitManagerP.Cooling = UnitManagerP.CoolingModesP[1].Cooling; 
                     UnitManagerP.CoolingOverdrive();
-                }
-
-                // Swap dead unit
-                if (UnitManagerP.IsDead)
-                {
-                    _squadManager.RemoveDeadUnit(this);
-                    UnitManagerP.IsDead = false;
-                }
+                }                
             }
 
             // Keep shield from overload ---
@@ -195,6 +182,16 @@ public class AIController : MonoBehaviour
             // ---
         }        
     }  
+
+    // Swap dead unit
+    private void UnitDeathCheck()
+    {        
+        if (UnitManagerP.IsDead && !_deathTrigger)
+        {
+            _squadManager.RemoveDeadUnit(this);
+            _deathTrigger = true;
+        }
+    }
 
     private void MoveToClick()
     {
@@ -304,7 +301,7 @@ public class AIController : MonoBehaviour
                     if (_squadManager.SwitchCooldown <= 0)
                     {
                         _squadManager.CurrentUnit = Random.Range(0, _squadManager.AIControllers.Count);                    
-                        _squadManager.ApplyPositions();
+                        _squadManager.ApplyPositions(false);
                     }
                     SetPath();
 
@@ -329,9 +326,10 @@ public class AIController : MonoBehaviour
                     // Change fire modes depending on heat or enable weapon after overheat
                     foreach (WPNManager weapon in UnitManagerP.WeaponList)
                     {
-                        if (weapon != null && UnitManagerP.CoolingDownTimer > 3)
+                        if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.CoolingDownTimer > 3  
+                            || weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold / 2)
                         {
-                            weapon.BurstSize = weapon.WeaponModesP[2].FireMode;
+                            weapon.BurstSize = weapon.WeaponModesP[2].FireMode;                            
                         }
                         else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
                         {
@@ -345,42 +343,44 @@ public class AIController : MonoBehaviour
                         }
                     }            
                 } 
-
-                if (UnitsFormation == FormationType.Free)
+                else
                 {
-                    SetPath();
-                }
-
-                // Save your resources (passive units)
-                foreach (WPNManager weapon in UnitManagerP.WeaponList)
-                {
-                    if (weapon != null && weapon.DownTimer <= 0 && weapon.ProjectileTypeP == WPNManager.ProjectileType.AMS)
-                    {                       
-                        weapon.BurstSize = weapon.WeaponModesP[weapon.WeaponModesP.Count - 1].FireMode;
-                    }
-                    else if (weapon != null && weapon.DownTimer <= 0)
+                    if (UnitsFormation == FormationType.Free)
                     {
-                        int changeMode = Random.Range(0, weapon.WeaponModesP.Count - 1);
-                        weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
+                        SetPath();
                     }
-                }
 
-                // Shield management
-                if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.HP < 0.5f 
-                    && UnitManagerP.Heat < UnitManagerP.HeatTreshold / 2)
-                {    
-                    UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[2]);
-                    UnitManagerP.UnitShield.TurnOnOff();
-                    _oneTime = false;
-                    _shieldEnable = false;
-                }
-                else if (UnitManagerP.UnitShield.DownTimer <= 0)
-                { 
-                    UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
-                    UnitManagerP.UnitShield.TurnOnOff();
-                    _oneTime = false;
-                    _shieldEnable = false;
-                }                    
+                    // Save your resources (passive units)
+                    foreach (WPNManager weapon in UnitManagerP.WeaponList)
+                    {
+                        if (weapon != null && weapon.DownTimer <= 0 && weapon.ProjectileTypeP == WPNManager.ProjectileType.AMS)
+                        {                       
+                            weapon.BurstSize = weapon.WeaponModesP[weapon.WeaponModesP.Count - 1].FireMode;
+                        }
+                        else if (weapon != null && weapon.DownTimer <= 0)
+                        {
+                            int changeMode = Random.Range(0, weapon.WeaponModesP.Count - 1);
+                            weapon.BurstSize = weapon.WeaponModesP[changeMode].FireMode;
+                        }
+                    }
+
+                    // Shield management
+                    if (UnitManagerP.UnitShield.DownTimer <= 0 && UnitManagerP.UnitShield.HP < 0.5f 
+                        && UnitManagerP.Heat < UnitManagerP.HeatTreshold / 2)
+                    {    
+                        UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[2]);
+                        UnitManagerP.UnitShield.TurnOnOff();
+                        _oneTime = false;
+                        _shieldEnable = false;
+                    }
+                    else if (UnitManagerP.UnitShield.DownTimer <= 0)
+                    { 
+                        UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);   
+                        UnitManagerP.UnitShield.TurnOnOff();
+                        _oneTime = false;
+                        _shieldEnable = false;
+                    }   
+                }                 
             }
         } 
     }
@@ -436,9 +436,14 @@ public class AIController : MonoBehaviour
         {              
             UnitAgent.stoppingDistance = 0.1f;
             UnitAgent.SetDestination( _formationPos.position);
-            UnitManagerP.MoveSpeed = 1.3f * GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
-            UnitAgent.speed = UnitManagerP.MoveSpeed;                                   
+            SetSpeed();                                   
         } 
+    }
+
+    public void SetSpeed()
+    {
+        UnitManagerP.MoveSpeed = 1.3f * GetPathLength(UnitAgent.path) / _gameManager.TimeValue;            
+        UnitAgent.speed = UnitManagerP.MoveSpeed;     
     }
 
     private Vector3 RandomNavmeshLocation(int radius) 

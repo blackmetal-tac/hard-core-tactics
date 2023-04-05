@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     // Control keys    
     private PlayerInput _playerInput;
-    private InputAction _slow, _pause, _switchUnit;
+    private InputAction _slow, _pause, _switchUnit, _kill, _start;
     private bool _paused, _slowed;
 
     // UI settings
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     private static TextMeshProUGUI _timer, _switchButton;    
     public float TimeValue, TurnTime;
 
-    [HideInInspector] public bool InAction, UpdateTargets;
+    [HideInInspector] public bool InAction;
 
     [System.Serializable]
     public class Formation
@@ -50,6 +50,12 @@ public class GameManager : MonoBehaviour
 
         _switchUnit = _playerInput.Player.Switch;
         _switchUnit.Enable();
+
+        _start = _playerInput.UI.StartRound;
+        _start.Enable();
+
+        _kill = _playerInput.UI.Kill;
+        _kill.Enable();
     }
 
     void OnDisable()
@@ -57,6 +63,8 @@ public class GameManager : MonoBehaviour
         _slow.Disable();
         _pause.Disable();
         _switchUnit.Disable();
+        _start.Disable();
+        _kill.Disable();
     }
 
     void Awake()
@@ -133,6 +141,18 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        // Start turn/round
+        if (!InAction && _start.WasPressedThisFrame())
+        {            
+            ExecuteOrder();            
+        }
+
+        // Kill target
+        if (_kill.WasPressedThisFrame())
+        {            
+            PlayerSquad.KillTarget();            
+        }
+
         if (Time.time > LoadTime && !InAction && _switchUnit.WasPressedThisFrame() && PlayerSquad.SwitchCooldown <= 0)
         {
             SwitchUnit();
@@ -178,14 +198,14 @@ public class GameManager : MonoBehaviour
         InAction = true;
 
         // Player actions        
-        PlayerSquad.ApplyPositions();        
+        PlayerSquad.ApplyPositions(false);        
         foreach (AIController controller in PlayerSquad.AIControllers)
         {       
             controller.Move();
         }
 
         // Enemy actions 
-        EnemySquad.ApplyPositions();       
+        EnemySquad.ApplyPositions(false);       
         foreach (AIController controller in EnemySquad.AIControllers)
         {
             controller.Move();
@@ -200,7 +220,6 @@ public class GameManager : MonoBehaviour
         this.Wait(TurnTime, () =>
         { 
             _clickMarker.transform.localScale = Vector3.zero;
-            UpdateTargets = false;
 
             // Enable buttons
             _actionMask.transform.localScale = Vector3.zero;        
@@ -237,7 +256,7 @@ public class GameManager : MonoBehaviour
 
     public void SwitchUnit()
     {
-        PlayerSquad.SwitchUnit();
+        PlayerSquad.SwitchUnit(false);
 
         _audioUI.PlayOneShot(_buttonClick);
         _switchBorder.transform.DOScaleX(1.2f, 0.1f).SetLoops(4);

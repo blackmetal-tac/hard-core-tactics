@@ -724,9 +724,9 @@ MonoBehaviour:
   CoreSwitch: 0
   CoolingModesP:
   - ModeName: On
-    Cooling: 0.2
+    Cooling: 0.15
   - ModeName: Over
-    Cooling: 0.4
+    Cooling: 0.3
   - ModeName: Auto
     Cooling: 0
   _coreParameters:
