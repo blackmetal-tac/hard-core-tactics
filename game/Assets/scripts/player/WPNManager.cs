@@ -348,18 +348,22 @@ public class WPNManager : MonoBehaviour
         return heat;
     }
 
-    public void EndMove()
+    public void StopLaser()
     {
         if (_lineRenderer != null)
         {
             _laserOn = false; 
-            this.Progress(1, () => {
+            this.Progress(2, () => {
                 _lineRenderer.startWidth = _laserWidth;
                 _lineRenderer.endWidth = _laserWidth; 
                 _laserWidth = Mathf.Lerp(_laserWidth, 0f, Time.deltaTime * _fireDelay / 0.3f);         
             });
         }
+    }
 
+    public void EndMove()
+    {
+        StopLaser();
         if (ProjectileTypeP == ProjectileType.AMS)
         {
             TargetAMS = null;

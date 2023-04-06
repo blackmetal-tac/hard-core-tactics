@@ -197,15 +197,15 @@ public class GameManager : MonoBehaviour
 
         InAction = true;
 
-        // Player actions        
-        PlayerSquad.ApplyPositions(false);        
+        // Units actions        
+        PlayerSquad.ApplyPositions(false);  
+        EnemySquad.ApplyPositions(false);
+
         foreach (AIController controller in PlayerSquad.AIControllers)
         {       
             controller.Move();
-        }
-
-        // Enemy actions 
-        EnemySquad.ApplyPositions(false);       
+        }        
+               
         foreach (AIController controller in EnemySquad.AIControllers)
         {
             controller.Move();

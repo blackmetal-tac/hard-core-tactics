@@ -184,6 +184,10 @@ public class UnitManager : MonoBehaviour
             {
                 StartShoot();
             } 
+            else
+            {
+                StopLaser();
+            }
             
             // Heat dissipation
             if (Heat > 0)
@@ -204,6 +208,10 @@ public class UnitManager : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            StopLaser();
+        }
     }
 
     private void StartShoot()
@@ -219,9 +227,19 @@ public class UnitManager : MonoBehaviour
             {
                 weapon.FireBurst(Target);
             }
-        }
-        _weaponUI.CoreButtonP.UpdateStatus();
+        }        
     }    
+
+    private void StopLaser()
+    {
+        foreach (WPNManager weapon in WeaponList)
+        {
+            if (weapon != null)
+            {
+                weapon.StopLaser();
+            }
+        }  
+    }
 
     // Take damage
     public void TakeDamage(float damage)

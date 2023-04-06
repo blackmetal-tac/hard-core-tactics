@@ -16,6 +16,7 @@ public class AIController : MonoBehaviour
 
     private PlayerInput _playerInput;
     private InputAction _leftClick;
+    private WeaponUI _weaponUI;
 
     [HideInInspector] public NavMeshAgent UnitAgent;
     [HideInInspector] public UnitManager UnitManagerP;    
@@ -76,8 +77,9 @@ public class AIController : MonoBehaviour
 
         UnitAgent = GetComponent<NavMeshAgent>();        
         UnitManagerP.UnitShield.ChangeMode(UnitManagerP.UnitShield.shieldModes[1]);     
-
+        _weaponUI = GameObject.Find("WeaponUI").GetComponent<WeaponUI>();
         SetUnitsPos();
+
         if(_formationPos != null)
         {            
             transform.position = _formationPos.position;
@@ -290,6 +292,7 @@ public class AIController : MonoBehaviour
 
             UnitManagerP.UnitShield.TurnOnOff();
             UnitAgent.speed = UnitManagerP.MoveSpeed;
+            _weaponUI.CoreButtonP.UpdateStatus();
 
             // AI behavior
             if (transform.name != "Player")    
@@ -329,7 +332,8 @@ public class AIController : MonoBehaviour
                         if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.CoolingDownTimer > 3  
                             || weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold / 2)
                         {
-                            weapon.BurstSize = weapon.WeaponModesP[2].FireMode;                            
+                            weapon.BurstSize = weapon.WeaponModesP[2].FireMode;  
+                            Debug.Log(transform.name + " overdrive");                          
                         }
                         else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
                         {
