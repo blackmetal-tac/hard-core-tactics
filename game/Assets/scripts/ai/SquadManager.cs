@@ -35,14 +35,20 @@ public class SquadManager : MonoBehaviour
             if (CurrentUnit < AIControllers.Count - 1)
             {
                 CurrentUnit++;
-                AIControllers[CurrentUnit - 1].UnitManagerP.ShrinkBar.ToggleUI();
-                AIControllers[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
+                if (AIControllers[CurrentUnit].transform.parent.name == "PlayerSquad")
+                {  
+                    AIControllers[CurrentUnit - 1].UnitManagerP.ShrinkBar.ToggleUI();
+                    AIControllers[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI(); 
+                }           
             }
             else
             {
                 CurrentUnit = 0;
-                AIControllers[AIControllers.Count - 1].UnitManagerP.ShrinkBar.ToggleUI();
-                AIControllers[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();            
+                if (AIControllers[CurrentUnit].transform.parent.name == "PlayerSquad")
+                {  
+                    AIControllers[AIControllers.Count - 1].UnitManagerP.ShrinkBar.ToggleUI();
+                    AIControllers[CurrentUnit].UnitManagerP.ShrinkBar.ToggleUI();     
+                }       
             }        
 
             // Move camera to next unit

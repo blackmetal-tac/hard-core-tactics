@@ -39,7 +39,7 @@ public class ShrinkBar : MonoBehaviour
 
         if (_unitManager.transform.parent.name == "Player")
         {                        
-            ToggleUI();
+            ToggleUI();            
         }  
     }
     
@@ -147,7 +147,7 @@ public class ShrinkBar : MonoBehaviour
         _player = !_player;
         if (_player)
         {
-            _unitUI.transform.localScale = Vector3.zero;
+            _unitUI.transform.localScale = Vector3.zero;            
         }
         else
         {

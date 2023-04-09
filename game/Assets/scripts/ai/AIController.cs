@@ -332,8 +332,7 @@ public class AIController : MonoBehaviour
                         if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.CoolingDownTimer > 3  
                             || weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold / 2)
                         {
-                            weapon.BurstSize = weapon.WeaponModesP[2].FireMode;  
-                            Debug.Log(transform.name + " overdrive");                          
+                            weapon.BurstSize = weapon.WeaponModesP[2].FireMode;
                         }
                         else if (weapon != null && weapon.DownTimer <= 0 && UnitManagerP.Heat < UnitManagerP.HeatTreshold)
                         {
