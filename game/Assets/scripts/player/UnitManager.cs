@@ -57,12 +57,12 @@ public class UnitManager : MonoBehaviour
     {
         /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
             left top, rigth shoulder, left shoulder) */
-        WeaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(transform.Find("Torso").Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
 
         // ??? assign unit manager for each weapon
         foreach (WPNManager weapon in WeaponList)
@@ -74,7 +74,7 @@ public class UnitManager : MonoBehaviour
                 WeaponCount += 1;
             }
         }
-        UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>();        
+        UnitShield = GetComponentInChildren<LegsController>().transform.Find("Shield").GetComponentInChildren<Shield>();        
     }
 
     // Start is called before the first frame update
