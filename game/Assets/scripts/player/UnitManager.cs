@@ -10,7 +10,7 @@ public class UnitManager : MonoBehaviour
     private enum UnitClass { Assault, Scout, Heavy }
     [SerializeField] private UnitClass _unitClass;
 	[HideInInspector] public UnitManager Target;
-    private GameObject _clickMarker;
+    private GameObject _clickMarker, _legs, _torso, _leftArm, _rightArm;
     private AIController _unitController;
     [HideInInspector] public Shield UnitShield;
 	
@@ -44,6 +44,7 @@ public class UnitManager : MonoBehaviour
         public float Cooling;
     }
     public List<CoolingModes> CoolingModesP = new List<CoolingModes>(); 
+    public List<GameObject> MechParts = new List<GameObject>();
     
     [System.Serializable]
     public class CoreParameters
@@ -57,12 +58,21 @@ public class UnitManager : MonoBehaviour
     {
         /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
             left top, rigth shoulder, left shoulder) */
-        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(GetComponentInChildren<LegsController>().transform.Find("Torso").Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+        Transform torso = transform.Find("Torso");
+
+        WeaponList.Add(torso.Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(torso.Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(torso.Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(torso.Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(torso.Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
+        WeaponList.Add(torso.Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
+
+        UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>(); 
+
+        // Spawn mech components
+        _legs = GameObject.Instantiate(MechParts[0], transform.position, transform.rotation, transform); 
+        torso.SetParent(_legs.transform);     
+        UnitShield.transform.parent.SetParent(_legs.transform);
 
         // ??? assign unit manager for each weapon
         foreach (WPNManager weapon in WeaponList)
@@ -73,8 +83,7 @@ public class UnitManager : MonoBehaviour
                 weapon.UnitID = transform.parent.name;
                 WeaponCount += 1;
             }
-        }
-        UnitShield = GetComponentInChildren<LegsController>().transform.Find("Shield").GetComponentInChildren<Shield>();        
+        } 
     }
 
     // Start is called before the first frame update

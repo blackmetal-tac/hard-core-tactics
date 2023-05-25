@@ -17,8 +17,11 @@ public class LegsController : MonoBehaviour
         LeftFoot = GetComponentInChildren<LeftFoot>().transform;
         RightFoot = GetComponentInChildren<RightFoot>().transform;
         
+        // Set standing position
         LeftHip.localRotation = Quaternion.Euler(165, 0, 0);
         RightHip.localRotation = Quaternion.Euler(165, 0, 0);
+        LeftKnee.localRotation = Quaternion.Euler(0, 0, 0);
+        RightKnee.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     // Update is called once per frame
