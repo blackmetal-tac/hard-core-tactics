@@ -382,7 +382,7 @@ MonoBehaviour:
   - ModeName: Auto
     Cooling: 0
   MechParts:
-  - {fileID: 8200491202495923286, guid: 07257f68e059d17449b8494e8ebb083f, type: 3}
+  - {fileID: 98436722744406385, guid: 07257f68e059d17449b8494e8ebb083f, type: 3}
   _coreParameters:
     MoveBoost: 2
 --- !u!1 &7450830651402943426
