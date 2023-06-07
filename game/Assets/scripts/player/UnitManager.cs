@@ -12,6 +12,7 @@ public class UnitManager : MonoBehaviour
 	[HideInInspector] public UnitManager Target;
     private GameObject _clickMarker, _legs, _torso, _leftArm, _rightArm;
     private AIController _unitController;
+    private LegsController _legsController;
     [HideInInspector] public Shield UnitShield;
 	
     // Stats    
@@ -25,7 +26,7 @@ public class UnitManager : MonoBehaviour
 	private GameManager _gameManager;
     [HideInInspector] public ShrinkBar ShrinkBar;
     private Vector3 _direction; // Rotate body to the enemy
-    private readonly float _rotSpeed = 1f;
+    private readonly float _rotSpeed = 0.3f;
     [HideInInspector] public float SpreadMult = 0.1f;
 
     [HideInInspector] public List<WPNManager> WeaponList = new List<WPNManager>();
@@ -70,8 +71,9 @@ public class UnitManager : MonoBehaviour
         UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>(); 
 
         // Spawn mech components
-        _legs = GameObject.Instantiate(MechParts[0], transform.position, transform.rotation, transform); 
-        torso.SetParent(_legs.transform);     
+        _legs = GameObject.Instantiate(MechParts[0], transform.position, Quaternion.Euler(-90, 0, 0), transform); 
+        _legsController = _legs.GetComponent<LegsController>();
+        torso.SetParent(_legs.GetComponentInChildren<Hips>().transform);  
         UnitShield.transform.parent.SetParent(_legs.transform);
 
         // ??? assign unit manager for each weapon
@@ -153,13 +155,15 @@ public class UnitManager : MonoBehaviour
                 weapon.FirePoint.transform.LookAt(Target.transform.position);
             }
         }
+        transform.LookAt(Target.transform);
     }
 
     void Update()
     {
+        MoveAnimation();
         if (_gameManager.InAction)
         {
-            StartAction();
+            StartAction();            
         }
 
         ShrinkBar.UpdateShield();
@@ -186,9 +190,9 @@ public class UnitManager : MonoBehaviour
 
     // Do actions in Update
     private void StartAction()
-    {
+    {       
         if (!IsDead)
-        {
+        {            
             if (!Target.IsDead)
             {
                 StartShoot();
@@ -220,6 +224,24 @@ public class UnitManager : MonoBehaviour
         else
         {
             StopLaser();
+        }
+    }
+
+    private void MoveAnimation()
+    {
+        if (_gameManager.InAction && _unitController.UnitAgent.hasPath 
+            && transform.rotation.y < _unitController.transform.rotation.y)
+        {
+            _legsController.Glide(false, 0.2f);
+        }
+        else if (_gameManager.InAction && _unitController.UnitAgent.hasPath 
+            && transform.rotation.y > _unitController.transform.rotation.y)
+        {
+            _legsController.Glide(true, 0.2f);
+        }
+        else if (!_unitController.UnitAgent.hasPath)
+        {
+            _legsController.Reset(0.2f);
         }
     }
 
