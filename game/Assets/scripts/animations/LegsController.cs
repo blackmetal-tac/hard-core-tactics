@@ -5,6 +5,8 @@ public class LegsController : MonoBehaviour
     // Joints    
     private Transform hips, leftHip, rightHip, leftKnee, rightKnee, leftKnee2, rightKnee2, leftFoot, rightFoot;
 
+    [SerializeField] private float legsHeight;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +29,7 @@ public class LegsController : MonoBehaviour
     public void Glide(bool left, float speed)
     {
         hips.transform.localPosition = Vector3.Slerp(hips.transform.localPosition, new Vector3(hips.transform.localPosition.x,
-            hips.transform.localPosition.y, -0.04f), speed); // z - 0.04
+            hips.transform.localPosition.y, legsHeight - 0.04f), speed); // z - 0.04
 
         if (!left)
         {
@@ -59,7 +61,7 @@ public class LegsController : MonoBehaviour
     public void Reset(float speed)
     {
         hips.transform.localPosition = Vector3.Slerp(hips.transform.localPosition, new Vector3(hips.transform.localPosition.x,
-            hips.transform.localPosition.y, 0f), speed); 
+            hips.transform.localPosition.y, legsHeight), speed); 
         RotateJoint(hips, Quaternion.Euler(0, 0, 0), speed);  
         RotateJoint(leftHip, Quaternion.Euler(-15, 0, 0), speed); 
         RotateJoint(rightHip, Quaternion.Euler(-15, 0, 0), speed); 

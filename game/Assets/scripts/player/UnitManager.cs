@@ -10,7 +10,7 @@ public class UnitManager : MonoBehaviour
     private enum UnitClass { Assault, Scout, Heavy }
     [SerializeField] private UnitClass _unitClass;
 	[HideInInspector] public UnitManager Target;
-    private GameObject _clickMarker, _legs, _torso, _leftArm, _rightArm;
+    private GameObject _clickMarker, _legs, _torso, _leftArm, _rightArm, _shield;
     private AIController _unitController;
     private LegsController _legsController;
     [HideInInspector] public Shield UnitShield;
@@ -68,13 +68,18 @@ public class UnitManager : MonoBehaviour
         WeaponList.Add(torso.Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
         WeaponList.Add(torso.Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
 
-        UnitShield = transform.Find("Shield").GetComponentInChildren<Shield>(); 
-
-        // Spawn mech components
+        // Spawn mech components (0 - legs 1 - torso 2 - arms 3 - shield)        
         _legs = GameObject.Instantiate(MechParts[0], transform.position, Quaternion.Euler(-90, 0, 0), transform); 
         _legsController = _legs.GetComponent<LegsController>();
-        torso.SetParent(_legs.GetComponentInChildren<Hips>().transform);  
-        UnitShield.transform.parent.SetParent(_legs.transform);
+        Transform hips = _legs.GetComponentInChildren<Hips>().transform;
+        torso.SetParent(hips);
+
+        _torso = GameObject.Instantiate(MechParts[1], Vector3.zero, Quaternion.Euler(-90, 0, 0), hips);      
+        _torso.transform.localPosition = new Vector3(0, 0, 0.0025f);  
+        _torso.transform.localScale = Vector3.one / 100;
+
+        _shield = GameObject.Instantiate(MechParts[3], hips.position, transform.rotation, transform);        
+        UnitShield = _shield.GetComponent<Shield>(); 
 
         // ??? assign unit manager for each weapon
         foreach (WPNManager weapon in WeaponList)

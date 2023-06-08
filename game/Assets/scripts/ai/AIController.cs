@@ -206,9 +206,15 @@ public class AIController : MonoBehaviour
             _clickMarker.transform.localScale = Vector3.zero;
             _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.5f);
             SetAgentDestination(hit.point);
-            transform.LookAt(hit.point);
-            UnitManagerP.transform.LookAt(UnitManagerP.Target.transform);
+            RotateAgent(hit.point);
         }       
+    }
+
+    private void RotateAgent(Vector3 point)
+    {
+        transform.LookAt(point);
+        transform.rotation = Quaternion.Euler(new Vector3(0, transform.rotation.y, 0));
+        UnitManagerP.transform.LookAt(UnitManagerP.Target.transform);
     }
 
     // Set move position to maximum move distance (speed)
@@ -223,7 +229,7 @@ public class AIController : MonoBehaviour
             if (pathLenght <= UnitManagerP.WalkDistance)
             {
                 UnitAgent.SetDestination(movePoint);
-                transform.LookAt(movePoint);
+                RotateAgent(movePoint);
                 UnitManagerP.MoveSpeed = pathLenght / _gameManager.TurnTime;
                 UnitManagerP.ShrinkBar.UpdateStability();                                      
             }
@@ -231,13 +237,12 @@ public class AIController : MonoBehaviour
             {
                 Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * UnitManagerP.WalkDistance);
                 UnitAgent.SetDestination(finalPoint);
-                transform.LookAt(finalPoint);
+                RotateAgent(finalPoint);
                 UnitManagerP.MoveSpeed = UnitManagerP.WalkDistance / _gameManager.TurnTime;
                 UnitManagerP.ShrinkBar.UpdateStability();
                 break;
             }
-        }        
-        UnitManagerP.transform.LookAt(UnitManagerP.Target.transform);
+        }
     }
 
     public float GetPathLength(NavMeshPath path)
