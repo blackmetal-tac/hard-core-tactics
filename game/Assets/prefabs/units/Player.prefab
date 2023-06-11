@@ -612,11 +612,19 @@ MonoBehaviour:
     Cooling: 0.3
   - ModeName: Auto
     Cooling: 0
-  MechParts:
-  - {fileID: 6268920553294073223, guid: 07257f68e059d17449b8494e8ebb083f, type: 3}
-  - {fileID: 5565740663897083016, guid: 5c7ae3632e0a59447be39ffba3ac67f6, type: 3}
-  - {fileID: 0}
+  _mechParts:
+  - {fileID: 7258402093267373835, guid: ffbf4820ae2fe5a4989a3adcc9365d12, type: 3}
+  - {fileID: 7187563730989191515, guid: 410c8a9440ecfa94caf633e76b556775, type: 3}
+  - {fileID: 6245170440877270265, guid: 175c284b1937d8d49a6b9bfb3fd9593f, type: 3}
+  - {fileID: 6245170440877270265, guid: 175c284b1937d8d49a6b9bfb3fd9593f, type: 3}
   - {fileID: 6285176286650417559, guid: ceebc16cc6296004e8431adf7c063548, type: 3}
+  _mechWeapons:
+  - {fileID: 636598228297172968, guid: e0deff1a45b1eab4289b3a205e48f1e0, type: 3}
+  - {fileID: 636598228297172968, guid: e0deff1a45b1eab4289b3a205e48f1e0, type: 3}
+  - {fileID: 4266089538177853295, guid: 94384da20836d724ea5f521b70943c15, type: 3}
+  - {fileID: 2479452605947280997, guid: db35e3038ac0eca419f2617b6d4819d3, type: 3}
+  - {fileID: 187078880366221859, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec, type: 3}
+  - {fileID: 4987383190760336455, guid: a6556bcb56d998f4e90f12dd915861ef, type: 3}
   _coreParameters:
     MoveBoost: 2
 --- !u!135 &5427134762505438226

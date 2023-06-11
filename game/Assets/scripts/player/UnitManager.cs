@@ -13,6 +13,7 @@ public class UnitManager : MonoBehaviour
     private GameObject _clickMarker, _legs, _torso, _leftArm, _rightArm, _shield;
     private AIController _unitController;
     private LegsController _legsController;
+    private ArmsController _leftArmCont, _rightArmCont;
     [HideInInspector] public Shield UnitShield;
 	
     // Stats    
@@ -26,7 +27,7 @@ public class UnitManager : MonoBehaviour
 	private GameManager _gameManager;
     [HideInInspector] public ShrinkBar ShrinkBar;
     private Vector3 _direction; // Rotate body to the enemy
-    private readonly float _rotSpeed = 0.3f;
+    private readonly float _rotSpeed = 0.2f;
     [HideInInspector] public float SpreadMult = 0.1f;
 
     [HideInInspector] public List<WPNManager> WeaponList = new List<WPNManager>();
@@ -45,7 +46,10 @@ public class UnitManager : MonoBehaviour
         public float Cooling;
     }
     public List<CoolingModes> CoolingModesP = new List<CoolingModes>(); 
-    public List<GameObject> MechParts = new List<GameObject>();
+
+    // Lists of parts and weapons for instanses ???
+    [SerializeField] private List<GameObject> _mechParts = new List<GameObject>(), _mechWeapons = new List<GameObject>();
+    private List<GameObject> _mountedWeapons = new List<GameObject>();
     
     [System.Serializable]
     public class CoreParameters
@@ -56,30 +60,47 @@ public class UnitManager : MonoBehaviour
 
     // ??? Set UnitManager for all weapons before Start
     void Awake()
-    {
-        /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
-            left top, rigth shoulder, left shoulder) */
-        Transform torso = transform.Find("Torso");
+    { 
+        //Transform torso = transform.Find("Torso");
 
-        WeaponList.Add(torso.Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
+        // Spawn mech components (0 - legs 1 - torso 2-3 - arms 4 - shield)        
+        _legs = GameObject.Instantiate(_mechParts[0], transform.position, Quaternion.Euler(-90, 0, 0), transform); 
+        _legsController = _legs.GetComponent<LegsController>();
+        //torso.SetParent(_legs.transform);
+
+        Transform mountTransform = _legs.GetComponentInChildren<Hips>().transform;
+        _torso = GameObject.Instantiate(_mechParts[1], mountTransform.position, Quaternion.Euler(-90, 0, 0), mountTransform);      
+        _torso.transform.localPosition = new Vector3(0, 0, 0.25f);
+
+        _shield = GameObject.Instantiate(_mechParts[4], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform);
+        UnitShield = _shield.GetComponent<Shield>(); 
+
+        mountTransform = _torso.GetComponentInChildren<LeftShoulder>().transform;
+        _leftArm = GameObject.Instantiate(_mechParts[2], mountTransform.position, Quaternion.Euler(-90, 0, 0), mountTransform);
+        _leftArmCont = _leftArm.GetComponent<ArmsController>();
+        _leftArm.transform.localPosition = new Vector3(-0.02f, 0, 0);
+
+        mountTransform = _torso.GetComponentInChildren<RightShoulder>().transform;           
+        _rightArm = GameObject.Instantiate(_mechParts[3], mountTransform.position, Quaternion.Euler(-90, 0, 0), mountTransform);           
+        _rightArmCont = _rightArm.GetComponent<ArmsController>();
+        _rightArm.transform.localScale = new Vector3(-1, 1, 1);
+        _rightArm.transform.localPosition = new Vector3(0.02f, 0, 0);
+
+
+        /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
+            left top, rigth shoulder, left shoulder)*/
+            
+        mountTransform = _rightArm.GetComponentInChildren<HandMount>().transform;
+        _mountedWeapons[0] = GameObject.Instantiate(_mechWeapons[0], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform);
+            
+
+
+        /*WeaponList.Add(torso.Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
         WeaponList.Add(torso.Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
         WeaponList.Add(torso.Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
         WeaponList.Add(torso.Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
         WeaponList.Add(torso.Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(torso.Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());
-
-        // Spawn mech components (0 - legs 1 - torso 2 - arms 3 - shield)        
-        _legs = GameObject.Instantiate(MechParts[0], transform.position, Quaternion.Euler(-90, 0, 0), transform); 
-        _legsController = _legs.GetComponent<LegsController>();
-        Transform hips = _legs.GetComponentInChildren<Hips>().transform;
-        torso.SetParent(hips);
-
-        _torso = GameObject.Instantiate(MechParts[1], Vector3.zero, Quaternion.Euler(-90, 0, 0), hips);      
-        _torso.transform.localPosition = new Vector3(0, 0, 0.0025f);  
-        _torso.transform.localScale = Vector3.one / 100;
-
-        _shield = GameObject.Instantiate(MechParts[3], hips.position, transform.rotation, transform);        
-        UnitShield = _shield.GetComponent<Shield>(); 
+        WeaponList.Add(torso.Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());*/
 
         // ??? assign unit manager for each weapon
         foreach (WPNManager weapon in WeaponList)
@@ -160,12 +181,17 @@ public class UnitManager : MonoBehaviour
                 weapon.FirePoint.transform.LookAt(Target.transform.position);
             }
         }
-        transform.LookAt(Target.transform);
+        transform.LookAt(new Vector3(Target.transform.position.x, transform.position.y, Target.transform.position.z));
     }
 
     void Update()
     {
         MoveAnimation();
+
+        // Arms animation ???
+        _leftArmCont.Reset(0.1f); 
+        _rightArmCont.Reset(0.1f); 
+
         if (_gameManager.InAction)
         {
             StartAction();            
@@ -232,30 +258,39 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    // Animate in Update ???
     private void MoveAnimation()
     {
-        if (_gameManager.InAction && _unitController.UnitAgent.hasPath 
-            && transform.rotation.y < _unitController.transform.rotation.y)
+        if (_gameManager.InAction && _unitController.UnitAgent.hasPath)
         {
-            _legsController.Glide(false, 0.2f);
-        }
-        else if (_gameManager.InAction && _unitController.UnitAgent.hasPath 
-            && transform.rotation.y > _unitController.transform.rotation.y)
-        {
-            _legsController.Glide(true, 0.2f);
+            _legsController.Glide(IsLeft(transform.position, _unitController.UnitAgent.destination), 0.1f);
         }
         else if (!_unitController.UnitAgent.hasPath)
         {
-            _legsController.Reset(0.2f);
+            _legsController.Reset(0.1f);
         }
     }
+
+    // If negative object to the , positive - to the left
+    private bool IsLeft(Vector3 unitPos, Vector3 movePoint)
+    {
+        if (-unitPos.x * movePoint.z + unitPos.z * movePoint.x < 0)
+        {
+            return false;
+        }
+        else 
+        {
+            return true;
+        }
+    }
+
 
     private void StartShoot()
     {
         // Rotate body to Target
         _direction = Target.transform.position - transform.position;
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, Quaternion.LookRotation(_direction), Time.time * _rotSpeed);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(_direction), 
+            Time.time * _rotSpeed);
 
         foreach (WPNManager weapon in WeaponList)
         {

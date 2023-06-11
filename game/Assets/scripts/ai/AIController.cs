@@ -205,16 +205,8 @@ public class AIController : MonoBehaviour
             _clickMarker.transform.position = hit.point;
             _clickMarker.transform.localScale = Vector3.zero;
             _clickMarker.transform.DOScale(0.2f * Vector3.one , 0.5f);
-            SetAgentDestination(hit.point);
-            RotateAgent(hit.point);
+            SetAgentDestination(hit.point);            
         }       
-    }
-
-    private void RotateAgent(Vector3 point)
-    {
-        transform.LookAt(point);
-        transform.rotation = Quaternion.Euler(new Vector3(0, transform.rotation.y, 0));
-        UnitManagerP.transform.LookAt(UnitManagerP.Target.transform);
     }
 
     // Set move position to maximum move distance (speed)
@@ -228,8 +220,7 @@ public class AIController : MonoBehaviour
         {          
             if (pathLenght <= UnitManagerP.WalkDistance)
             {
-                UnitAgent.SetDestination(movePoint);
-                RotateAgent(movePoint);
+                UnitAgent.SetDestination(movePoint);            
                 UnitManagerP.MoveSpeed = pathLenght / _gameManager.TurnTime;
                 UnitManagerP.ShrinkBar.UpdateStability();                                      
             }
@@ -237,7 +228,6 @@ public class AIController : MonoBehaviour
             {
                 Vector3 finalPoint = path.corners[i] + ((path.corners[i + 1] - path.corners[i]).normalized * UnitManagerP.WalkDistance);
                 UnitAgent.SetDestination(finalPoint);
-                RotateAgent(finalPoint);
                 UnitManagerP.MoveSpeed = UnitManagerP.WalkDistance / _gameManager.TurnTime;
                 UnitManagerP.ShrinkBar.UpdateStability();
                 break;
@@ -448,7 +438,7 @@ public class AIController : MonoBehaviour
         if (_formationPos != null && UnitManagerP.WalkDistance > 0)
         {              
             UnitAgent.stoppingDistance = 0.1f;
-            UnitAgent.SetDestination( _formationPos.position);
+            UnitAgent.SetDestination(_formationPos.position);            
             SetSpeed();                                   
         } 
     }
