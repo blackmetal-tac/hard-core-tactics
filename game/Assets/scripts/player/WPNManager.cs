@@ -45,12 +45,14 @@ public class WPNManager : MonoBehaviour
     void Awake()
     {
         FirePoint = transform.Find("FirePoint").gameObject;
+        BurstSize = WeaponModesP[1].FireMode;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();  
+        _camMain = Camera.main;
 
         // Check if has 2 AMS' 
         _crosshairAMS = GameObject.Find("CrosshairAMS").GetComponent<CrosshairAMS>();
@@ -67,14 +69,6 @@ public class WPNManager : MonoBehaviour
         {
             _crosshairAMS = GameObject.Find("CrosshairAMS2").GetComponent<CrosshairAMS>();
             _crosshairAMS.Taken = true;
-        }
-        
-        _camMain = Camera.main;
-
-        // Friend/Foe system for AMS to intercept
-        if (UnitManagerP.transform.parent.parent.name == "PlayerSquad")
-        {
-            IsFriend = true;            
         }
 
         // Set AMS parameters 

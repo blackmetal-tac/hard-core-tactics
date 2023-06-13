@@ -52,7 +52,7 @@ public class WeaponUI : MonoBehaviour
         CoreButtonP.UpdateStatus();    
 
         // Shield controls
-        _weaponButtons[6].WeaponName.text = _playerManager.UnitShield.name;
+        _weaponButtons[6].WeaponName.text = _playerManager.UnitShield.name.Replace("(Clone)", "");
         _weaponButtons[6].Slider.PlayerManager = _playerManager;
         _weaponButtons[6].Slider.UpdateUI();
         _weaponButtons[6].Slider.ChangeWPNmode();
@@ -68,7 +68,7 @@ public class WeaponUI : MonoBehaviour
         {
             if (_playerManager.WeaponList[i] != null)
             {
-                _weaponButtons[i].WeaponName.text = _playerManager.WeaponList[i].name;
+                _weaponButtons[i].WeaponName.text = _playerManager.WeaponList[i].name.Replace("(Clone)", "");
                 _weaponButtons[i].Slider.Weapon = _playerManager.WeaponList[i];
                 _weaponButtons[i].Slider.UpdateUI();
                 _weaponButtons[i].Slider.ChangeWPNmode();             

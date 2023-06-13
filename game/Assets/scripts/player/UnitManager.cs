@@ -18,8 +18,7 @@ public class UnitManager : MonoBehaviour
 	
     // Stats    
     [HideInInspector] public float HP, Heat, Cooling, HeatCalc, MissileLockTimer;
-	[Range(0, 1)] public float HeatTreshold;    
-    [SerializeField][Range(0, 0.5f)] private float _shieldRegen;
+	[Range(0, 1)] public float HeatTreshold;
     [SerializeField][Range(0, 1)] private float _heatCheckTime;
     [SerializeField][Range(0, 10)] private int _heatSafeRoll;
     [Range(0, 20)] public int WalkDistance;
@@ -61,12 +60,9 @@ public class UnitManager : MonoBehaviour
     // ??? Set UnitManager for all weapons before Start
     void Awake()
     { 
-        //Transform torso = transform.Find("Torso");
-
         // Spawn mech components (0 - legs 1 - torso 2-3 - arms 4 - shield)        
         _legs = GameObject.Instantiate(_mechParts[0], transform.position, Quaternion.Euler(-90, 0, 0), transform); 
         _legsController = _legs.GetComponent<LegsController>();
-        //torso.SetParent(_legs.transform);
 
         Transform mountTransform = _legs.GetComponentInChildren<Hips>().transform;
         _torso = GameObject.Instantiate(_mechParts[1], mountTransform.position, Quaternion.Euler(-90, 0, 0), mountTransform);      
@@ -86,21 +82,32 @@ public class UnitManager : MonoBehaviour
         _rightArm.transform.localScale = new Vector3(-1, 1, 1);
         _rightArm.transform.localPosition = new Vector3(0.02f, 0, 0);
 
-
         /* Fill the list of all weapons on this unit (ORDER: rigth arm, left arm, rigth top,
             left top, rigth shoulder, left shoulder)*/
             
         mountTransform = _rightArm.GetComponentInChildren<HandMount>().transform;
-        _mountedWeapons[0] = GameObject.Instantiate(_mechWeapons[0], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform);
-            
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[0], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        WeaponList.Add(_mountedWeapons[0].GetComponentInChildren<WPNManager>());
 
+        mountTransform = _leftArm.GetComponentInChildren<HandMount>().transform;
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[1], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        WeaponList.Add(_mountedWeapons[1].GetComponentInChildren<WPNManager>());
 
-        /*WeaponList.Add(torso.Find("RightArm").Find("RightArmWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(torso.Find("LeftArm").Find("LeftArmWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(torso.Find("RightShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(torso.Find("LeftShoulderTopWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(torso.Find("RightArm").Find("RightShoulderWPN").GetComponentInChildren<WPNManager>());
-        WeaponList.Add(torso.Find("LeftArm").Find("LeftShoulderWPN").GetComponentInChildren<WPNManager>());*/
+        mountTransform = _torso.GetComponentInChildren<RightMount>().transform;
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[2], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        WeaponList.Add(_mountedWeapons[2].GetComponentInChildren<WPNManager>());
+
+        mountTransform = _torso.GetComponentInChildren<LeftMount>().transform;
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[3], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        WeaponList.Add(_mountedWeapons[3].GetComponentInChildren<WPNManager>());
+
+        mountTransform = _rightArm.GetComponentInChildren<ShoulderMount>().transform;
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[4], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        WeaponList.Add(_mountedWeapons[4].GetComponentInChildren<WPNManager>());
+
+        mountTransform = _leftArm.GetComponentInChildren<ShoulderMount>().transform;
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[5], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        WeaponList.Add(_mountedWeapons[5].GetComponentInChildren<WPNManager>());      
 
         // ??? assign unit manager for each weapon
         foreach (WPNManager weapon in WeaponList)
@@ -110,6 +117,11 @@ public class UnitManager : MonoBehaviour
                 weapon.UnitManagerP = this;
                 weapon.UnitID = transform.parent.name;
                 WeaponCount += 1;
+
+                if (transform.parent.name == "PlayerSquad")
+                {
+                    weapon.IsFriend = true;
+                }
             }
         } 
     }
