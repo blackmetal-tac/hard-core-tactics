@@ -356,8 +356,8 @@ MonoBehaviour:
   - {fileID: 6245170440877270265, guid: 175c284b1937d8d49a6b9bfb3fd9593f, type: 3}
   - {fileID: 6285176286650417559, guid: ceebc16cc6296004e8431adf7c063548, type: 3}
   _mechWeapons:
-  - {fileID: 636598228297172968, guid: e0deff1a45b1eab4289b3a205e48f1e0, type: 3}
-  - {fileID: 636598228297172968, guid: e0deff1a45b1eab4289b3a205e48f1e0, type: 3}
+  - {fileID: 8860261211795677210, guid: 20dcc85f8bc336143aef0e822794df08, type: 3}
+  - {fileID: 8860261211795677210, guid: 20dcc85f8bc336143aef0e822794df08, type: 3}
   - {fileID: 4266089538177853295, guid: 94384da20836d724ea5f521b70943c15, type: 3}
   - {fileID: 2479452605947280997, guid: db35e3038ac0eca419f2617b6d4819d3, type: 3}
   - {fileID: 187078880366221859, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec, type: 3}

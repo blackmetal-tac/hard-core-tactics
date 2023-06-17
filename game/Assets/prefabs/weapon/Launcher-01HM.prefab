@@ -84,6 +84,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4266089538669041068}
+  - component: {fileID: 5576676493619380173}
   m_Layer: 0
   m_Name: FirePoint
   m_TagString: Untagged
@@ -106,6 +107,18 @@ Transform:
   m_Father: {fileID: 4266089538177853288}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -60, y: 0, z: 0}
+--- !u!114 &5576676493619380173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4266089538669041059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 193112cefe2cd94409250add3b5219fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6197034520350996472
 GameObject:
   m_ObjectHideFlags: 0

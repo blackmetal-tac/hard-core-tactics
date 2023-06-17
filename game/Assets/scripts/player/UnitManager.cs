@@ -184,15 +184,6 @@ public class UnitManager : MonoBehaviour
         });
         
         ShrinkBar.UpdateStability();
-
-        // Aim at the enemy ???
-        foreach (WPNManager weapon in WeaponList)
-        {
-            if (weapon != null && !weapon.Homing)
-            {
-                weapon.FirePoint.transform.LookAt(Target.transform.position);
-            }
-        }
         transform.LookAt(new Vector3(Target.transform.position.x, transform.position.y, Target.transform.position.z));
     }
 
