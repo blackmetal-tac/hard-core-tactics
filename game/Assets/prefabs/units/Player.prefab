@@ -352,12 +352,12 @@ MonoBehaviour:
   _mechParts:
   - {fileID: 7258402093267373835, guid: ffbf4820ae2fe5a4989a3adcc9365d12, type: 3}
   - {fileID: 7187563730989191515, guid: 410c8a9440ecfa94caf633e76b556775, type: 3}
-  - {fileID: 6245170440877270265, guid: 175c284b1937d8d49a6b9bfb3fd9593f, type: 3}
-  - {fileID: 6245170440877270265, guid: 175c284b1937d8d49a6b9bfb3fd9593f, type: 3}
+  - {fileID: 3760192076657911006, guid: 175c284b1937d8d49a6b9bfb3fd9593f, type: 3}
+  - {fileID: 3760192076657911006, guid: 175c284b1937d8d49a6b9bfb3fd9593f, type: 3}
   - {fileID: 6285176286650417559, guid: ceebc16cc6296004e8431adf7c063548, type: 3}
   _mechWeapons:
-  - {fileID: 8860261211795677210, guid: 20dcc85f8bc336143aef0e822794df08, type: 3}
-  - {fileID: 8860261211795677210, guid: 20dcc85f8bc336143aef0e822794df08, type: 3}
+  - {fileID: 6812707125350856895, guid: dd9cf55a4dae2d14ea7ceeecc8994461, type: 3}
+  - {fileID: 6812707125350856895, guid: dd9cf55a4dae2d14ea7ceeecc8994461, type: 3}
   - {fileID: 4266089538177853295, guid: 94384da20836d724ea5f521b70943c15, type: 3}
   - {fileID: 2479452605947280997, guid: db35e3038ac0eca419f2617b6d4819d3, type: 3}
   - {fileID: 187078880366221859, guid: 10e93a8b8a1d2034790f2f2aa1d3cbec, type: 3}
