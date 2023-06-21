@@ -16,7 +16,7 @@ public class ArmsController : MonoBehaviour
     
     public void Reset(float speed)
     {     
-        RotateJoint(_shoulder, Quaternion.Euler(0, 5, 0), speed); 
+        RotateJoint(_shoulder, Quaternion.Euler(-1, 5, 0), speed); 
         RotateJoint(_elbow, Quaternion.Euler(-75, -5, 0), speed); 
         RotateJoint(_wrist, Quaternion.Euler(75, 0, 0), speed);  
     }

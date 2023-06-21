@@ -102,11 +102,11 @@ public class UnitManager : MonoBehaviour
         WeaponList.Add(_mountedWeapons[3].GetComponentInChildren<WPNManager>());
 
         mountTransform = _rightArm.GetComponentInChildren<ShoulderMount>().transform;
-        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[4], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[4], mountTransform.position, mountTransform.rotation, mountTransform));
         WeaponList.Add(_mountedWeapons[4].GetComponentInChildren<WPNManager>());
 
         mountTransform = _leftArm.GetComponentInChildren<ShoulderMount>().transform;
-        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[5], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[5], mountTransform.position, mountTransform.rotation, mountTransform));
         WeaponList.Add(_mountedWeapons[5].GetComponentInChildren<WPNManager>());      
 
         // ??? assign unit manager for each weapon
