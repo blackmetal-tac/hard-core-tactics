@@ -94,11 +94,11 @@ public class UnitManager : MonoBehaviour
         WeaponList.Add(_mountedWeapons[1].GetComponentInChildren<WPNManager>());
 
         mountTransform = _torso.GetComponentInChildren<RightMount>().transform;
-        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[2], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[2], mountTransform.position, mountTransform.rotation, mountTransform));
         WeaponList.Add(_mountedWeapons[2].GetComponentInChildren<WPNManager>());
 
         mountTransform = _torso.GetComponentInChildren<LeftMount>().transform;
-        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[3], mountTransform.position, Quaternion.Euler(0, 0, 0), mountTransform));
+        _mountedWeapons.Add(GameObject.Instantiate(_mechWeapons[3], mountTransform.position, mountTransform.rotation, mountTransform));
         WeaponList.Add(_mountedWeapons[3].GetComponentInChildren<WPNManager>());
 
         mountTransform = _rightArm.GetComponentInChildren<ShoulderMount>().transform;

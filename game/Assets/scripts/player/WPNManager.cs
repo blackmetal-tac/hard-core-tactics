@@ -36,7 +36,7 @@ public class WPNManager : MonoBehaviour
     private CrosshairAMS _crosshairAMS;
     [HideInInspector] public UnitManager UnitManagerP;    
     private GameManager _gameManager;
-    private Collider _colliderAMS;
+    private SphereCollider _colliderAMS;
 
     private LineRenderer _lineRenderer;
     private bool _laserOn, _oneTime;
@@ -72,7 +72,7 @@ public class WPNManager : MonoBehaviour
         if (ProjectileTypeP == ProjectileType.AMS)
         {
             _damage = 0;
-            _colliderAMS = GetComponentInChildren<Collider>();
+            _colliderAMS = GetComponentInChildren<SphereCollider>();
             if (IsFriend)
             {
                 _colliderAMS.gameObject.layer = 14;
@@ -82,7 +82,7 @@ public class WPNManager : MonoBehaviour
                 _colliderAMS.gameObject.layer = 15;
             }
             _colliderAMS.enabled = true;
-            _colliderAMS.transform.localScale = _radiusAMS * Vector3.one;
+            _colliderAMS.radius = _radiusAMS;
         }
         else
         {

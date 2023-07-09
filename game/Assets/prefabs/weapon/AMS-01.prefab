@@ -270,6 +270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2307309139686543369}
   - component: {fileID: 8270254312800047840}
+  - component: {fileID: 1825073273148308573}
   m_Layer: 0
   m_Name: AMS-01
   m_TagString: Untagged
@@ -334,6 +335,19 @@ MonoBehaviour:
   TargetAMS: {fileID: 0}
   UnitManagerP: {fileID: 0}
   UnitID: 
+--- !u!135 &1825073273148308573
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3120684327029377715}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Center: {x: 0, y: -3, z: 0}
 --- !u!1 &3297842351266526635
 GameObject:
   m_ObjectHideFlags: 0
